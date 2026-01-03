@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Contact Us – Easy Opt</title>
+<title>Contact Us – CareerUnified</title>
 
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -76,7 +76,7 @@ footer a:hover { text-decoration: underline; }
 
 <!-- NAVIGATION -->
 <nav>
-  <a href="index.html" class="logo">Easy Opt</a>
+  <a href="index.html" class="logo">CareerUnified</a>
   <div>
     <a href="jobs.html">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
@@ -98,9 +98,8 @@ footer a:hover { text-decoration: underline; }
   <div class="section">
     <h2>Get in Touch</h2>
     <p>
-      If you have questions, feedback, or suggestions regarding Easy Opt,
-      we welcome you to reach out. While we aim to respond promptly, response
-      times may vary depending on volume.
+      If you have questions, feedback, or suggestions regarding CareerUnified,
+      we welcome you to reach out. Our team will respond promptly, usually within 1 business day.
     </p>
   </div>
 
@@ -108,8 +107,8 @@ footer a:hover { text-decoration: underline; }
   <div class="section">
     <h2>Contact Information</h2>
     <ul class="contact-info">
-      <li><strong>Platform:</strong> Easy Opt (South Africa)</li>
-      <li><strong>Email:</strong> support@easyopt.co.za</li>
+      <li><strong>Platform:</strong> CareerUnified (South Africa)</li>
+      <li><strong>Email:</strong> support@careerunified.com</li>
       <li><strong>Availability:</strong> Monday – Friday (Business Hours)</li>
     </ul>
   </div>
@@ -118,12 +117,11 @@ footer a:hover { text-decoration: underline; }
   <div class="section">
     <h2>Send Us a Message</h2>
     <p>
-      This form is provided for general enquiries only.
-      Easy Opt does not process job applications directly.
+      Please use the form below for general enquiries. We’ll get back to you promptly.
     </p>
 
     <div class="notice">
-      Message submission is active. Our team will respond promptly.
+      Message submission is active. Our team will respond within 1 business day.
     </div>
 
     <form id="contact-form" class="contact-form">
@@ -144,7 +142,7 @@ footer a:hover { text-decoration: underline; }
   <div class="section">
     <h2>Important Notice</h2>
     <p>
-      Easy Opt is a third-party career assistance platform.
+      CareerUnified is a third-party career assistance platform.
       We do not recruit, shortlist, hire, or award funding.
     </p>
     <p>
@@ -164,27 +162,28 @@ footer a:hover { text-decoration: underline; }
     <a href="terms.html">Terms & Conditions</a> |
     <a href="contact-us.html">Contact Us</a>
   </p>
-  <p>© 2025 Easy Opt. All rights reserved.</p>
+  <p>© 2026 CareerUnified. All rights reserved.</p>
 </footer>
 
 <!-- ===============================
      EMAILJS CONTACT FORM SCRIPT
 ================================ -->
 <script>
-  // Initialize EmailJS with Public Key
+  // Initialize EmailJS with public key
   emailjs.init("u082oiEYxXgiBHK07");
 
-  // Main email to your team
+  // Send main contact email
   function sendMainEmail(formData) {
       return emailjs.send("service_1g83g1d", "template_vuptbkx", {
           from_name: formData.name,
           from_email: formData.email,
+          reason: formData.reason,
           message: formData.message,
-          reason: formData.reason
+          date: formData.date // added date variable
       });
   }
 
-  // HTML auto-reply to user
+  // Send auto-reply email to user
   function sendAutoReply(formData) {
       return emailjs.send("service_1g83g1d", "template_4agu3xs", {
           from_name: formData.name,
@@ -200,11 +199,12 @@ footer a:hover { text-decoration: underline; }
       const formData = {
           name: this.name.value,
           email: this.email.value,
+          reason: this.reason.value,
           message: this.message.value,
-          reason: this.reason.value
+          date: new Date().toLocaleString() // pass current date/time
       };
 
-      console.log("Sending message...", formData); // Debug
+      console.log("Sending email with data:", formData); // debug log
 
       sendMainEmail(formData)
           .then(() => sendAutoReply(formData))
@@ -214,14 +214,16 @@ footer a:hover { text-decoration: underline; }
               this.reset();
           })
           .catch((error) => {
-              console.error("Failed to send email:", error);
-              alert("Oops! Something went wrong. Please try again.");
+              console.error("EmailJS error:", error);
+              alert("Oops! Something went wrong. Please try again later.");
           });
   });
 </script>
 
 </body>
 </html>
+
+
 
 
 
