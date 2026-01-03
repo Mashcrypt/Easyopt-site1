@@ -2,141 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>About Us – Easy Opt</title>
+<title>Terms & Conditions – Career Unified</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-/* ===============================
-   ABOUT PAGE – PREMIUM REVAMP
-================================ */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: 'Poppins', Arial, sans-serif;
   background: #f7f9fc;
   color: #1f2937;
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
-/* ===============================
-   HERO HEADER
-================================ */
+/* NAVIGATION BAR */
+nav {
+  background: #1e3a8a;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 20px;
+}
+
+nav .logo {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+nav a:hover {
+  color: #facc15;
+}
+
+/* HEADER */
 header {
   background: linear-gradient(90deg, #1e3a8a, #2563eb);
   color: white;
-  padding: 80px 20px;
+  padding: 60px 20px;
   text-align: center;
 }
 
 header h1 {
-  font-size: 46px;
-  margin-bottom: 12px;
-  font-weight: 700;
+  font-size: 40px;
 }
 
 header p {
-  font-size: 19px;
-  max-width: 720px;
-  margin: auto;
+  font-size: 18px;
   opacity: 0.95;
 }
 
-/* ===============================
-   MAIN WRAPPER
-================================ */
+/* MAIN CONTENT */
 main {
-  max-width: 950px;
-  margin: 50px auto;
+  max-width: 900px;
+  margin: 40px auto;
   background: white;
-  padding: 50px;
-  border-radius: 16px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 section {
-  margin-bottom: 45px;
+  margin-bottom: 30px;
 }
 
 section h2 {
-  font-size: 24px;
   color: #1e3a8a;
-  margin-bottom: 12px;
+  font-size: 22px;
+  margin-bottom: 10px;
 }
 
 section p {
-  font-size: 15.5px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
+  font-size: 15px;
 }
 
-/* ===============================
-   HIGHLIGHT BANNER
-================================ */
-.highlight {
-  background: #f1f5ff;
-  border-left: 5px solid #2563eb;
-  padding: 25px;
-  border-radius: 10px;
-  margin: 40px 0;
+ul {
+  margin-left: 20px;
+  margin-top: 10px;
 }
 
-.highlight strong {
-  color: #1e3a8a;
-}
-
-/* ===============================
-   VALUES GRID
-================================ */
-.values {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 22px;
-  margin-top: 25px;
-}
-
-.value-box {
-  background: #f9fbff;
-  padding: 22px;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-}
-
-.value-box h3 {
-  font-size: 16px;
-  color: #1e3a8a;
+li {
   margin-bottom: 8px;
 }
 
-/* ===============================
-   TRUST SECTION
-================================ */
-.trust {
-  background: #0f172a;
-  color: #e5e7eb;
-  padding: 35px;
-  border-radius: 14px;
-}
-
-.trust h2 {
-  color: #facc15;
-}
-
-.trust p {
-  font-size: 15px;
-  opacity: 0.95;
-}
-
-/* ===============================
-   FOOTER
-================================ */
+/* FOOTER */
 footer {
   background: #1e3a8a;
   color: white;
   text-align: center;
-  padding: 25px 20px;
-  margin-top: 60px;
+  padding: 20px;
+  margin-top: 50px;
   font-size: 14px;
 }
 
@@ -150,31 +113,35 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* ===============================
-   RESPONSIVE
-================================ */
+/* RESPONSIVE NAVIGATION */
 @media (max-width: 768px) {
-  main {
-    padding: 30px;
-    margin: 20px;
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  nav a {
+    margin: 8px 0 0;
   }
 
   header h1 {
-    font-size: 32px;
+    font-size: 30px;
   }
 
-  header p {
-    font-size: 16px;
+  main {
+    padding: 25px;
+    margin: 20px;
   }
 }
 </style>
 </head>
 
 <body>
-<!-- NAVIGATION -->
-<nav class="main-nav">
+
+<!-- NAVIGATION BAR -->
+<nav>
   <a href="index.html" class="logo">Career Unified</a>
-  <div class="nav-links">
+  <div>
     <a href="jobs.html">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
     <a href="varsity.html">Varsity</a>
@@ -182,108 +149,93 @@ footer a:hover {
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- HEADER -->
 <header>
-  <h1>About Career Unified</h1>
-  <p>One click from your dream — simplifying access to opportunities</p>
+  <h1>Terms & Conditions</h1>
+  <p>Important information regarding the use of Career Unified</p>
 </header>
 
-<!-- CONTENT -->
+<!-- MAIN CONTENT -->
 <main>
 
   <section>
-    <h2>Who We Are</h2>
+    <h2>1. Introduction</h2>
     <p>
-      Easy Opt is a digital opportunity discovery platform designed to help
-      individuals find jobs, bursaries, universities, and career resources in
-      one central, easy-to-use space.
-    </p>
-    <p>
-      We know that opportunity searches can be confusing, time-consuming,
-      and fragmented. Easy Opt exists to bring clarity and simplicity.
+      Welcome to Career Unified. By accessing or using this website, you agree to comply with and be bound by these Terms and Conditions.
+      If you do not agree with any part of these terms, please do not use our platform.
     </p>
   </section>
 
   <section>
-    <h2>Why CareerUnified Exists</h2>
+    <h2>2. Nature of Our Service</h2>
     <p>
-      Many opportunities are missed not because people lack potential,
-      but because information is scattered, unclear, or hard to access.
+      Career Unified is an independent third-party platform designed to help users discover job opportunities, bursaries,
+      universities, and career-related resources.
     </p>
     <p>
-      CareerUnified was created to bridge that gap — by organizing publicly
-      available opportunities and presenting them in a way that is
-      accessible, transparent, and practical.
+      We do not employ users, offer jobs directly, award bursaries, or represent employers, institutions, or funding bodies.
     </p>
   </section>
 
-  <div class="highlight">
-    <p>
-      <strong>Our belief:</strong> Access to information should never be the
-      reason someone misses an opportunity.
-    </p>
-  </div>
-
   <section>
-    <h2>What We Do</h2>
-    <p>CareerUnified helps users discover:</p>
+    <h2>3. Third-Party Disclaimer</h2>
+    <p>
+      Career Unified acts solely as an information-sharing platform. All job listings, bursaries, and opportunities displayed
+      originate from third parties.
+    </p>
+    <p>We are not responsible for:</p>
     <ul>
-      <li>Job opportunities and graduate programmes</li>
-      <li>Bursaries, scholarships, and funding options</li>
-      <li>University and higher education information</li>
-      <li>Career tools such as CV tips and generators</li>
+      <li>The accuracy, completeness, or validity of listings</li>
+      <li>Decisions made by employers or institutions</li>
+      <li>Any losses, damages, or disputes arising from applications</li>
+      <li>Fraudulent or misleading third-party listings</li>
     </ul>
+    <p>Users are strongly encouraged to verify information independently before applying.</p>
+  </section>
+
+  <section>
+    <h2>4. User Responsibility</h2>
     <p>
-      We guide users to opportunities — applications are completed through
-      official providers.
+      By using Career Unified, you acknowledge that all applications and interactions with third parties
+      are done at your own discretion and risk.
+    </p>
+    <p>
+      You agree to provide accurate information and to use the platform only for lawful purposes.
     </p>
   </section>
 
   <section>
-    <h2>What We Are Not</h2>
+    <h2>5. No Guarantees</h2>
     <p>
-      CareerUnified is not an employer, recruitment agency, bursary provider,
-      or educational institution.
+      Career Unified does not guarantee employment, acceptance into institutions, funding approval,
+      or successful outcomes of any application.
     </p>
     <p>
-      We do not make hiring decisions, award funding, or guarantee placement
-      or acceptance.
+      Our role is to assist with access to information, not to influence decisions.
     </p>
   </section>
 
   <section>
-    <h2>Our Values</h2>
-    <div class="values">
-      <div class="value-box">
-        <h3>Transparency</h3>
-        <p>Clear communication about our role and limitations.</p>
-      </div>
-      <div class="value-box">
-        <h3>Accessibility</h3>
-        <p>Making opportunities easier to find for everyone.</p>
-      </div>
-      <div class="value-box">
-        <h3>Responsibility</h3>
-        <p>Encouraging ethical and informed decision-making.</p>
-      </div>
-      <div class="value-box">
-        <h3>Growth</h3>
-        <p>Continuously improving our tools and content.</p>
-      </div>
-    </div>
+    <h2>6. Limitation of Liability</h2>
+    <p>
+      To the fullest extent permitted by law, Career Unified shall not be liable for any direct,
+      indirect, incidental, or consequential damages arising from the use of this platform.
+    </p>
   </section>
 
-  <section class="trust">
-    <h2>Trust & Responsibility</h2>
+  <section>
+    <h2>7. Changes to These Terms</h2>
     <p>
-      CareerUnified operates as a third-party platform. While we strive to keep
-      information accurate and up to date, users are encouraged to verify
-      details directly with employers, institutions, and providers.
+      We reserve the right to update or modify these Terms & Conditions at any time without prior notice.
+      Continued use of the website constitutes acceptance of the revised terms.
     </p>
+  </section>
+
+  <section>
+    <h2>8. Contact</h2>
     <p>
-      We are committed to ethical operation, data responsibility, and
-      compliance with applicable South African regulations, including
-      POPIA principles.
+      If you have questions regarding these Terms & Conditions, please contact us through the official
+      Career Unified communication channels.
     </p>
   </section>
 
@@ -291,17 +243,21 @@ footer a:hover {
 
 <!-- FOOTER -->
 <footer>
-  <p>© 2026 CareerUnified. All rights reserved.</p>
+  <p>
+    © 2026 Career Unified. All rights reserved.
+  </p>
   <p>
     <a href="index.html">Home</a> |
     <a href="about-us.html">About Us</a> |
-    <a href="terms.html">Terms</a> |
-    <a href="privacy.html">Privacy</a> |
+    <a href="privacy.html">Privacy Policy</a> |
+    <a href="terms.html">Terms & Conditions</a> |
     <a href="contact-us.html">Contact Us</a>
   </p>
 </footer>
 
 </body>
 </html>
+
+
 
 
