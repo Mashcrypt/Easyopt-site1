@@ -7,16 +7,8 @@
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-<!-- EmailJS SDK v4 -->
-<script type="module">
-  import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
-
-  // Initialize EmailJS
-  emailjs.init("u082oiEYxXgiBHK07");
-
-  // Expose emailjs to window so we can use it in form handler
-  window.emailjs = emailjs;
-</script>
+<!-- EmailJS SDK v4 (classic, works in all browsers) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <style>
 /* =====================================
@@ -174,55 +166,57 @@ footer a:hover { text-decoration: underline; }
 </footer>
 
 <!-- ===============================
-     EMAILJS CONTACT FORM SCRIPT v4
+     EMAILJS CONTACT FORM SCRIPT v4 (classic)
 ================================ -->
-<script type="module">
-import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+<script>
+  // Initialize EmailJS
+  emailjs.init("u082oiEYxXgiBHK07");
 
-document.getElementById("contact-form").addEventListener("submit", function(e) {
-  e.preventDefault();
+  document.getElementById("contact-form").addEventListener("submit", function(e){
+    e.preventDefault();
 
-  const formData = {
+    const formData = {
       name: this.name.value,
       email: this.email.value,
       reason: this.reason.value,
       message: this.message.value,
       date: new Date().toLocaleString()
-  };
+    };
 
-  console.log("Sending emails with data:", formData);
+    console.log("Sending emails with data:", formData);
 
-  // Send main contact email
-  emailjs.send("service_1g83g1d", "template_vuptbkx", {
+    // Send main email to team
+    emailjs.send("service_1g83g1d", "template_vuptbkx", {
       from_name: formData.name,
       from_email: formData.email,
       reason: formData.reason,
       message: formData.message,
       date: formData.date
-  })
-  .then(() => {
+    })
+    .then(() => {
       // Send auto-reply to user
       return emailjs.send("service_1g83g1d", "template_4agu3xs", {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message
+        from_name: formData.name,
+        from_email: formData.email,
+        message: formData.message
       });
-  })
-  .then(() => {
+    })
+    .then(() => {
       console.log("Both emails sent successfully!");
       alert("Your message has been sent! A confirmation email has been sent to you as well.");
       this.reset();
-  })
-  .catch((error) => {
+    })
+    .catch((error) => {
       console.error("EmailJS error:", error);
       alert("Oops! Something went wrong. Please try again later.");
+    });
   });
-
-});
 </script>
 
 </body>
 </html>
+
+
 
 
 
