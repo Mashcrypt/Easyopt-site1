@@ -6,8 +6,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-<!-- ✅ CORRECT & CURRENT EMAILJS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.10.0/dist/email.min.js"></script>
+<!-- ✅ OFFICIAL EMAILJS CDN (NOT jsDelivr) -->
+<script src="https://unpkg.com/@emailjs/browser@4/dist/email.min.js"></script>
 
 <style>
 body {
@@ -16,21 +16,21 @@ body {
   padding: 40px;
 }
 form {
-  max-width: 500px;
-  background: #fff;
+  max-width: 520px;
+  background: #ffffff;
   padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 input, select, textarea, button {
   width: 100%;
-  margin-bottom: 14px;
   padding: 12px;
+  margin-bottom: 14px;
   font-size: 14px;
 }
 button {
   background: #2563eb;
-  color: #fff;
+  color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -46,58 +46,70 @@ button:hover { background: #1d4ed8; }
 <form id="contact-form">
   <input type="text" name="from_name" placeholder="Your Name" required>
   <input type="email" name="from_email" placeholder="Your Email" required>
+
   <select name="reason" required>
     <option value="">Reason</option>
     <option>Feedback</option>
     <option>Question</option>
     <option>Support</option>
   </select>
+
   <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+
   <button type="submit">Send Message</button>
 </form>
 
 <script>
-/* ===============================
-   EMAILJS – FINAL VERIFIED SETUP
-================================ */
+/* ======================================
+   EMAILJS – SAFE INITIALIZATION
+====================================== */
 
-// 1️⃣ INIT WITH **CORRECT PUBLIC KEY**
+// 🚨 HARD STOP if EmailJS did not load
+if (typeof emailjs === "undefined") {
+  alert("Email service failed to load. Check your internet or ad-blocker.");
+  throw new Error("EmailJS not loaded");
+}
+
+// ✅ INIT WITH VERIFIED PUBLIC KEY
 emailjs.init("ZdXt4LrBaHzJDfotS");
 
-// 2️⃣ FORM SUBMIT
-document.getElementById("contact-form").addEventListener("submit", function(e) {
+console.log("EmailJS loaded successfully");
+
+// FORM HANDLER
+document.getElementById("contact-form").addEventListener("submit", function (e) {
   e.preventDefault();
 
   const params = {
-    from_name: this.from_name.value,
-    from_email: this.from_email.value,
+    from_name: this.from_name.value.trim(),
+    from_email: this.from_email.value.trim(),
     reason: this.reason.value,
-    message: this.message.value,
+    message: this.message.value.trim(),
     date: new Date().toLocaleString()
   };
 
-  console.log("Sending EmailJS data:", params);
+  console.log("Sending data:", params);
 
-  // 3️⃣ SEND EMAIL
   emailjs.send(
-    "service_1g83g1d",       // ✅ service ID
-    "template_vuptbkx",      // ✅ main contact template
+    "service_1g83g1d",     // ✅ VERIFIED SERVICE
+    "template_vuptbkx",    // ✅ VERIFIED TEMPLATE
     params
   )
-  .then(function(response) {
-    console.log("SUCCESS:", response);
+  .then(function (res) {
+    console.log("SUCCESS", res);
     alert("Message sent successfully!");
     document.getElementById("contact-form").reset();
   })
-  .catch(function(error) {
-    console.error("EMAILJS ERROR:", error);
-    alert("Failed to send message. Check console.");
+  .catch(function (err) {
+    console.error("EMAILJS ERROR", err);
+    alert("Send failed. Open console.");
   });
 });
 </script>
 
 </body>
 </html>
+
+
 
 
 
