@@ -125,5 +125,26 @@
   <p>Apply early and check opening/closing dates for applications.</p>
 </footer>
 
+<script type="module">
+import { sanityClient } from './js/sanityClient.js';
+
+const list = document.getElementById('universityList');
+
+sanityClient.fetch(`*[_type=="university"] | order(deadline asc)`).then(data => {
+  list.innerHTML = '';
+  data.forEach(u => {
+    list.innerHTML += `
+      <div class="card">
+        <h3>${u.name}</h3>
+        <p><strong>Deadline:</strong> ${u.deadline || 'Open'}</p>
+        <a href="${u.applicationLink}" target="_blank">Apply Now</a>
+      </div>
+    `;
+  });
+});
+</script>
+
+  
 </body>
 </html>
+
