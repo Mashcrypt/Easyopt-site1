@@ -96,7 +96,29 @@ if(tips.length === 0){
 }
 </script>
 
+<script type="module">
+import { sanityClient } from './js/sanityClient.js';
+
+const list = document.getElementById('cvTipsList');
+
+sanityClient.fetch(`*[_type=="cvTip"] | order(category asc)`).then(tips => {
+  list.innerHTML = '';
+  tips.forEach(tip => {
+    list.innerHTML += `
+      <div class="card">
+        <h3>${tip.title}</h3>
+        <small>${tip.category}</small>
+        <p>${tip.content}</p>
+      </div>
+    `;
+  });
+});
+</script>
+<div id="cvTipsList"></div>
+
+  
 </body>
 </html>
+
 
 
