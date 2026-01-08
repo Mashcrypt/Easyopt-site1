@@ -7,9 +7,7 @@
 <link rel="stylesheet" href="css/style.css">
 
 <style>
-/* ===============================
-   GLOBAL LAYOUT CONSISTENCY FIX
-================================ */
+/* Global Layout */
 header { text-align: center; }
 header h1 { margin-bottom: 6px; }
 header p { margin-top: 0; color: #e5e7eb; }
@@ -17,14 +15,12 @@ nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 nav a { padding: 10px 14px; }
 footer { text-align: center; }
 
-/* ===============================
-   JOBS PAGE – LOCKED DESIGN
-================================ */
+/* Jobs Layout */
 .jobs-container { display: flex; gap: 20px; max-width: 1200px; margin: 20px auto; }
 .jobs-left { flex: 1; }
 .jobs-preview { flex: 1; background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); min-height: 420px; }
 
-/* SEARCH & FILTERS */
+/* Search & Filter */
 .search-filter-container { display: flex; gap: 10px; margin-bottom: 15px; }
 .search-filter-container input,
 .search-filter-container select,
@@ -32,10 +28,8 @@ footer { text-align: center; }
 .search-filter-container button { background: #1e3a8a; color: white; font-weight: 600; cursor: pointer; border: none; }
 .search-filter-container button:hover { background: #162c6f; }
 
-/* JOB LIST */
+/* Job Cards */
 .jobs-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-
-/* JOB CARD */
 .job-card { background: #fff; border-radius: 10px; padding: 12px 14px; box-shadow: 0 3px 8px rgba(0,0,0,0.1); cursor: pointer; transition: 0.25s ease; }
 .job-card:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
 .job-card.selected { border-left: 4px solid #1e3a8a; }
@@ -44,12 +38,12 @@ footer { text-align: center; }
 .job-card .meta { font-size: 12.5px; color: #4b5563; margin-top: 2px; }
 .job-card .salary { margin-top: 6px; font-size: 13.5px; font-weight: 700; color: #15803d; font-family: "Inter", "Segoe UI", system-ui, sans-serif; letter-spacing: 0.2px; }
 
-/* PREVIEW */
+/* Preview */
 .fade-in { animation: fadeIn 0.35s ease; }
 @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
 .apply-btn { display: inline-block; margin-top: 15px; background: #16a34a; color: white; padding: 8px 14px; border-radius: 6px; font-weight: 600; text-decoration: none; }
 
-/* SCROLL BUTTONS */
+/* Scroll Buttons */
 .scroll-btn { position: fixed; right: 20px; padding: 10px 14px; border-radius: 50%; border: none; background: #1e3a8a; color: white; cursor: pointer; display: none; z-index: 999; }
 #scrollUp { bottom: 80px; }
 #scrollDown { bottom: 30px; }
@@ -74,7 +68,6 @@ footer { text-align: center; }
 </nav>
 
 <main class="jobs-container">
-
   <div class="jobs-left">
     <div class="search-filter-container">
       <input type="text" id="jobSearch" placeholder="Search job title, company, keyword">
@@ -86,14 +79,11 @@ footer { text-align: center; }
       </select>
       <button id="sortBtn">Sort by Closing Date</button>
     </div>
-
     <ul class="jobs-list" id="jobList"></ul>
   </div>
-
   <div class="jobs-preview" id="jobPreview">
     <p>Select a job to view details</p>
   </div>
-
 </main>
 
 <footer>
@@ -197,10 +187,9 @@ searchInput.addEventListener('input', renderJobs);
 categoryFilter.addEventListener('change', renderJobs);
 sortBtn.addEventListener('click', renderJobs);
 
-/* SCROLL */
+/* Scroll Buttons */
 const scrollUp = document.getElementById('scrollUp');
 const scrollDown = document.getElementById('scrollDown');
-
 window.addEventListener('scroll', () => {
   const show = window.scrollY > 300;
   scrollUp.style.display = show ? 'block' : 'none';
@@ -209,12 +198,14 @@ window.addEventListener('scroll', () => {
 scrollUp.onclick = () => window.scrollTo({top:0,behavior:'smooth'});
 scrollDown.onclick = () => window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
 
-// Fetch jobs on load
+// Initial fetch
 fetchJobs();
 </script>
 
 </body>
 </html>
+
+
 
 
 
