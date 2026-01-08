@@ -1,18 +1,27 @@
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
-import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './schemaTypes'
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
+import { visionTool } from '@sanity/vision'
+import { schemaTypes } from './schemaTypes'
 
 export default defineConfig({
   name: 'default',
-  title: 'Careerunified',
+  title: 'CareerUnified',
 
   projectId: 'qjg5raj1',
   dataset: 'production',
 
-  plugins: [structureTool(), visionTool()],
+  plugins: [
+    structureTool(),
+    visionTool()
+  ],
 
   schema: {
     types: schemaTypes,
   },
+
+  // 🔥 CRITICAL FOR NETLIFY
+  build: {
+    output: 'dist'
+  }
 })
+
