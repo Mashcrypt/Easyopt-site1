@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CV Generator</title>
+<title>CV Generator – Career Unified</title>
 
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/cv-generator.css">
@@ -38,34 +38,47 @@
   </div>
 
   <div class="preview-card">
-    <div id="cvPreview"></div>
+    <div id="cvPreview"><p>CV preview will appear here</p></div>
   </div>
 </main>
 
 <section style="max-width:1000px;margin:40px auto;">
   <h2>CV Tips</h2>
-  <div id="cvTipsContainer"></div>
+  <div id="cvTipsContainer"><p>Loading CV tips...</p></div>
 </section>
 
-<script>
+<script type="module">
+import { sanityClient } from './js/sanityClient.js';
+
+// ----------------------------
+// CV Preview & PDF Generation
+// ----------------------------
 const preview = document.getElementById('cvPreview');
 
 function generateCV(){
+  const fullName = document.getElementById('fullName').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const summary = document.getElementById('summary').value;
+  const education = document.getElementById('education').value;
+  const experience = document.getElementById('experience').value;
+  const skills = document.getElementById('skills').value;
+
   preview.innerHTML = `
-    <h1>${fullName.value}</h1>
-    <p>${email.value} | ${phone.value}</p>
+    <h1>${fullName}</h1>
+    <p>${email} | ${phone}</p>
 
     <h3>Profile</h3>
-    <p style="white-space:pre-line;">${summary.value}</p>
+    <p style="white-space:pre-line;">${summary}</p>
 
     <h3>Education</h3>
-    <p style="white-space:pre-line;">${education.value}</p>
+    <p style="white-space:pre-line;">${education}</p>
 
     <h3>Experience</h3>
-    <p style="white-space:pre-line;">${experience.value}</p>
+    <p style="white-space:pre-line;">${experience}</p>
 
     <h3>Skills</h3>
-    <p style="white-space:pre-line;">${skills.value}</p>
+    <p style="white-space:pre-line;">${skills}</p>
   `;
 }
 
@@ -73,30 +86,51 @@ function downloadPDF(){
   html2pdf().from(preview).save("My_CV.pdf");
 }
 
-/* LOAD CV TIPS */
-const tips = JSON.parse(localStorage.getItem('cvTips')) || [];
+// ----------------------------
+// Load CV Tips from Sanity
+// ----------------------------
 const container = document.getElementById('cvTipsContainer');
 
-if(tips.length === 0){
-  container.innerHTML = "<p>No CV tips added yet.</p>";
-} else {
-  tips.forEach(tip=>{
-    const div = document.createElement('div');
-    div.style.background="#fff";
-    div.style.padding="15px";
-    div.style.marginBottom="10px";
-    div.style.borderRadius="8px";
+async function fetchCVTips() {
+  try {
+    const tips = await sanityClient.fetch(`*[_type=="cvTip"] | order(title asc){_id,title,description,category}`);
+    container.innerHTML = '';
 
-    div.innerHTML = `
-      <strong>${tip.title}</strong>
-      <p style="white-space:pre-line;">${tip.content}</p>
-    `;
-    container.appendChild(div);
-  });
+    if(!tips.length){
+      container.innerHTML = "<p>No CV tips available.</p>";
+      return;
+    }
+
+    tips.forEach(tip => {
+      const div = document.createElement('div');
+      div.style.background = "#fff";
+      div.style.padding = "15px";
+      div.style.marginBottom = "10px";
+      div.style.borderRadius = "8px";
+
+      div.innerHTML = `
+        <strong>${tip.title} (${tip.category})</strong>
+        <p style="white-space:pre-line;">${tip.description}</p>
+      `;
+      container.appendChild(div);
+    });
+  } catch(err){
+    container.innerHTML = "<p>Failed to load CV tips.</p>";
+    console.error("Sanity fetch error:", err);
+  }
 }
+
+// Initial fetch
+fetchCVTips();
 </script>
+
+<footer>
+  <p>© 2026 Career Unified</p>
+</footer>
 
 </body>
 </html>
+
+
 
 
