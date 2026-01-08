@@ -1,7 +1,6 @@
 // js/sanityClient.js
 // Browser-ready Sanity client for Career Unified
 
-// Create a global sanityClient object
 window.sanityClient = window.sanityClient || {
   fetch: async function(query) {
     const projectId = 'qjg5raj1';
