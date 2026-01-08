@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Varsity Applications – Career Unified</title>
+<title>Varsity – Career Unified</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/varsity.css">
 </head>
@@ -21,88 +21,70 @@
 </nav>
 
 <main>
-  <p>Below is a list of recognized public universities in South Africa. Application status updates automatically based on deadlines.</p>
-
   <input type="text" id="searchInput" placeholder="Search universities..." />
   <button id="sortDeadlineBtn">Sort by Earliest Deadline</button>
-
-  <ul class="varsity-cards" id="varsityList"></ul>
+  <ul id="varsityList"></ul>
 </main>
 
 <footer>
-  <p>Apply early and check opening/closing dates for applications.</p>
+  <p>Apply early and check university application deadlines.</p>
 </footer>
 
-<script type="module">
-import { sanityClient } from './js/sanityClient.js';
-
+<script src="js/sanityClient.js"></script>
+<script>
 const varsityList = document.getElementById('varsityList');
 const searchInput = document.getElementById('searchInput');
-const sortDeadlineBtn = document.getElementById('sortDeadlineBtn');
+const sortBtn = document.getElementById('sortDeadlineBtn');
 let universities = [];
 
-// --- Fetch universities from Sanity ---
 async function fetchUniversities() {
-  try {
-    const query = `*[_type=="university"] | order(deadline asc){
-      _id,
-      name,
-      link,
-      deadline
-    }`;
-    universities = await sanityClient.fetch(query);
-    renderFilteredList();
-  } catch(err) {
-    varsityList.innerHTML = '<li>Failed to load universities from Sanity.</li>';
-    console.error('Sanity fetch error:', err);
-  }
+  universities = await window.sanityClient.fetch(`*[_type=="university"] | order(deadline asc){
+    name,
+    link,
+    deadline
+  }`);
+  renderList();
 }
 
-// --- Render filtered list ---
-function renderFilteredList() {
+function renderList() {
   const query = searchInput.value.toLowerCase();
   varsityList.innerHTML = '';
-
-  const filtered = universities.filter(uni => uni.name.toLowerCase().includes(query));
-
-  if (!filtered.length) {
+  const filtered = universities.filter(u=>u.name.toLowerCase().includes(query));
+  if(!filtered.length){
     varsityList.innerHTML = "<li>No universities match your search.</li>";
     return;
   }
-
   const today = new Date();
-
-  filtered.forEach(uni => {
+  filtered.forEach(uni=>{
     const deadlineDate = new Date(uni.deadline);
     const isOpen = deadlineDate >= today;
-    const diffDays = Math.ceil((deadlineDate - today)/(1000*60*60*24));
+    const diffDays = Math.ceil((deadlineDate-today)/(1000*60*60*24));
     const isUrgent = diffDays <= 7 && isOpen;
 
     const li = document.createElement('li');
-    li.className = "varsity-card";
+    li.className="varsity-card";
     li.innerHTML = `
       <a href="${uni.link}" target="_blank">${uni.name}</a>
       <small>Deadline: ${uni.deadline}</small>
-      <span class="status ${isOpen ? 'open' : 'closed'}">${isOpen ? 'Open' : 'Closed'}</span>
+      <span class="status ${isOpen?'open':'closed'}">${isOpen?'Open':'Closed'}</span>
       ${isUrgent ? '<span class="urgent">Urgent!</span>' : ''}
     `;
     varsityList.appendChild(li);
   });
 }
 
-// --- Event listeners ---
-searchInput.addEventListener('input', renderFilteredList);
-sortDeadlineBtn.addEventListener('click', () => {
-  universities.sort((a,b) => new Date(a.deadline) - new Date(b.deadline));
-  renderFilteredList();
+searchInput.addEventListener('input', renderList);
+sortBtn.addEventListener('click', ()=>{
+  universities.sort((a,b)=> new Date(a.deadline)-new Date(b.deadline));
+  renderList();
 });
 
-// Initial fetch
 fetchUniversities();
 </script>
-
 </body>
 </html>
+
+
 
 
 
