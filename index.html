@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Easy Opt – Your Career, Your Future</title>
+<title>Career Unified – Your Career, Your Future</title>
 
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
 
 <!-- NAVIGATION -->
 <nav class="main-nav">
-  <a href="index.html" class="logo">Easy Opt</a>
+  <a href="index.html" class="logo">Career Unified</a>
   <div class="nav-links">
     <a href="jobs.html">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
@@ -25,7 +25,7 @@
 
 <!-- HERO -->
 <header class="hero">
-  <h1>Easy Opt</h1>
+  <h1>Career Unified</h1>
   <p class="slogan">One click from your dream</p>
 
   <form class="hero-search" onsubmit="performSearch(); return false;">
@@ -63,13 +63,14 @@
 <!-- COOKIE NOTICE -->
 <div id="cookieNotice" class="cookie-notice">
   <p>
-    Easy Opt uses browser storage (cookies & localStorage) to improve your experience,
+    Career Unified uses browser storage (cookies & localStorage) to improve your experience,
     remember preferences, and analyse site usage.
     By continuing to use this site, you agree to this.
     <a href="privacy.html">Learn more</a>
   </p>
   <button id="acceptCookies">Accept</button>
 </div>
+
 <script>
 (function () {
   const notice = document.getElementById('cookieNotice');
@@ -86,7 +87,6 @@
 })();
 </script>
 
-
 <!-- FOOTER -->
 <footer class="main-footer">
   <div class="footer-links">
@@ -95,44 +95,54 @@
     <a href="terms.html">Terms & Conditions</a>
     <a href="contact-us.html">Contact Us</a>
   </div>
-  <p>© 2025 Easy Opt. All rights reserved.</p>
+  <p>© 2026 Career Unified. All rights reserved.</p>
 </footer>
 
 <!-- SCROLL BUTTONS -->
 <button id="scrollUp" class="scroll-btn">↑</button>
 <button id="scrollDown" class="scroll-btn">↓</button>
 
+<!-- SANITY CLIENT -->
+<script src="js/sanityClient.js"></script>
+
 <script>
-// ================= JOBS =================
-let jobs = JSON.parse(localStorage.getItem('jobs')) || [];
-document.getElementById('statJobs').innerText = jobs.length + '+';
-
+// ================= RECENT JOBS =================
 const homeJobList = document.getElementById('homeJobList');
+const statJobs = document.getElementById('statJobs');
 
-function renderRecentJobs() {
-  homeJobList.innerHTML = '';
+async function renderRecentJobs() {
+  let jobs = await window.sanityClient.fetch(`*[_type=="job"] | order(posted desc){
+    title,
+    company,
+    location,
+    category,
+    posted,
+    deadline
+  }`);
+
+  statJobs.innerText = jobs.length + '+';
+
   const today = new Date();
 
-  jobs
-    .sort((a,b)=> new Date(b.posted) - new Date(a.posted))
-    .slice(0,6)
-    .forEach(job => {
-      const deadlineDate = new Date(job.deadline);
-      const isUrgent = (deadlineDate - today)/(1000*60*60*24) <= 7;
+  homeJobList.innerHTML = '';
+  jobs.slice(0, 6).forEach(job => {
+    const deadlineDate = new Date(job.deadline);
+    const isUrgent = (deadlineDate - today)/(1000*60*60*24) <= 7;
 
-      const card = document.createElement('div');
-      card.className='job-card';
-      card.innerHTML=`
-        <h3>${job.title} <span class="badge">${job.category}</span></h3>
-        <p class="company">${job.company || 'Confidential'}</p>
-        <p>${job.location}</p>
-        <p class="meta">Posted: ${job.posted} • Closing: ${job.deadline}
-        ${isUrgent ? '<span class="urgent">Urgent</span>' : ''}</p>
-        <a href="jobs.html" class="apply-link">View & Apply</a>
-      `;
-      homeJobList.appendChild(card);
-    });
+    const card = document.createElement('div');
+    card.className='job-card';
+    card.innerHTML=`
+      <h3>${job.title} <span class="badge">${job.category}</span></h3>
+      <p class="company">${job.company || 'Confidential'}</p>
+      <p>${job.location}</p>
+      <p class="meta">Posted: ${job.posted} • Closing: ${job.deadline}
+      ${isUrgent ? '<span class="urgent">Urgent</span>' : ''}</p>
+      <a href="jobs.html" class="apply-link">View & Apply</a>
+    `;
+    homeJobList.appendChild(card);
+  });
 }
+
 renderRecentJobs();
 
 // ================= SEARCH =================
@@ -156,4 +166,6 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 
 </body>
 </html>
+
+
 
