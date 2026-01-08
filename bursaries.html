@@ -5,42 +5,125 @@
 <title>Bursaries – Career Unified</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/bursaries.css">
+<style>
+/* =============================== */
+/* Bursaries Page Styles           */
+/* =============================== */
+.bursaries-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 30px auto;
+  gap: 20px;
+}
+.bursaries-left {
+  flex: 1;
+}
+.bursaries-preview {
+  flex: 1;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  min-height: 420px;
+}
+.bursary-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: 0.25s ease;
+  margin-bottom: 10px;
+}
+.bursary-card:hover {
+  background-color: #d0e7ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+.bursary-card.selected {
+  border-left: 4px solid #1e3a8a;
+}
+.bursary-card strong { font-size: 15px; }
+.bursary-card p { margin: 4px 0; color: #111827; }
+.read-more { color: #1e3a8a; cursor: pointer; font-weight: 600; }
+
+/* Search Filter */
+.filter { display: flex; flex-direction: column; margin-bottom: 15px; }
+.filter label { margin-bottom: 4px; font-weight: 600; }
+.filter select { padding: 8px 10px; border-radius: 6px; border: 1px solid #ccc; }
+
+/* Fade Animation */
+.fade-in { animation: fadeIn 0.35s ease; }
+@keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+/* Apply link */
+.bursaries-preview a { display:inline-block; margin-top:15px; background:#16a34a; color:white; padding:8px 14px; border-radius:6px; text-decoration:none; font-weight:600; }
+
+/* Scroll Buttons */
+.scroll-btn { position: fixed; right: 20px; padding: 10px 14px; border-radius: 50%; border: none; background: #1e3a8a; color: white; cursor: pointer; display: none; z-index: 999; }
+#scrollUp { bottom: 80px; }
+#scrollDown { bottom: 30px; }
+
+@media (max-width: 900px) { .bursaries-container { flex-direction: column; } }
+</style>
 </head>
 <body>
 
-<header>
-  <h1>Available Bursaries</h1>
-</header>
-
-<nav>
-  <a href="index.html">Home</a>
-  <a href="jobs.html">Jobs</a>
-  <a href="bursaries.html" class="active">Bursaries</a>
-  <a href="varsity.html">Varsity</a>
-  <a href="cv-generator.html">Generate CV</a>
+<!-- NAVIGATION -->
+<nav class="main-nav">
+  <a href="index.html" class="logo">Career Unified</a>
+  <div class="nav-links">
+    <a href="jobs.html">Jobs</a>
+    <a href="bursaries.html" class="active">Bursaries</a>
+    <a href="varsity.html">Varsity</a>
+    <a href="cv-generator.html">Generate CV</a>
+  </div>
 </nav>
 
-<main>
-  <p>Filter bursaries by faculty or category and check deadlines.</p>
-  <div class="filter">
-    <label for="facultyFilter">Select Faculty/Category: </label>
-    <select id="facultyFilter">
-      <option value="All">All Bursaries</option>
-    </select>
-  </div>
+<!-- HEADER -->
+<header>
+  <h1>Available Bursaries</h1>
+  <p style="color:white;">Find bursaries and apply early</p>
+</header>
 
-  <ul id="bursaryList"></ul>
+<!-- MAIN -->
+<main class="bursaries-container">
+  <div class="bursaries-left">
+    <div class="filter">
+      <label for="facultyFilter">Select Faculty/Category:</label>
+      <select id="facultyFilter">
+        <option value="All">All Bursaries</option>
+      </select>
+    </div>
+    <ul id="bursaryList"></ul>
+  </div>
+  <div class="bursaries-preview" id="bursaryPreview">
+    <p>Select a bursary to view details</p>
+  </div>
 </main>
 
-<footer>
-  <p>Apply early and check bursary deadlines.</p>
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-links">
+    <a href="about-us.html">About Us</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms & Conditions</a>
+    <a href="contact-us.html">Contact Us</a>
+  </div>
+  <p>© 2026 Career Unified. All rights reserved.</p>
 </footer>
+
+<!-- SCROLL BUTTONS -->
+<button id="scrollUp" class="scroll-btn">↑</button>
+<button id="scrollDown" class="scroll-btn">↓</button>
 
 <script src="js/sanityClient.js"></script>
 <script>
 const bursaryList = document.getElementById('bursaryList');
 const facultyFilter = document.getElementById('facultyFilter');
+const bursaryPreview = document.getElementById('bursaryPreview');
 let bursaries = [];
+let selectedIndex = null;
 
 async function fetchBursaries() {
   bursaries = await window.sanityClient.fetch(`*[_type=="bursary"] | order(deadline asc){
@@ -53,6 +136,7 @@ async function fetchBursaries() {
     link
   }`);
 
+  // populate faculties
   const faculties = Array.from(new Set(bursaries.map(b=>b.faculty))).sort();
   faculties.forEach(f => {
     const opt = document.createElement('option');
@@ -69,6 +153,7 @@ function renderBursaries(filter='All') {
   const filtered = filter==='All'?bursaries:bursaries.filter(b=>b.faculty===filter);
   if(!filtered.length){
     bursaryList.innerHTML = '<li>No bursaries found.</li>';
+    bursaryPreview.innerHTML = '<p>Select a bursary to view details</p>';
     return;
   }
 
@@ -81,16 +166,34 @@ function renderBursaries(filter='All') {
 
     const li = document.createElement('li');
     li.className='bursary-card';
+    if(index===selectedIndex) li.classList.add('selected');
     li.innerHTML=`
       <strong>${b.name}</strong> (${b.faculty})<br>
       Provider: ${b.provider}<br>
       Deadline: ${b.deadline} ${isUrgent ? '<span class="urgent">Urgent</span>' : ''}<br>
       <p id="desc-${index}">${shortDesc}</p>
-      ${readMore}<br>
-      <a href="${b.link}" target="_blank">Apply Here</a>
+      ${readMore}
     `;
+    li.onclick = () => {
+      selectedIndex = index;
+      showPreview(b);
+      renderBursaries(facultyFilter.value);
+    };
     bursaryList.appendChild(li);
   });
+}
+
+function showPreview(b){
+  bursaryPreview.innerHTML = `
+    <div class="fade-in">
+      <h2>${b.name}</h2>
+      <p><strong>Faculty:</strong> ${b.faculty}</p>
+      <p><strong>Provider:</strong> ${b.provider}</p>
+      <p><strong>Deadline:</strong> ${b.deadline}</p>
+      <div style="white-space:pre-line;margin-top:12px;">${b.description}</div>
+      <a href="${b.link}" target="_blank">Apply Now</a>
+    </div>
+  `;
 }
 
 function toggleDesc(index){
@@ -100,11 +203,19 @@ function toggleDesc(index){
 }
 
 facultyFilter.addEventListener('change', e=>renderBursaries(e.target.value));
-
 fetchBursaries();
+
+// ================= SCROLL =================
+const up = document.getElementById('scrollUp');
+const down = document.getElementById('scrollDown');
+window.addEventListener('scroll',()=>{ up.style.display = down.style.display = window.scrollY > 300 ? 'block' : 'none'; });
+up.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
 </script>
 </body>
 </html>
+
+
 
 
 
