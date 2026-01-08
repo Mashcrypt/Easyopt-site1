@@ -1,12 +1,22 @@
-<script type="module">
-import { sanityClient } from './js/sanityClient.js';
+// js/sanityClient.js
+// Browser-ready Sanity client for Career Unified
 
-// Example: fetch jobs
-async function fetchJobs() {
-  const query = `*[_type=="job"] | order(posted desc){title, company, description, location, salary, applyLink, category, posted, deadline}`;
-  const jobs = await sanityClient.fetch(query);
-  console.log(jobs);
-}
-fetchJobs();
-</script>
+// Create a global sanityClient object
+window.sanityClient = window.sanityClient || {
+  fetch: async function(query) {
+    const projectId = 'qjg5raj1';
+    const dataset = 'production';
+    const url = `https://${projectId}.api.sanity.io/v2024-01-01/data/query/${dataset}?query=${encodeURIComponent(query)}`;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return data.result;
+    } catch (err) {
+      console.error('Sanity fetch error:', err);
+      return [];
+    }
+  }
+};
 
