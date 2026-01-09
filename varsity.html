@@ -8,22 +8,55 @@
 <style>
 /* NAVBAR / HEADER SEPARATION */
 .main-nav {
-  border-bottom: 2px solid #d1d5db; /* subtle gray line */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   padding-bottom: 6px;
+  background: #1e3a8a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* HEADER STYLING */
+.main-nav .logo {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.main-nav .nav-links a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 22px;
+  font-weight: 600;
+  padding-bottom: 4px;
+}
+
+.main-nav .nav-links a.active {
+  border-bottom: 3px solid #facc15;
+}
+
+/* HEADER WITH GRADIENT */
 header {
   text-align: center;
-  background: #f9fafb; /* light gray */
-  padding: 30px 15px;
+  padding: 70px 15px 55px;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  color: #fff;
   margin-bottom: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
-header h1 { margin: 0; font-size: 2rem; }
-header p { margin-top: 10px; color: #111827; font-weight: 500; }
+
+header h1 {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+header p {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #e5e7eb;
+}
 
 /* University List */
 #varsityList {
@@ -32,6 +65,7 @@ header p { margin-top: 10px; color: #111827; font-weight: 500; }
   padding: 0;
   list-style: none;
 }
+
 .varsity-card {
   background: #fff;
   border-radius: 10px;
@@ -40,21 +74,25 @@ header p { margin-top: 10px; color: #111827; font-weight: 500; }
   box-shadow: 0 3px 8px rgba(0,0,0,0.08);
   transition: 0.25s ease;
 }
+
 .varsity-card:hover {
-  background: #e0f2fe; /* light blue hover */
+  background: #e0f2fe;
   transform: translateY(-2px);
 }
+
 .varsity-card a {
   font-size: 1.1rem;
   text-decoration: none;
   color: #1e3a8a;
   font-weight: 600;
 }
+
 .varsity-card small {
   display: block;
   color: #374151;
   margin-top: 4px;
 }
+
 .status { font-weight:600; margin-left:8px; }
 .status.open { color:#16a34a; }
 .status.closed { color:#dc2626; }
@@ -65,7 +103,7 @@ header p { margin-top: 10px; color: #111827; font-weight: 500; }
 #sortDeadlineBtn { padding:8px 12px; border-radius:6px; border:none; background:#1e3a8a; color:white; cursor:pointer; font-weight:600; }
 
 /* Footer */
-.main-footer { text-align:center; margin-top:50px; padding:25px 0; background:#f9fafb; color:#374151; }
+.main-footer { text-align:center; margin-top:50px; padding:25px 0; background:#1e3a8a; color:white; }
 
 /* Scroll Buttons */
 .scroll-btn { position: fixed; right: 20px; padding: 10px 14px; border-radius: 50%; border: none; background: #1e3a8a; color: white; cursor: pointer; display: none; z-index: 999; }
@@ -178,6 +216,8 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 </script>
 </body>
 </html>
+
+
 
 
 
