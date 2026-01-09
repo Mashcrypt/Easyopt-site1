@@ -22,27 +22,33 @@ body {
 }
 
 /* ===============================
-   TOP NAV BAR (HOME CONSISTENT)
+   TOP NAV BAR (HOME STYLE)
 ================================ */
-nav {
+.top-nav {
   background: #1e3a8a;
+  padding: 14px 30px;
   display: flex;
-  justify-content: center;
-  gap: 30px;
-  padding: 14px 20px;
+  align-items: center;
+  justify-content: space-between;
 }
 
-nav a {
-  color: white;
+.top-nav .logo {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
   text-decoration: none;
-  font-size: 15px;
+}
+
+.top-nav .nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  margin-left: 22px;
   font-weight: 500;
   padding-bottom: 4px;
 }
 
-nav a:hover,
-nav a.active {
-  border-bottom: 2px solid #f4b400;
+.top-nav .nav-links a:hover {
+  opacity: 0.85;
 }
 
 /* ===============================
@@ -92,7 +98,9 @@ section p {
   font-size: 15px;
 }
 
-/* LISTS */
+/* ===============================
+   LISTS
+================================ */
 ul {
   margin-left: 20px;
   margin-top: 10px;
@@ -109,13 +117,13 @@ footer {
   background: #1e3a8a;
   color: white;
   text-align: center;
-  padding: 20px;
+  padding: 22px;
   margin-top: 50px;
   font-size: 14px;
 }
 
 footer a {
-  color: #f4b400;
+  color: #facc15;
   text-decoration: none;
   margin: 0 10px;
 }
@@ -128,9 +136,13 @@ footer a:hover {
    RESPONSIVE
 ================================ */
 @media (max-width: 768px) {
-  nav {
-    flex-wrap: wrap;
-    gap: 15px;
+  .top-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nav-links a {
+    margin-left: 14px;
   }
 
   main {
@@ -146,8 +158,9 @@ footer a:hover {
 </head>
 
 <body>
-<!-- NAV BAR -->
-<nav class="main-nav">
+
+<!-- TOP NAV -->
+<nav class="top-nav">
   <a href="index.html" class="logo">Career Unified</a>
   <div class="nav-links">
     <a href="jobs.html">Jobs</a>
@@ -156,6 +169,7 @@ footer a:hover {
     <a href="cv-generator.html">Generate CV</a>
   </div>
 </nav>
+
 <!-- HEADER -->
 <header>
   <h1>Terms & Conditions</h1>
@@ -192,13 +206,13 @@ footer a:hover {
     </p>
     <p>We are not responsible for:</p>
     <ul>
-      <li>The accuracy, completeness, or validity of listings</li>
+      <li>The accuracy or completeness of listings</li>
       <li>Decisions made by employers or institutions</li>
-      <li>Any losses, damages, or disputes arising from applications</li>
+      <li>Losses or disputes arising from applications</li>
       <li>Fraudulent or misleading third-party listings</li>
     </ul>
     <p>
-      Users are strongly encouraged to verify information independently before applying.
+      Users are encouraged to verify information independently before applying.
     </p>
   </section>
 
@@ -208,19 +222,13 @@ footer a:hover {
       By using Career Unified, you acknowledge that all applications and interactions with third parties
       are done at your own discretion and risk.
     </p>
-    <p>
-      You agree to provide accurate information and to use the platform only for lawful purposes.
-    </p>
   </section>
 
   <section>
     <h2>5. No Guarantees</h2>
     <p>
-      Career Unified does not guarantee employment, acceptance into institutions, funding approval,
+      Career Unified does not guarantee employment, acceptance, funding approval,
       or successful outcomes of any application.
-    </p>
-    <p>
-      Our role is to assist with access to information, not to influence decisions.
     </p>
   </section>
 
@@ -235,7 +243,7 @@ footer a:hover {
   <section>
     <h2>7. Changes to These Terms</h2>
     <p>
-      We reserve the right to update or modify these Terms & Conditions at any time without prior notice.
+      We reserve the right to update these Terms & Conditions at any time without prior notice.
       Continued use of the website constitutes acceptance of the revised terms.
     </p>
   </section>
@@ -243,7 +251,7 @@ footer a:hover {
   <section>
     <h2>8. Contact</h2>
     <p>
-      If you have questions regarding these Terms & Conditions, please contact us through the official
+      If you have questions regarding these Terms & Conditions, please contact us via the official
       Career Unified communication channels.
     </p>
   </section>
@@ -264,6 +272,8 @@ footer a:hover {
 
 </body>
 </html>
+
+
 
 
 
