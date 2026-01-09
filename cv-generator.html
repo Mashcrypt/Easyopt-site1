@@ -17,14 +17,13 @@ body {
   color: #111827;
 }
 
-/* ============ NAV BAR (HOME STYLE) ============ */
+/* ============ NAV BAR (NO SEPARATOR LINE) ============ */
 nav {
   background: #1e3a8a;
   padding: 14px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid #facc15;
 }
 
 .nav-brand {
@@ -49,27 +48,29 @@ nav {
 /* ============ HEADER ============ */
 header {
   text-align: center;
-  padding: 35px 15px 25px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 70px 15px 55px;
+  background: #1e3a8a;
 }
 
 header h1 {
-  font-size: 3rem;
+  font-size: 3.4rem;
   margin: 0;
-  color: #1e3a8a;
+  color: #ffffff;
   font-weight: 800;
+  letter-spacing: 0.5px;
 }
 
 header p {
-  margin-top: 8px;
-  font-size: 1.05rem;
-  color: #374151;
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #e5e7eb;
+  font-weight: 500;
 }
 
 /* ============ MAIN LAYOUT ============ */
 main {
   max-width: 1200px;
-  margin: 40px auto 50px;
+  margin: 45px auto 60px;
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
@@ -80,7 +81,7 @@ main {
 .form-card {
   flex: 1 1 420px;
   background: #fff;
-  padding: 25px;
+  padding: 26px;
   border-radius: 14px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
@@ -118,7 +119,7 @@ main {
 .preview-card {
   flex: 1 1 500px;
   background: #fff;
-  padding: 25px;
+  padding: 26px;
   border-radius: 14px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   max-height: 85vh;
@@ -175,7 +176,6 @@ footer p {
 <!-- NAV -->
 <nav>
   <a href="index.html" class="nav-brand">Career Unified</a>
-
   <div class="nav-links">
     <a href="jobs.html">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
@@ -186,7 +186,7 @@ footer p {
 
 <!-- HEADER -->
 <header>
-  <h1>Generate CV</h1>
+  <h1>Generate Cv</h1>
   <p>Build a professional CV and download it instantly</p>
 </header>
 
@@ -231,7 +231,6 @@ footer p {
 </footer>
 
 <script>
-// ===== CV GENERATOR =====
 const preview = document.getElementById('cvPreview');
 
 function generateCV(){
@@ -257,7 +256,6 @@ function downloadPDF(){
   html2pdf().from(preview).save("My_CV.pdf");
 }
 
-// ===== LOAD CV TIPS =====
 const tips = JSON.parse(localStorage.getItem('cvTips')) || [];
 const container = document.getElementById('cvTipsContainer');
 
@@ -277,6 +275,8 @@ if(!tips.length){
 
 </body>
 </html>
+
+
 
 
 
