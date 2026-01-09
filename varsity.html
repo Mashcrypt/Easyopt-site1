@@ -6,13 +6,27 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/varsity.css">
 <style>
-/* NAVBAR / HEADER SEPARATION */
+/* =============================== */
+/* RESET BODY & GLOBAL LAYOUT */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #f5f5f7;
+  color: #111827;
+  overflow-x: hidden;
+}
+
+/* =============================== */
+/* NAVBAR FULL WIDTH */
 .main-nav {
-  padding-bottom: 6px;
-  background: #1e3a8a;
+  padding: 14px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100vw;
+  box-sizing: border-box;
+  background: #1e3a8a;
 }
 
 .main-nav .logo {
@@ -34,14 +48,17 @@
   border-bottom: 3px solid #facc15;
 }
 
-/* HEADER WITH GRADIENT */
+/* =============================== */
+/* HEADER FULL WIDTH WITH GRADIENT */
 header {
   text-align: center;
   padding: 70px 15px 55px;
   background: linear-gradient(90deg, #1e3a8a, #2563eb);
   color: #fff;
-  margin-bottom: 20px;
-  border-radius: 10px;
+  margin: 0;
+  width: 100vw;
+  border-radius: 0;
+  box-sizing: border-box;
 }
 
 header h1 {
@@ -58,6 +75,7 @@ header p {
   color: #e5e7eb;
 }
 
+/* =============================== */
 /* University List */
 #varsityList {
   max-width: 1000px;
@@ -103,12 +121,14 @@ header p {
 #sortDeadlineBtn { padding:8px 12px; border-radius:6px; border:none; background:#1e3a8a; color:white; cursor:pointer; font-weight:600; }
 
 /* Footer */
-.main-footer { text-align:center; margin-top:50px; padding:25px 0; background:#1e3a8a; color:white; }
+.main-footer { text-align:center; margin-top:50px; padding:25px 0; background:#1e3a8a; color:white; width:100vw; box-sizing:border-box; }
 
 /* Scroll Buttons */
 .scroll-btn { position: fixed; right: 20px; padding: 10px 14px; border-radius: 50%; border: none; background: #1e3a8a; color: white; cursor: pointer; display: none; z-index: 999; }
 #scrollUp { bottom: 80px; }
 #scrollDown { bottom: 30px; }
+
+@media (max-width:900px){#searchInput{width:100%;margin-bottom:10px}}
 </style>
 </head>
 <body>
@@ -216,6 +236,8 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 </script>
 </body>
 </html>
+
+
 
 
 
