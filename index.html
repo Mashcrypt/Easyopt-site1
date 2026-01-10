@@ -125,7 +125,7 @@ async function renderRecentJobs() {
   const today = new Date();
 
   homeJobList.innerHTML = '';
-  jobs.slice(0, 6).forEach(job => {
+  jobs.slice(0, 9).forEach(job => {
     const deadlineDate = new Date(job.deadline);
     const isUrgent = (deadlineDate - today)/(1000*60*60*24) <= 7;
 
@@ -166,6 +166,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 
 </body>
 </html>
+
 
 
 
