@@ -13,7 +13,12 @@ export default {
       name: 'applicationLink',
       title: 'Application Link',
       type: 'url',
-      validation: Rule => Rule.required()
+      description: 'Full URL starting with https://',
+      validation: Rule =>
+        Rule.required().uri({
+          allowRelative: false,
+          scheme: ['http', 'https']
+        })
     },
     {
       name: 'deadline',
@@ -28,3 +33,4 @@ export default {
     }
   ]
 }
+
