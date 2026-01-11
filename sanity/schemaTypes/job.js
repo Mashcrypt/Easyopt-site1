@@ -72,28 +72,32 @@ export default {
       type: 'date',
       validation: Rule => Rule.required()
     },
-
-    // ===== NEW FIELDS FOR SPONSORED JOBS =====
+    // ===========================
+    // Sponsored / Premier Fields
+    // ===========================
     {
       name: 'isSponsored',
-      title: 'Sponsored Job',
+      title: 'Is Sponsored?',
       type: 'boolean',
-      description: 'Check to feature this job at the top',
-      initialValue: false
+      description: 'Check if this job should be featured (Sponsored)'
+    },
+    {
+      name: 'isPremier',
+      title: 'Is Premier?',
+      type: 'boolean',
+      description: 'Check if this job is a high-priority premium job'
     },
     {
       name: 'sponsoredUntil',
       title: 'Sponsored Until',
       type: 'date',
-      description: 'Date until which the job remains featured',
-      hidden: ({ document }) => !document?.isSponsored
+      description: 'Date until which the job remains sponsored or premier'
     },
     {
       name: 'badge',
-      title: 'Badge Label',
+      title: 'Badge Text',
       type: 'string',
-      description: 'Optional label to show on the job card (e.g., Featured)',
-      hidden: ({ document }) => !document?.isSponsored
+      description: 'Optional custom badge text (e.g., Featured, Premium)'
     }
   ]
 }
