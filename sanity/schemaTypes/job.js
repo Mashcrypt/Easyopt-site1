@@ -71,6 +71,29 @@ export default {
       title: 'Closing Date',
       type: 'date',
       validation: Rule => Rule.required()
+    },
+
+    // ===== NEW FIELDS FOR SPONSORED JOBS =====
+    {
+      name: 'isSponsored',
+      title: 'Sponsored Job',
+      type: 'boolean',
+      description: 'Check to feature this job at the top',
+      initialValue: false
+    },
+    {
+      name: 'sponsoredUntil',
+      title: 'Sponsored Until',
+      type: 'date',
+      description: 'Date until which the job remains featured',
+      hidden: ({ document }) => !document?.isSponsored
+    },
+    {
+      name: 'badge',
+      title: 'Badge Label',
+      type: 'string',
+      description: 'Optional label to show on the job card (e.g., Featured)',
+      hidden: ({ document }) => !document?.isSponsored
     }
   ]
 }
