@@ -122,28 +122,28 @@
 
 <script>
 /* ===============================
-   SPONSORED / PREMIER HELPERS
+   LISTING TIER HELPERS (FIXED)
 ================================ */
 
-function isActiveSponsored(job) {
+function isPromotionActive(job) {
   if (!job.sponsoredUntil) return true;
   return new Date(job.sponsoredUntil) >= new Date();
 }
 
 function getPriority(job) {
-  if (job.isPremier && isActiveSponsored(job)) return 3;
-  if (job.isSponsored && isActiveSponsored(job)) return 2;
+  if (job.listingTier === 'premier' && isPromotionActive(job)) return 3;
+  if (job.listingTier === 'sponsored' && isPromotionActive(job)) return 2;
   return 1;
 }
 
 function getBadge(job) {
-  if (job.isPremier && isActiveSponsored(job)) return "Premier";
-  if (job.isSponsored && isActiveSponsored(job)) return "Sponsored";
-  return "";
+  if (job.listingTier === 'premier' && isPromotionActive(job)) return 'Premier';
+  if (job.listingTier === 'sponsored' && isPromotionActive(job)) return 'Sponsored';
+  return '';
 }
 
 /* ===============================
-   RECENT JOBS (LOGIC UNCHANGED)
+   RECENT JOBS (LOGIC PRESERVED)
 ================================ */
 
 const homeJobList = document.getElementById('homeJobList');
@@ -157,27 +157,30 @@ async function renderRecentJobs() {
     category,
     posted,
     deadline,
-    isSponsored,
-    isPremier,
+    listingTier,
     sponsoredUntil
   }`);
 
   statJobs.innerText = jobs.length + '+';
 
-  /* 🔥 PRIORITY SORT (ADDED) */
-  jobs.sort((a,b)=> getPriority(b) - getPriority(a));
+  // 🔥 PRIORITY FIRST, THEN RECENT
+  jobs.sort((a, b) => {
+    const tierDiff = getPriority(b) - getPriority(a);
+    if (tierDiff !== 0) return tierDiff;
+    return new Date(b.posted) - new Date(a.posted);
+  });
 
   const today = new Date();
   homeJobList.innerHTML = '';
 
   jobs.slice(0, 9).forEach(job => {
     const deadlineDate = new Date(job.deadline);
-    const isUrgent = (deadlineDate - today)/(1000*60*60*24) <= 7;
+    const isUrgent = (deadlineDate - today) / (1000 * 60 * 60 * 24) <= 7;
     const badge = getBadge(job);
 
     const card = document.createElement('div');
-    card.className='job-card';
-    card.innerHTML=`
+    card.className = 'job-card';
+    card.innerHTML = `
       <h3>
         ${job.title}
         <span class="badge">${job.category}</span>
@@ -218,6 +221,8 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 
 </body>
 </html>
+
+
 
 
 
