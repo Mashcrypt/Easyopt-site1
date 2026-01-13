@@ -2,243 +2,234 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Generate CV – Career Unified</title>
-
-<!-- GOOGLE FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>CV Builder – Career Unified</title>
 
 <link rel="stylesheet" href="css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-/* ======================================================
-   GLOBAL RESET & VARIABLES
-====================================================== */
-:root {
-  --primary:#1e3a8a;
-  --accent:#2563eb;
-  --bg:#f5f5f7;
-  --card:#ffffff;
-  --text:#111827;
-  --muted:#6b7280;
-}
-
-* {
-  box-sizing: border-box;
-}
+/* =====================================================
+   GLOBAL
+===================================================== */
+* { box-sizing: border-box; }
 
 body {
-  margin:0;
-  font-family:'Poppins',sans-serif;
-  background:var(--bg);
-  color:var(--text);
+  margin: 0;
+  font-family: 'Inter', 'Poppins', sans-serif;
+  background: #f4f6fb;
+  color: #111827;
 }
 
-/* ======================================================
-   NAVBAR
-====================================================== */
+/* =====================================================
+   NAV
+===================================================== */
 nav {
-  background:var(--primary);
-  padding:14px 30px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  background: #1e3a8a;
+  padding: 14px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .nav-brand {
-  color:#fff;
-  font-size:1.4rem;
-  font-weight:700;
-  text-decoration:none;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.4rem;
+  text-decoration: none;
 }
 
 .nav-links a {
-  color:#fff;
-  margin-left:22px;
-  text-decoration:none;
-  font-weight:600;
+  color: #fff;
+  margin-left: 22px;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .nav-links a.active {
-  border-bottom:3px solid #facc15;
+  border-bottom: 3px solid #facc15;
 }
 
-/* ======================================================
+/* =====================================================
    HEADER
-====================================================== */
+===================================================== */
 header {
-  background:linear-gradient(90deg,#1e3a8a,#2563eb);
-  color:#fff;
-  padding:80px 15px 55px;
-  text-align:center;
+  background: linear-gradient(90deg,#1e3a8a,#2563eb);
+  color: #fff;
+  padding: 75px 15px 60px;
+  text-align: center;
 }
 
 header h1 {
-  font-size:3.4rem;
-  margin-bottom:10px;
+  font-size: 3.2rem;
+  margin-bottom: 10px;
 }
 
 header p {
-  color:#e5e7eb;
-  font-size:1.2rem;
+  color: #e5e7eb;
+  font-size: 1.15rem;
 }
 
-/* ======================================================
-   TEMPLATE SELECTION
-====================================================== */
-.template-section {
-  max-width:1200px;
-  margin:40px auto;
-  padding:0 15px;
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
+main {
+  max-width: 1400px;
+  margin: 40px auto 70px;
+  padding: 0 16px;
 }
 
-.template-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:22px;
+/* =====================================================
+   TEMPLATE GALLERY
+===================================================== */
+.template-section h2 {
+  font-size: 1.9rem;
+  margin-bottom: 12px;
+  color: #1e3a8a;
+}
+
+.template-scroll {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding-bottom: 14px;
 }
 
 .template-card {
-  background:#fff;
-  border-radius:14px;
-  box-shadow:0 8px 22px rgba(0,0,0,0.08);
-  cursor:pointer;
-  transition:0.3s ease;
-  overflow:hidden;
+  min-width: 260px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: transform .25s ease;
 }
 
 .template-card:hover {
-  transform:translateY(-4px);
+  transform: translateY(-4px);
 }
 
 .template-preview {
-  height:220px;
-  padding:18px;
-  background:#f9fafb;
-  font-size:12px;
+  height: 260px;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 0.75rem;
+  overflow: hidden;
 }
 
 .template-preview h3 {
-  margin:0;
-  font-size:14px;
+  margin: 0;
 }
 
-.template-footer {
-  padding:16px;
-  text-align:center;
-  font-weight:600;
+.template-card button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  background: #1e3a8a;
+  color: #fff;
 }
 
-/* ======================================================
-   BUILDER LAYOUT
-====================================================== */
-.builder {
-  display:none;
-  max-width:1300px;
-  margin:40px auto 70px;
-  padding:0 15px;
-  gap:24px;
+/* =====================================================
+   BUILDER GRID
+===================================================== */
+.builder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  margin-top: 45px;
 }
 
-.builder.active {
-  display:flex;
-  flex-wrap:wrap;
-}
-
-.builder-form,
-.builder-preview {
-  background:#fff;
-  border-radius:16px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.08);
-  padding:26px;
-}
-
+/* =====================================================
+   FORM
+===================================================== */
 .builder-form {
-  flex:1 1 420px;
+  background: #fff;
+  padding: 26px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
-.builder-preview {
-  flex:1 1 520px;
-  max-height:85vh;
-  overflow:auto;
+.builder-form h3 {
+  margin-top: 0;
+  color: #1e3a8a;
 }
 
-/* ======================================================
-   FORM ELEMENTS
-====================================================== */
 .builder-form input,
 .builder-form textarea {
-  width:100%;
-  padding:11px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  margin-bottom:12px;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 11px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
 }
 
 .builder-form textarea {
-  resize:vertical;
+  min-height: 70px;
 }
 
 .builder-form button {
-  padding:11px 18px;
-  border:none;
-  border-radius:8px;
-  font-weight:600;
-  cursor:pointer;
+  padding: 11px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  margin-right: 10px;
 }
 
-.btn-primary {
-  background:var(--primary);
-  color:#fff;
+.btn-primary { background:#1e3a8a; color:#fff; }
+.btn-success { background:#16a34a; color:#fff; }
+
+/* =====================================================
+   PREVIEW
+===================================================== */
+.preview-container {
+  background: #fff;
+  padding: 26px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  max-height: 88vh;
+  overflow-y: auto;
 }
 
-.btn-success {
-  background:#16a34a;
-  color:#fff;
-}
-
-/* ======================================================
+/* =====================================================
    CV THEMES
-====================================================== */
-.cv {
-  font-size:14px;
-  line-height:1.6;
-}
+===================================================== */
+.cv.theme-modern h1 { color:#1e3a8a; }
+.cv.theme-classic h1 { color:#111827; }
+.cv.theme-creative h1 { color:#7c3aed; }
+.cv.theme-executive h1 { color:#065f46; }
+.cv.theme-minimal h1 { color:#374151; }
 
-.cv.modern h1 {
-  color:#1e3a8a;
-}
-
-.cv.classic h1 {
-  font-family:serif;
-}
-
-.cv.minimal h1 {
-  font-weight:500;
-  letter-spacing:1px;
+.cv h1 {
+  margin-bottom: 6px;
 }
 
 .cv h3 {
-  margin-top:18px;
-  color:#2563eb;
+  margin-top: 18px;
 }
 
-/* ======================================================
-   UPLOAD CARD
-====================================================== */
-.upload-card {
-  margin-bottom:20px;
-  padding:18px;
-  background:#f9fafb;
-  border-radius:12px;
+/* =====================================================
+   RECRUITER MATCH
+===================================================== */
+.recruiter-match {
+  background:#fff;
+  margin-top:40px;
+  padding:26px;
+  border-radius:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
 }
 
-/* ======================================================
+.recruiter-match h2 {
+  color:#1e3a8a;
+}
+
+/* =====================================================
    FOOTER
-====================================================== */
+===================================================== */
 footer {
   background:#1e3a8a;
-  color:#fff;
   padding:26px 0;
   text-align:center;
 }
@@ -248,120 +239,164 @@ footer a {
   margin:0 12px;
   text-decoration:none;
 }
+
+footer p {
+  color:#fff;
+}
 </style>
 </head>
 
 <body>
 
-<!-- NAV -->
 <nav>
-  <a href="index.html" class="nav-brand">Career Unified</a>
+  <a class="nav-brand" href="index.html">Career Unified</a>
   <div class="nav-links">
     <a href="jobs.html">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
     <a href="varsity.html">Varsity</a>
-    <a href="cv-generator.html" class="active">Generate CV</a>
+    <a href="cv-generator.html" class="active">CV Builder</a>
   </div>
 </nav>
 
 <header>
-  <h1>Create Your CV</h1>
-  <p>Choose a template and build a professional CV in minutes</p>
+  <h1>Build a Recruiter-Ready CV</h1>
+  <p>Choose a template, customize live, and get matched with employers</p>
 </header>
 
-<!-- TEMPLATE SELECTION -->
+<main>
+
+<!-- ================= TEMPLATE GALLERY ================= -->
 <section class="template-section">
-  <h2>Select a Template</h2>
-  <div class="template-grid">
-    <div class="template-card" onclick="selectTemplate('modern')">
-      <div class="template-preview">
-        <h3>Modern</h3>
-        <p>Clean • Professional</p>
-      </div>
-      <div class="template-footer">Modern</div>
-    </div>
+<h2>Select a CV Template</h2>
 
-    <div class="template-card" onclick="selectTemplate('classic')">
-      <div class="template-preview">
-        <h3>Classic</h3>
-        <p>Traditional • Formal</p>
-      </div>
-      <div class="template-footer">Classic</div>
-    </div>
+<div class="template-scroll">
 
-    <div class="template-card" onclick="selectTemplate('minimal')">
-      <div class="template-preview">
-        <h3>Minimal</h3>
-        <p>Simple • Elegant</p>
-      </div>
-      <div class="template-footer">Minimal</div>
-    </div>
-  </div>
+<div class="template-card">
+<div class="template-preview theme-modern">
+<h3>Thabo Mokoena</h3>
+<p>Software Developer</p>
+<p>React • Node • APIs</p>
+</div>
+<button onclick="selectTemplate('theme-modern')">Use this CV Template</button>
+</div>
+
+<div class="template-card">
+<div class="template-preview theme-classic">
+<h3>Sarah Williams</h3>
+<p>Accounting Graduate</p>
+<p>Audit • Tax • IFRS</p>
+</div>
+<button onclick="selectTemplate('theme-classic')">Use this CV Template</button>
+</div>
+
+<div class="template-card">
+<div class="template-preview theme-creative">
+<h3>Neo Dlamini</h3>
+<p>UX Designer</p>
+<p>Figma • Research</p>
+</div>
+<button onclick="selectTemplate('theme-creative')">Use this CV Template</button>
+</div>
+
+<div class="template-card">
+<div class="template-preview theme-executive">
+<h3>Michael Roberts</h3>
+<p>Operations Manager</p>
+<p>Strategy • Leadership</p>
+</div>
+<button onclick="selectTemplate('theme-executive')">Use this CV Template</button>
+</div>
+
+<div class="template-card">
+<div class="template-preview theme-minimal">
+<h3>Aisha Khan</h3>
+<p>Data Analyst</p>
+<p>SQL • Python • BI</p>
+</div>
+<button onclick="selectTemplate('theme-minimal')">Use this CV Template</button>
+</div>
+
+</div>
 </section>
 
-<!-- BUILDER -->
-<section class="builder" id="builder">
-  <div class="builder-form">
-    <div class="upload-card">
-      <strong>Upload Existing CV</strong><br>
-      <input type="file" id="cvFile">
-      <p id="uploadStatus"></p>
-    </div>
+<!-- ================= BUILDER ================= -->
+<div class="builder-grid">
 
-    <input id="fullName" placeholder="Full Name" oninput="renderCV()">
-    <input id="email" placeholder="Email" oninput="renderCV()">
-    <input id="phone" placeholder="Phone" oninput="renderCV()">
-    <textarea id="summary" placeholder="Profile" oninput="renderCV()"></textarea>
-    <textarea id="experience" placeholder="Experience" oninput="renderCV()"></textarea>
-    <textarea id="education" placeholder="Education" oninput="renderCV()"></textarea>
-    <textarea id="skills" placeholder="Skills" oninput="renderCV()"></textarea>
+<div class="builder-form">
+<h3>Live CV Builder</h3>
+<input id="name" placeholder="Full Name">
+<input id="email" placeholder="Email">
+<input id="role" placeholder="Professional Title">
+<textarea id="summary" placeholder="Professional Summary"></textarea>
+<textarea id="education" placeholder="Education"></textarea>
+<textarea id="experience" placeholder="Experience"></textarea>
+<textarea id="skills" placeholder="Skills"></textarea>
 
-    <button class="btn-success" onclick="downloadPDF()">Download PDF</button>
-  </div>
+<button class="btn-primary" onclick="updateCV()">Update Preview</button>
+<button class="btn-success" onclick="downloadPDF()">Download PDF</button>
+</div>
 
-  <div class="builder-preview">
-    <div id="cvPreview" class="cv modern">
-      <p>Select a template to start</p>
-    </div>
-  </div>
+<div class="preview-container">
+<div id="cvPreview" class="cv theme-modern">
+<h1>Thabo Mokoena</h1>
+<p>Software Developer | thabo@email.com</p>
+<h3>Profile</h3><p>Passionate developer with 3+ years experience.</p>
+<h3>Education</h3><p>BSc Computer Science</p>
+<h3>Experience</h3><p>Frontend Developer – TechCorp</p>
+<h3>Skills</h3><p>React, Node, APIs</p>
+</div>
+</div>
+
+</div>
+
+<!-- ================= RECRUITER MATCH ================= -->
+<section class="recruiter-match">
+<h2>Recruiter Match</h2>
+<p>Upload your CV to be discovered by verified employers.</p>
+<input type="file">
+<button class="btn-primary">Upload for Recruiter Match</button>
 </section>
+
+</main>
 
 <footer>
-  <a href="about-us.html">About Us</a>
-  <a href="privacy.html">Privacy</a>
-  <a href="terms.html">Terms</a>
-  <p>© 2026 Career Unified</p>
+<a href="about-us.html">About</a>
+<a href="privacy.html">Privacy</a>
+<a href="terms.html">Terms</a>
+<a href="contact-us.html">Contact</a>
+<p>© 2026 Career Unified</p>
 </footer>
 
 <script>
-let currentTemplate = 'modern';
-const preview = document.getElementById("cvPreview");
+let currentTheme = 'theme-modern';
 
-function selectTemplate(template){
-  currentTemplate = template;
-  document.getElementById("builder").classList.add("active");
-  preview.className = 'cv ' + template;
-  renderCV();
+function selectTemplate(theme){
+  const cv = document.getElementById('cvPreview');
+  cv.className = 'cv ' + theme;
+  currentTheme = theme;
 }
 
-function renderCV(){
-  preview.innerHTML = `
-    <h1>${fullName.value || 'Your Name'}</h1>
-    <p>${email.value || ''} ${phone.value ? ' | ' + phone.value : ''}</p>
-    <h3>Profile</h3><p>${summary.value || ''}</p>
-    <h3>Experience</h3><p>${experience.value || ''}</p>
-    <h3>Education</h3><p>${education.value || ''}</p>
-    <h3>Skills</h3><p>${skills.value || ''}</p>
+function updateCV(){
+  const cv = document.getElementById('cvPreview');
+  cv.innerHTML = `
+    <h1>${name.value || 'Your Name'}</h1>
+    <p>${role.value || 'Professional Title'} | ${email.value || 'email@example.com'}</p>
+    <h3>Profile</h3><p>${summary.value}</p>
+    <h3>Education</h3><p>${education.value}</p>
+    <h3>Experience</h3><p>${experience.value}</p>
+    <h3>Skills</h3><p>${skills.value}</p>
   `;
 }
 
 function downloadPDF(){
-  html2pdf().from(preview).save("CareerUnified_CV.pdf");
+  html2pdf().from(document.getElementById('cvPreview')).save('My_CV.pdf');
 }
 </script>
 
 </body>
 </html>
+
+
 
 
 
