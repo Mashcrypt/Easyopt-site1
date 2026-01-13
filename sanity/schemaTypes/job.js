@@ -37,7 +37,8 @@ export default {
       name: 'applyLink',
       title: 'Application Link',
       type: 'url',
-      validation: Rule => Rule.required().uri({ allowRelative: false })
+      validation: Rule =>
+        Rule.required().uri({ allowRelative: false })
     },
     {
       name: 'category',
@@ -75,14 +76,14 @@ export default {
     },
 
     /* ===============================
-       MONETISATION (CONTROLLED)
+       MONETISATION / PROMOTION
     =============================== */
 
     {
       name: 'listingTier',
       title: 'Listing Tier',
       type: 'string',
-      description: 'Choose how this job is promoted',
+      description: 'Select how this job is promoted',
       options: {
         list: [
           { title: 'Normal (Free)', value: 'normal' },
@@ -99,13 +100,13 @@ export default {
       name: 'sponsoredUntil',
       title: 'Promotion Active Until',
       type: 'date',
-      description: 'Required for Sponsored or Premier listings',
+      description: 'Required for Sponsored or Premier jobs',
       hidden: ({ parent }) => parent?.listingTier === 'normal',
       validation: Rule =>
         Rule.custom((value, context) => {
           const tier = context.parent?.listingTier;
           if (tier !== 'normal' && !value) {
-            return 'Promotion expiry date is required for Sponsored or Premier jobs';
+            return 'Promotion expiry date is required';
           }
           return true;
         })
@@ -115,13 +116,13 @@ export default {
       name: 'badge',
       title: 'Custom Badge Text',
       type: 'string',
-      description: 'Optional override (e.g. "Featured", "Top Employer")',
+      description: 'Optional (e.g. Featured, Top Employer)',
       hidden: ({ parent }) => parent?.listingTier === 'normal'
     }
   ],
 
   /* ===============================
-     COMPUTED PREVIEW (VERY IMPORTANT)
+     SANITY STUDIO PREVIEW
   =============================== */
 
   preview: {
@@ -134,7 +135,7 @@ export default {
     prepare({ title, company, tier, until }) {
       let subtitle = company;
 
-      if (tier !== 'normal') {
+      if (tier && tier !== 'normal') {
         subtitle += ` • ${tier.toUpperCase()}`;
         if (until) subtitle += ` (until ${until})`;
       }
@@ -145,6 +146,7 @@ export default {
       };
     }
   }
-}
+};
+
 
 
