@@ -820,6 +820,183 @@ footer p {
 
 <body>
 
+
+  <script>
+/* ============================================================
+   CV BUILDER ENGINE – ADDITIVE EXTENSION (SAFE)
+   ============================================================ */
+
+/* ------------------------------
+   GLOBAL STATE (NON-INTRUSIVE)
+-------------------------------- */
+let activeTemplate = null;
+
+const cvState = {
+  name: "",
+  title: "",
+  email: "",
+  phone: "",
+  location: "",
+  summary: "",
+  experience: "",
+  education: "",
+  skills: ""
+};
+
+/* ------------------------------
+   TEMPLATE PRESETS (SEED DATA)
+-------------------------------- */
+const templatePresets = {
+  1: {
+    name: "Sarah Johnson",
+    title: "Marketing Manager",
+    email: "sarah.j@email.com",
+    phone: "+1 (555) 123-4567",
+    location: "New York, NY",
+    summary: "Results-driven marketing leader with 8+ years experience building digital-first growth strategies.",
+    experience: "Senior Marketing Manager – Tech Solutions Inc (2020–Present)",
+    education: "MBA – Harvard Business School",
+    skills: "Digital Marketing, SEO, Campaign Strategy, Analytics"
+  },
+  2: {
+    name: "Michael Chen",
+    title: "Software Engineer",
+    email: "michael.chen@email.com",
+    phone: "+1 (555) 222-3333",
+    location: "San Francisco, CA",
+    summary: "Full-stack engineer specialising in scalable web applications.",
+    experience: "Senior Engineer – CloudTech Inc (2021–Present)",
+    education: "BSc Computer Science – Stanford",
+    skills: "JavaScript, React, Node.js, AWS"
+  },
+  3: {
+    name: "Dr. Emily Rodriguez",
+    title: "Physician",
+    email: "e.rodriguez@hospital.com",
+    phone: "+1 (555) 234-5678",
+    location: "Chicago, IL",
+    summary: "Board-certified physician with over a decade of patient-focused care.",
+    experience: "Attending Physician – Northwestern Memorial",
+    education: "MD – Johns Hopkins University",
+    skills: "Internal Medicine, Cardiology, Patient Care"
+  }
+  // (Templates 4–15 fall back to empty editable state)
+};
+
+/* ------------------------------
+   TEMPLATE SELECTION OVERRIDE
+-------------------------------- */
+window.selectTemplate = function(card) {
+  document.querySelectorAll(".template-card").forEach(c => c.classList.remove("selected"));
+  card.classList.add("selected");
+
+  activeTemplate = card.dataset.style;
+
+  const preset = templatePresets[card.dataset.template] || {};
+
+  Object.assign(cvState, {
+    name: preset.name || "",
+    title: preset.title || "",
+    email: preset.email || "",
+    phone: preset.phone || "",
+    location: preset.location || "",
+    summary: preset.summary || "",
+    experience: preset.experience || "",
+    education: preset.education || "",
+    skills: preset.skills || ""
+  });
+
+  showBuilder();
+  syncForm();
+  renderCV();
+};
+
+/* ------------------------------
+   BUILDER VISIBILITY
+-------------------------------- */
+function showBuilder() {
+  const builder = document.querySelector(".builder");
+  if (builder) builder.classList.add("active");
+}
+
+/* ------------------------------
+   FORM BINDING (LIVE)
+-------------------------------- */
+function syncForm() {
+  const map = {
+    fullName: "name",
+    jobTitle: "title",
+    email: "email",
+    phone: "phone",
+    location: "location",
+    summary: "summary",
+    experience: "experience",
+    education: "education",
+    skills: "skills"
+  };
+
+  Object.keys(map).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.value = cvState[map[id]];
+    el.oninput = e => {
+      cvState[map[id]] = e.target.value;
+      renderCV();
+    };
+  });
+}
+
+/* ------------------------------
+   CV RENDER ENGINE
+-------------------------------- */
+function renderCV() {
+  const preview = document.getElementById("cvPreview");
+  if (!preview || !activeTemplate) return;
+
+  preview.innerHTML = `
+    <div class="cv ${activeTemplate}">
+      <div class="sidebar">
+        <h1>${cvState.name}</h1>
+        <div class="title">${cvState.title}</div>
+        <section>
+          <h3>Contact</h3>
+          <p>${cvState.email}<br>${cvState.phone}<br>${cvState.location}</p>
+        </section>
+        <section>
+          <h3>Skills</h3>
+          <p>${cvState.skills}</p>
+        </section>
+      </div>
+      <div class="main">
+        <section>
+          <h3>Profile</h3>
+          <p>${cvState.summary}</p>
+        </section>
+        <section>
+          <h3>Experience</h3>
+          <p>${cvState.experience}</p>
+        </section>
+        <section>
+          <h3>Education</h3>
+          <p>${cvState.education}</p>
+        </section>
+      </div>
+    </div>
+  `;
+}
+
+/* ------------------------------
+   PDF EXPORT (SAFE)
+-------------------------------- */
+window.downloadCV = function() {
+  const preview = document.getElementById("cvPreview");
+  if (!preview) return alert("No CV selected");
+  html2pdf().from(preview).save("CareerUnified_CV.pdf");
+};
+</script>
+
+
 <nav>
   <a class="nav-brand" href="index.html">Career Unified</a>
   <div class="nav-links">
@@ -1459,6 +1636,7 @@ function slideCarousel(direction) {
               </div>
             </div>
             <div class="t-right">
+
 
 
 
