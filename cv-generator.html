@@ -1733,6 +1733,36 @@ function slideCarousel(direction) {
             </div>
             <div class="t-right">
 
+<script>
+/* ============================================================
+   TEMPLATE CAROUSEL FIX (NON-DESTRUCTIVE)
+   ============================================================ */
+
+let currentSlideIndex = 0;
+
+function slideCarousel(direction) {
+  const track = document.getElementById("carouselTrack");
+  if (!track) return;
+
+  const cards = track.querySelectorAll(".template-card");
+  if (!cards.length) return;
+
+  const cardWidth = cards[0].offsetWidth + 32; // card width + gap
+  const visibleCards = Math.floor(
+    document.querySelector(".carousel-wrapper").offsetWidth / cardWidth
+  );
+
+  const maxIndex = cards.length - visibleCards;
+
+  currentSlideIndex += direction;
+
+  if (currentSlideIndex < 0) currentSlideIndex = 0;
+  if (currentSlideIndex > maxIndex) currentSlideIndex = maxIndex;
+
+  track.style.transform = `translateX(-${currentSlideIndex * cardWidth}px)`;
+}
+</script>
+
 
 
 
