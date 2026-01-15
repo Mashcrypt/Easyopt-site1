@@ -1392,6 +1392,9 @@ function renderCV() {
 ================================ */
 
 function downloadPDF() {
+  // First, ensure CV is updated with current form values
+  updateCV();
+  
   const original = document.getElementById('cvPreview');
   if (!original) return;
 
@@ -1412,6 +1415,7 @@ function downloadPDF() {
   // Force layout reflow
   clone.style.display = 'block';
 
+  // Give extra time for content to render
   setTimeout(() => {
     html2pdf()
       .set({
@@ -1433,10 +1437,13 @@ function downloadPDF() {
       .save()
       .then(() => {
         document.body.removeChild(wrapper);
+      })
+      .catch((error) => {
+        console.error('PDF generation failed:', error);
+        document.body.removeChild(wrapper);
       });
-  }, 300);
+  }, 500);
 }
-
 
 
 /* ===============================
@@ -1740,6 +1747,7 @@ function downloadPDF() {
 window.addEventListener("resize", calculateCarousel);
 window.addEventListener("load", calculateCarousel);
 </script>
+
 
 
 
