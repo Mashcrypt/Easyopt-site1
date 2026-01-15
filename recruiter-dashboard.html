@@ -3,77 +3,332 @@
 <head>
 <meta charset="UTF-8">
 <title>Recruiter Dashboard – Career Unified</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="css/recruiter-dashboard.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',sans-serif;
+  background:#f4f6fb;
+  color:#111827;
+}
+
+/* ================= HEADER ================= */
+header{
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  padding:60px 40px;
+  color:#fff;
+  text-align:center;
+}
+header h1{font-size:2.8rem;font-weight:800}
+header p{opacity:.9;margin-top:10px}
+
+/* ================= STATS ================= */
+.stats{
+  max-width:1300px;
+  margin:-40px auto 60px;
+  padding:0 40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
+}
+.stat{
+  background:#fff;
+  padding:28px;
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  text-align:center;
+}
+.stat h4{font-size:.8rem;text-transform:uppercase;color:#6b7280}
+.stat span{font-size:2.5rem;font-weight:800;color:#2563eb}
+
+/* ================= SEARCH ================= */
+.search-bar{
+  max-width:1300px;
+  margin:0 auto 40px;
+  padding:0 40px;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:16px;
+}
+.search-bar input,
+.search-bar select{
+  padding:14px 16px;
+  border-radius:10px;
+  border:1px solid #d1d5db;
+  font-size:.95rem;
+}
+
+/* ================= CV GRID ================= */
+.cv-grid{
+  max-width:1300px;
+  margin:0 auto 80px;
+  padding:0 40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:28px;
+}
+.cv-card{
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  overflow:hidden;
+  position:relative;
+}
+.cv-card.locked::after{
+  content:"Upgrade to View";
+  position:absolute;
+  inset:0;
+  background:rgba(17,24,39,.85);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:1.1rem;
+}
+.cv-card header{
+  padding:24px;
+  background:#f9fafb;
+}
+.cv-card h3{font-size:1.1rem;font-weight:700}
+.cv-card p{font-size:.9rem;color:#6b7280}
+.cv-card footer{
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.cv-card button{
+  padding:10px 16px;
+  border:none;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  background:#2563eb;
+  color:#fff;
+}
+
+/* ================= MODAL ================= */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+}
+.modal.active{display:flex}
+.modal-content{
+  background:#fff;
+  width:900px;
+  max-width:95%;
+  max-height:90vh;
+  overflow:auto;
+  border-radius:20px;
+  padding:40px;
+  position:relative;
+}
+.modal-close{
+  position:absolute;
+  top:20px;
+  right:20px;
+  font-size:1.4rem;
+  cursor:pointer;
+}
+
+/* ================= CV PREVIEW ================= */
+.cv-preview{
+  display:grid;
+  grid-template-columns:1fr 2fr;
+  gap:40px;
+}
+.cv-sidebar{
+  background:#1e40af;
+  color:#fff;
+  padding:32px;
+  border-radius:14px;
+}
+.cv-main h2{margin-bottom:10px}
+.cv-main section{margin-bottom:20px}
+
+/* ================= PRICING ================= */
+.pricing{
+  max-width:1300px;
+  margin:0 auto 100px;
+  padding:0 40px;
+}
+.pricing h2{text-align:center;font-size:2rem;margin-bottom:40px}
+.pricing-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:32px;
+}
+.plan{
+  background:#fff;
+  border-radius:20px;
+  padding:36px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+.plan.premium{
+  background:#111827;
+  color:#fff;
+  border:3px solid #fbbf24;
+}
+.plan button{
+  margin-top:20px;
+  padding:14px;
+  width:100%;
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  background:#2563eb;
+  color:#fff;
+}
+
+/* ================= ANALYTICS ================= */
+.analytics{
+  max-width:1300px;
+  margin:0 auto 120px;
+  padding:40px;
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+</style>
 </head>
 
 <body>
 
-<header class="dash-header">
+<header>
   <h1>Recruiter Dashboard</h1>
-  <p>Access top talent & track performance</p>
+  <p>Discover talent. Unlock insights. Hire faster.</p>
 </header>
 
-<section class="stats-grid">
-  <div class="stat-card">
-    <h3>CVs Viewed</h3>
-    <span id="viewsCount">0</span>
+<section class="stats">
+  <div class="stat"><h4>CVs Viewed</h4><span id="viewsCount">12</span></div>
+  <div class="stat"><h4>Credits</h4><span id="creditsCount">5</span></div>
+  <div class="stat"><h4>Plan</h4><span id="planType">Free</span></div>
+</section>
+
+<section class="search-bar">
+  <input placeholder="Search candidate, skill or role">
+  <select><option>All Roles</option></select>
+  <select><option>Experience</option></select>
+</section>
+
+<section class="cv-grid" id="cvGrid">
+  <div class="cv-card locked">
+    <header>
+      <h3>Sarah Johnson</h3>
+      <p>Marketing Manager</p>
+    </header>
+    <footer>
+      <span>8 yrs exp</span>
+      <button onclick="openCV()">View CV</button>
+    </footer>
   </div>
 
-  <div class="stat-card">
-    <h3>Credits Left</h3>
-    <span id="creditsCount">0</span>
-  </div>
-
-  <div class="stat-card">
-    <h3>Plan</h3>
-    <span id="planType">Free</span>
+  <div class="cv-card">
+    <header>
+      <h3>Michael Chen</h3>
+      <p>Software Engineer</p>
+    </header>
+    <footer>
+      <span>6 yrs exp</span>
+      <button onclick="openCV()">View CV</button>
+    </footer>
   </div>
 </section>
 
-<section class="pricing-section">
-  <h2>Upgrade Your Access</h2>
-
+<section class="pricing">
+  <h2>Upgrade Access</h2>
   <div class="pricing-grid">
-    <div class="price-card">
+    <div class="plan">
       <h3>Free</h3>
-      <p class="price">R0</p>
-      <ul>
-        <li>Preview CVs only</li>
-        <li>Limited views</li>
-      </ul>
-      <button disabled>Current Plan</button>
+      <p>Preview only</p>
+      <button disabled>Current</button>
     </div>
-
-    <div class="price-card highlight">
+    <div class="plan">
       <h3>Sponsored</h3>
-      <p class="price">R15 / CV</p>
-      <ul>
-        <li>Full CV access</li>
-        <li>Pay per view</li>
-      </ul>
+      <p>R15 / CV</p>
       <button onclick="upgradePlan('sponsored')">Activate</button>
     </div>
-
-    <div class="price-card premium">
+    <div class="plan premium">
       <h3>Premier</h3>
-      <p class="price">R499 / month</p>
-      <ul>
-        <li>Unlimited CVs</li>
-        <li>Advanced analytics</li>
-        <li>Priority support</li>
-      </ul>
+      <p>Unlimited access</p>
       <button onclick="upgradePlan('premier')">Go Premier</button>
     </div>
   </div>
 </section>
 
 <section class="analytics">
-  <h2>CV View Analytics</h2>
+  <h2>Analytics</h2>
   <canvas id="viewsChart"></canvas>
 </section>
 
-<script src="js/recruiter-dashboard.js"></script>
+<!-- ================= MODAL ================= -->
+<div class="modal" id="cvModal">
+  <div class="modal-content" id="cvContent">
+    <span class="modal-close" onclick="closeCV()">✕</span>
+    <div class="cv-preview" id="cvPreview">
+      <div class="cv-sidebar">
+        <h2>Sarah Johnson</h2>
+        <p>Marketing Manager</p>
+      </div>
+      <div class="cv-main">
+        <section><h3>Profile</h3><p>Experienced marketing leader...</p></section>
+        <section><h3>Experience</h3><p>Senior Marketing Manager – Tech Corp</p></section>
+      </div>
+    </div>
+    <br>
+    <button onclick="downloadCV()">Download PDF</button>
+  </div>
+</div>
+
+<script>
+let plan="Free";
+
+function openCV(){
+  if(plan==="Free"){
+    alert("Upgrade to view full CV");
+    return;
+  }
+  document.getElementById("cvModal").classList.add("active");
+}
+function closeCV(){
+  document.getElementById("cvModal").classList.remove("active");
+}
+function upgradePlan(p){
+  plan=p;
+  document.getElementById("planType").innerText=p;
+  document.querySelectorAll(".cv-card").forEach(c=>c.classList.remove("locked"));
+}
+function downloadCV(){
+  html2pdf().from(document.getElementById("cvPreview")).save("CV.pdf");
+}
+
+new Chart(document.getElementById("viewsChart"),{
+  type:"line",
+  data:{
+    labels:["Mon","Tue","Wed","Thu","Fri"],
+    datasets:[{
+      label:"CV Views",
+      data:[2,4,6,8,10],
+      borderColor:"#2563eb",
+      tension:.4
+    }]
+  }
+});
+</script>
+
 </body>
 </html>
+
