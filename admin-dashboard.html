@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Admin Dashboard – Recruiter Approvals</title>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    getDocs,
+    doc,
+    updateDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
+    authDomain: "career-unified.firebaseapp.com",
+    projectId: "career-unified",
+    storageBucket: "career-unified.firebasestorage.app",
+    messagingSenderId: "101656817742",
+    appId: "1:101656817742:web:22c9a58a822a714e54931f"
+  };
+
+  const ADMIN_UID = "PASTE_YOUR_ADMIN_UID_HERE";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUser = null;
+
+  onAuthStateChanged(auth, async user => {
+    if (!user || user.uid !== ADMIN_UID) {
+      alert("Access denied");
+      window.location.href = "index.html";
+      return;
+    }
+    currentUser = user;
+    loadApplications();
+  });
+
+  async function loadApplications() {
+    const q = query(
+      collection(db, "recruiterApplications"),
+      where("status", "==", "pending")
+    );
+
+    const snapshot = await getDocs(q);
+    const container = document.getElementById("applications");
+    container.innerHTML = "";
+
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const div = document.createElement("div");
+
+      div.innerHTML = `
+        <strong>${data.companyName}</strong><br>
+        Website: ${data.companyWebsite}<br>
+        Reason: ${data.reason}<br>
+        User ID: ${data.userId}<br><br>
+        <button onclick="approve('${docSnap.id}', '${data.userId}')">Approve</button>
+        <button onclick="reject('${docSnap.id}')">Reject</button>
+        <hr>
+      `;
+
+      container.appendChild(div);
+    });
+  }
+
+  window.approve = async (applicationId, userId) => {
+    await updateDoc(doc(db, "recruiterApplications", applicationId), {
+      status: "approved",
+      reviewedAt: serverTimestamp()
+    });
+
+    await updateDoc(doc(db, "users", userId), {
+      recruiterStatus: "approved"
+    });
+
+    alert("Recruiter approved");
+    loadApplications();
+  };
+
+  window.reject = async (applicationId) => {
+    await updateDoc(doc(db, "recruiterApplications", applicationId), {
+      status: "rejected",
+      reviewedAt: serverTimestamp()
+    });
+
+    alert("Recruiter rejected");
+    loadApplications();
+  };
+</script>
+
+<style>
+  body { font-family: Arial, sans-serif; padding: 30px; }
+  button { margin-right: 10px; }
+</style>
+</head>
+
+<body>
+  <h1>Admin – Recruiter Applications</h1>
+  <div id="applications"></div>
+</body>
+</html>
