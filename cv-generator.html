@@ -23,32 +23,16 @@ body {
   line-height: 1.6;
 }
 
-/* NAV */
-nav {
-  background: #1e3a8a;
-  padding: 16px 40px;
+/* =============================== */
+/* NAVBAR FULL WIDTH */
+.main-nav {
+  padding: 14px 30px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.nav-brand {
-  color: #2563eb;
-  font-weight: 800;
-  font-size: 1.5rem;
-  text-decoration: none;
-}
-
-.nav-links a {
-  color: #4b5563;
-  margin-left: 32px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.2s;
+  justify-content: space-between;
+  width: 100vw;
+  box-sizing: border-box;
+  background: #1e3a8a;
 }
 
 .main-nav .logo {
@@ -830,15 +814,16 @@ footer p {
 
 <body>
 
-<nav>
-  <a class="nav-brand" href="index.html">Career Unified</a>
+<nav class="main-nav">
+  <a href="index.html" class="logo">Career Unified</a>
   <div class="nav-links">
-    <a href="jobs.html">Jobs</a>
+    <a href="jobs.html" class="active">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
     <a href="varsity.html">Varsity</a>
-    <a href="cv-generator.html" class="active">CV Builder</a>
+    <a href="cv-generator.html">Generate CV</a>
   </div>
 </nav>
+
 
 <header>
   <h1>Professional CV Builder</h1>
@@ -1615,6 +1600,7 @@ function updateCV() {
 window.addEventListener("resize", calculateCarousel);
 window.addEventListener("load", calculateCarousel);
 </script>
+
 
 
 
