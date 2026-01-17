@@ -1427,7 +1427,6 @@ function downloadPDF() {
   }, 100);
 }
 
-
 /* ===============================
    CAROUSEL LOGIC
 ================================ */
@@ -1467,117 +1466,6 @@ if (track) {
    DEBUG CONFIRMATION
 ================================ */
 console.log('✅ CV Builder JS loaded successfully');
-
-/* ===============================
-   GLOBAL STATE
-================================ */
-let currentIndex = 0;
-let selectedStyle = "style-1";
-
-/* ===============================
-   TEMPLATE SELECTION
-================================ */
-function selectTemplate(card) {
-  document.querySelectorAll(".template-card").forEach(c =>
-    c.classList.remove("selected")
-  );
-
-  card.classList.add("selected");
-  selectedStyle = card.dataset.style;
-
-  document.getElementById("builder").classList.add("active");
-
-  const preview = document.getElementById("cvPreview");
-  preview.className = `cv ${selectedStyle}`;
-
-  window.scrollTo({
-    top: document.getElementById("builder").offsetTop - 80,
-    behavior: "smooth"
-  });
-}
-
-/* ===============================
-   UPDATE CV PREVIEW
-================================ */
-function updateCV() {
-  document.getElementById("cvName").innerText =
-    document.getElementById("name").value || "Your Name";
-
-  document.getElementById("cvTitle").innerText =
-    document.getElementById("title").value || "Professional Title";
-
-  document.getElementById("cvContact").innerText =
-    document.getElementById("contact").value || "";
-
-  document.getElementById("cvProfile").innerText =
-    document.getElementById("profile").value || "";
-
-  document.getElementById("cvEducation").innerText =
-    document.getElementById("education").value || "";
-
-  document.getElementById("cvExperience").innerText =
-    document.getElementById("experience").value || "";
-
-  document.getElementById("cvSkills").innerText =
-    document.getElementById("skills").value || "";
-}
-
-/* ===============================
-   PDF DOWNLOAD (FIXED)
-================================ */
-function downloadPDF() {
-  const source = document.getElementById("cvPreview");
-  if (!source) return;
-
-  const clone = source.cloneNode(true);
-  clone.style.display = "block";
-  clone.style.width = "210mm";
-  clone.style.background = "#ffffff";
-
-  const holder = document.createElement("div");
-  holder.style.position = "fixed";
-  holder.style.top = "-10000px";
-  holder.appendChild(clone);
-  document.body.appendChild(holder);
-
-  setTimeout(() => {
-    html2pdf()
-      .set({
-        margin: 0,
-        filename: "CareerUnified-CV.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, backgroundColor: "#ffffff" },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-      })
-      .from(clone)
-      .save()
-      .then(() => document.body.removeChild(holder));
-  }, 300);
-}
-
-/* ===============================
-   CAROUSEL + TOUCH
-================================ */
-const track = document.getElementById("carouselTrack");
-const cards = document.querySelectorAll(".template-card");
-let startX = 0;
-
-function slideCarousel(dir) {
-  const visible = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
-  currentIndex += dir;
-  currentIndex = Math.max(0, Math.min(currentIndex, cards.length - visible));
-  track.style.transform = `translateX(-${currentIndex * (cards[0].offsetWidth + 32)}px)`;
-}
-
-track.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
-});
-
-track.addEventListener("touchend", e => {
-  const diff = startX - e.changedTouches[0].clientX;
-  if (Math.abs(diff) > 50) slideCarousel(diff > 0 ? 1 : -1);
-});
-
 
 
   
@@ -1717,6 +1605,7 @@ function updateCV() {
 window.addEventListener("resize", calculateCarousel);
 window.addEventListener("load", calculateCarousel);
 </script>
+
 
 
 
