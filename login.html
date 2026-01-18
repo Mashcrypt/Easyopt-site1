@@ -5,6 +5,9 @@
 <title>Login – Career Unified</title>
 <link rel="stylesheet" href="css/style.css">
 <style>
+/* =========================
+   GENERAL BODY STYLES
+========================= */
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
@@ -15,6 +18,9 @@ body {
   margin: 0;
 }
 
+/* =========================
+   LOGIN CONTAINER
+========================= */
 .login-container {
   background: #fff;
   padding: 40px 35px;
@@ -32,6 +38,9 @@ body {
   font-size: 1.8rem;
 }
 
+/* =========================
+   INPUT FIELDS
+========================= */
 .login-container input {
   width: 100%;
   padding: 12px 14px;
@@ -53,6 +62,9 @@ body {
   transition: 0.3s ease;
 }
 
+/* =========================
+   LOGIN BUTTON
+========================= */
 #loginBtn {
   background: #1e3a8a;
   color: #fff;
@@ -60,6 +72,9 @@ body {
 
 #loginBtn:hover { background: #162c6f; }
 
+/* =========================
+   GOOGLE BUTTON
+========================= */
 .google-btn {
   display: flex;
   align-items: center;
@@ -75,10 +90,11 @@ body {
   margin-right: 10px;
 }
 
-.google-btn:hover {
-  background: #f5f5f5;
-}
+.google-btn:hover { background: #f5f5f5; }
 
+/* =========================
+   LINKS & MESSAGES
+========================= */
 .login-container p {
   margin-top: 15px;
   font-size: 13px;
@@ -96,6 +112,18 @@ body {
   margin-top: 8px;
   font-size: 13px;
 }
+
+/* =========================
+   FORGOT PASSWORD LINK
+========================= */
+#forgotPassword {
+  margin-top: 5px;
+  display: block;
+  font-size: 13px;
+  color: #1e3a8a;
+  text-decoration: underline;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -104,20 +132,39 @@ body {
   <h2>Login to Career Unified</h2>
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Password">
+
+  <!-- LOGIN BUTTON -->
   <button id="loginBtn">Login</button>
 
+  <!-- GOOGLE LOGIN BUTTON -->
   <button id="googleLogin" class="google-btn">
     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G Logo"> Login with Google
   </button>
 
+  <!-- FORGOT PASSWORD LINK -->
+  <span id="forgotPassword">Forgot Password?</span>
+
+  <!-- SIGN UP LINK -->
   <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
   <p id="errorMsg"></p>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  getIdTokenResult
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+/* =========================
+   FIREBASE CONFIG
+========================= */
 const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
   authDomain: "career-unified.firebaseapp.com",
@@ -127,23 +174,95 @@ const firebaseConfig = {
   appId: "1:101656817742:web:22c9a58a822a714e54931f",
   measurementId: "G-2Z934XRVXT"
 };
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-document.getElementById('loginBtn').onclick = () => {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  signInWithEmailAndPassword(auth, email, password)
-    .then(userCredential => window.location.href='jobs.html')
-    .catch(error => document.getElementById('errorMsg').textContent = error.message);
+/* =========================
+   HELPER FUNCTION: REDIRECT BASED ON CLAIMS
+========================= */
+async function redirectUser(user) {
+  // Get ID token to read custom claims
+  const tokenResult = await getIdTokenResult(user);
+  const claims = tokenResult.claims;
+
+  // If user is approved recruiter → recruiter-dashboard
+  if (claims.recruiter) {
+    window.location.href = "recruiter-dashboard.html";
+  } else {
+    // Otherwise → normal jobs page
+    window.location.href = "jobs.html";
+  }
 }
 
-document.getElementById('googleLogin').onclick = () => {
-  signInWithPopup(auth, provider)
-    .then(result => window.location.href='jobs.html')
-    .catch(error => document.getElementById('errorMsg').textContent = error.message);
-}
+/* =========================
+   EMAIL/PASSWORD LOGIN
+========================= */
+document.getElementById('loginBtn').onclick = async () => {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const errorMsg = document.getElementById('errorMsg');
+  errorMsg.textContent = '';
+
+  if (!email || !password) {
+    errorMsg.textContent = 'Please fill in all fields.';
+    return;
+  }
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    // Redirect based on claims
+    await redirectUser(userCredential.user);
+  } catch (error) {
+    errorMsg.textContent = error.message;
+  }
+};
+
+/* =========================
+   GOOGLE LOGIN
+========================= */
+document.getElementById('googleLogin').onclick = async () => {
+  const errorMsg = document.getElementById('errorMsg');
+  errorMsg.textContent = '';
+  try {
+    const result = await signInWithPopup(auth, provider);
+    await redirectUser(result.user);
+  } catch (error) {
+    errorMsg.textContent = error.message;
+  }
+};
+
+/* =========================
+   FORGOT PASSWORD
+========================= */
+document.getElementById('forgotPassword').onclick = async () => {
+  const email = document.getElementById('email').value.trim();
+  const errorMsg = document.getElementById('errorMsg');
+  errorMsg.textContent = '';
+
+  if (!email) {
+    errorMsg.textContent = 'Please enter your email to reset password.';
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert('Password reset email sent. Please check your inbox.');
+  } catch (error) {
+    errorMsg.textContent = error.message;
+  }
+};
+
+/* =========================
+   AUTO REDIRECT IF USER ALREADY LOGGED IN
+========================= */
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    await redirectUser(user);
+  }
+});
 </script>
 
 </body>
