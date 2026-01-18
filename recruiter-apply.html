@@ -65,6 +65,7 @@
       /* Create recruiter application */
       await addDoc(collection(db, "recruiterApplications"), {
         userId: currentUser.uid,
+        email: currentUser.email, // save email for future reference
         companyName,
         companyWebsite,
         reason,
@@ -79,13 +80,21 @@
           role: "recruiter",
           recruiterStatus: "pending",
           companyName,
+          email: currentUser.email,
           updatedAt: serverTimestamp()
         },
         { merge: true }
       );
 
-      alert("Application submitted successfully.");
-      window.location.href = "recruiter-dashboard.html";
+      /* 🎯 Friendly notice about approval timeline */
+      alert(
+        "Thank you for your recruiter application!\n\n" +
+        "Please note: approval can take up to 1 hour or 1 business day. " +
+        "If your application is not approved, consider it unsuccessful."
+      );
+
+      /* 🔄 Redirect back to home page */
+      window.location.href = "index.html";
 
     } catch (error) {
       console.error("Error submitting application:", error);
@@ -138,17 +147,30 @@
   button:hover {
     background: #1e40af;
   }
+
+  /* 🔹 Notice about approval timeline */
+  .notice {
+    background: #e0f2fe;
+    border-left: 4px solid #2563eb;
+    padding: 12px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #1e3a8a;
+    border-radius: 4px;
+  }
 </style>
 </head>
 
 <body>
 
-  <button onclick="location.href='recruiter-apply.html'">
-  Become a Recruiter
-</button>
-
   <div class="container">
     <h1>Recruiter Application</h1>
+
+    <!-- 🔹 Notice for users before submitting -->
+    <div class="notice">
+      Please fill out this form to apply as a recruiter. Approval can take up to 1 hour or 1 business day.
+      If your application is not approved, consider it unsuccessful.
+    </div>
 
     <input id="companyName" placeholder="Company Name" />
     <input id="companyWebsite" placeholder="Company Website" />
@@ -160,4 +182,5 @@
   </div>
 </body>
 </html>
+
 
