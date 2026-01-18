@@ -169,9 +169,9 @@ document.getElementById('googleSignup').onclick = async () => {
     // Check claims
     const token = await getIdTokenResult(user, true);
     if (token.claims.recruiter) {
-      window.location.href = "recruiter-dashboard.html"; // Approved recruiter
+      window.location.href = "index.html"; // Approved recruiter
     } else {
-      window.location.href = "jobs.html"; // Normal user
+      window.location.href = "index.html"; // Normal user
     }
   } catch (error) {
     document.getElementById('errorMsg').textContent = error.message;
