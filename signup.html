@@ -4,85 +4,216 @@
 <meta charset="UTF-8">
 <title>Sign Up – Career Unified</title>
 <link rel="stylesheet" href="css/style.css">
+
 <style>
-/* ---------- STYLES ---------- */
+/* =========================================================
+   GLOBAL RESET & BASE
+========================================================= */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  min-height: 100vh;
   margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* =========================================================
+   SIGNUP CARD
+========================================================= */
 .signup-container {
-  background: #fff;
-  padding: 40px 35px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  width: 380px;
-  max-width: 90%;
+  background: #ffffff;
+  width: 400px;
+  max-width: 92%;
+  padding: 42px 36px;
+  border-radius: 18px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18);
   text-align: center;
+  animation: fadeUp 0.5s ease;
 }
 
-.signup-container h2 { margin-bottom: 25px; color: #1e3a8a; font-weight: 700; font-size: 1.8rem; }
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+/* =========================================================
+   HEADINGS & TEXT
+========================================================= */
+.signup-container h2 {
+  margin-bottom: 8px;
+  color: #1e3a8a;
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+
+.signup-container .subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+/* =========================================================
+   INPUT FIELDS
+========================================================= */
 .signup-container input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 13px 14px;
   margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
   font-size: 14px;
+  transition: border 0.25s ease, box-shadow 0.25s ease;
 }
 
+.signup-container input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* =========================================================
+   PRIMARY BUTTON
+========================================================= */
 .signup-container button {
   width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  border-radius: 8px;
+  padding: 13px;
+  margin-top: 14px;
+  border-radius: 10px;
   border: none;
-  font-weight: 600;
   font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-#signupBtn { background: #1e3a8a; color: #fff; }
-#signupBtn:hover { background: #162c6f; }
+.signup-container button:active {
+  transform: scale(0.98);
+}
 
+#signupBtn {
+  background: #1e3a8a;
+  color: #ffffff;
+}
+
+#signupBtn:hover {
+  background: #162c6f;
+  box-shadow: 0 10px 18px rgba(30, 58, 138, 0.25);
+}
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 22px 0 12px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+/* =========================================================
+   GOOGLE BUTTON
+========================================================= */
 .google-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  color: #000;
-  border: 1px solid #ccc;
-  margin-top: 10px;
+  gap: 10px;
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+  margin-top: 6px;
 }
-.google-btn img { width: 20px; margin-right: 10px; }
-.google-btn:hover { background: #f5f5f5; }
 
-.signup-container p { margin-top: 15px; font-size: 13px; color: #555; }
-.signup-container p a { color: #1e3a8a; text-decoration: none; font-weight: 600; }
-#errorMsg { color: red; margin-top: 8px; font-size: 13px; }
+.google-btn:hover {
+  background: #f9fafb;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Google SVG logo */
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* =========================================================
+   FOOTER TEXT
+========================================================= */
+.signup-container p {
+  margin-top: 18px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.signup-container p a {
+  color: #1e3a8a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signup-container p a:hover {
+  text-decoration: underline;
+}
+
+#errorMsg {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #dc2626;
+  min-height: 18px;
+}
 </style>
 </head>
+
 <body>
 
 <div class="signup-container">
-  <h2>Create Your Account</h2>
-  <input type="text" id="fullName" placeholder="Full Name">
-  <input type="email" id="email" placeholder="Email">
+  <h2>Create your account</h2>
+  <div class="subtitle">Join Career Unified and unlock opportunities</div>
+
+  <input type="text" id="fullName" placeholder="Full name">
+  <input type="email" id="email" placeholder="Email address">
   <input type="password" id="password" placeholder="Password">
-  <button id="signupBtn">Sign Up</button>
+
+  <button id="signupBtn">Create account</button>
+
+  <div class="divider"><span>or continue with</span></div>
 
   <button id="googleSignup" class="google-btn">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G Logo"> Sign Up with Google
+    <!-- OFFICIAL GOOGLE SVG (NEVER BREAKS) -->
+    <svg class="google-icon" viewBox="0 0 48 48">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.7 1.22 9.18 3.6l6.86-6.86C35.9 2.38 30.47 0 24 0 14.62 0 6.52 5.38 2.56 13.22l8.02 6.22C12.36 13.09 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.5 24c0-1.64-.15-3.21-.43-4.73H24v9.02h12.66c-.55 2.97-2.2 5.49-4.66 7.19l7.18 5.58C43.44 36.98 46.5 30.98 46.5 24z"/>
+      <path fill="#FBBC05" d="M10.58 28.44c-.48-1.44-.76-2.97-.76-4.44s.27-3 .76-4.44l-8.02-6.22C.92 16.46 0 20.12 0 24s.92 7.54 2.56 10.66l8.02-6.22z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.9-2.13 15.86-5.78l-7.18-5.58c-1.99 1.34-4.53 2.13-8.68 2.13-6.26 0-11.64-3.59-13.42-8.94l-8.02 6.22C6.52 42.62 14.62 48 24 48z"/>
+    </svg>
+    Sign up with Google
   </button>
 
-  <p>Already have an account? <a href="login.html">Login</a></p>
+  <p>Already have an account? <a href="login.html">Log in</a></p>
   <p id="errorMsg"></p>
 </div>
 
@@ -113,12 +244,11 @@ const provider = new GoogleAuthProvider();
 /* ---------------- AUTO REDIRECT IF ALREADY LOGGED IN ---------------- */
 onAuthStateChanged(auth, async user => {
   if (user) {
-    // Check custom claims for recruiter
     const token = await getIdTokenResult(user, true);
     if (token.claims.recruiter) {
-      window.location.href = "recruiter-dashboard.html"; // Approved recruiter
+      window.location.href = "recruiter-dashboard.html";
     } else {
-      window.location.href = "index.html"; // Normal user
+      window.location.href = "index.html";
     }
   }
 });
@@ -138,7 +268,6 @@ document.getElementById('signupBtn').onclick = async () => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(userCredential.user, { displayName: fullName });
 
-    // Create user document in Firestore
     await setDoc(doc(db, "users", userCredential.user.uid), {
       fullName,
       email,
@@ -146,7 +275,7 @@ document.getElementById('signupBtn').onclick = async () => {
       createdAt: serverTimestamp()
     });
 
-    window.location.href = "index.html"; // Normal users
+    window.location.href = "index.html";
   } catch (error) {
     document.getElementById('errorMsg').textContent = error.message;
   }
@@ -158,7 +287,6 @@ document.getElementById('googleSignup').onclick = async () => {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Create Firestore user if it doesn't exist
     await setDoc(doc(db, "users", user.uid), {
       fullName: user.displayName,
       email: user.email,
@@ -166,12 +294,11 @@ document.getElementById('googleSignup').onclick = async () => {
       createdAt: serverTimestamp()
     }, { merge: true });
 
-    // Check claims
     const token = await getIdTokenResult(user, true);
     if (token.claims.recruiter) {
-      window.location.href = "index.html"; // Approved recruiter
+      window.location.href = "index.html";
     } else {
-      window.location.href = "index.html"; // Normal user
+      window.location.href = "index.html";
     }
   } catch (error) {
     document.getElementById('errorMsg').textContent = error.message;
@@ -181,5 +308,6 @@ document.getElementById('googleSignup').onclick = async () => {
 
 </body>
 </html>
+
 
 
