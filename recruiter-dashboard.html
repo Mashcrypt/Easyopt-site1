@@ -469,7 +469,97 @@ window.viewCV = (url) => {
   window.open(url, "_blank");
 };
 
+</script> 
+
+   <!-- ======================================================
+     PLAN CARDS & UPGRADE INTERFACE
+     Paste this directly after your existing scripts [SCRIPT 2]
+====================================================== -->
+<script type="module">
+// ================= PLAN DATA =================
+const plans = {
+  Free: { price: 0, cvLimit: 20, benefits: ["Post jobs", "View limited CVs"] },
+  Pro: { price: 49, cvLimit: 100, benefits: ["Post jobs", "Unlimited CV views", "Priority support"] },
+  Enterprise: { price: 149, cvLimit: 500, benefits: ["All Pro benefits", "Dedicated account manager", "Advanced analytics"] }
+};
+
+// ================= CREATE PLAN CARDS =================
+function renderPlanCards() {
+  const billingSection = document.getElementById("billing");
+
+  let cardsHtml = `<div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:20px;">`;
+
+  for (const key in plans) {
+    const plan = plans[key];
+    cardsHtml += `
+      <div style="
+          background:#fff;
+          flex:1 1 200px;
+          border-radius:14px;
+          padding:20px;
+          box-shadow:0 8px 20px rgba(0,0,0,0.08);
+          text-align:center;
+      ">
+        <h3 style="margin-bottom:6px;">${key}</h3>
+        <p style="font-weight:700; font-size:20px; margin:6px 0;">$${plan.price}/mo</p>
+        <p style="font-size:14px; color:#6b7280;">CV Limit: ${plan.cvLimit}</p>
+        <ul style="text-align:left; padding-left:20px; font-size:13px; margin:12px 0;">
+          ${plan.benefits.map(b => `<li>${b}</li>`).join("")}
+        </ul>
+        <button style="
+            background:#1e3a8a;
+            color:#fff;
+            padding:10px 14px;
+            border:none;
+            border-radius:8px;
+            font-weight:600;
+            cursor:pointer;
+        " onclick="upgradePlan('${key}')">
+          Select Plan
+        </button>
+      </div>
+    `;
+  }
+
+  cardsHtml += `</div>`;
+  billingSection.innerHTML += cardsHtml;
+}
+
+// ================= CURRENT PLAN & CV USAGE =================
+let userPlan = "Free"; // Replace with Firestore data in real app
+let cvViewed = 0;
+
+function updatePlanDisplay() {
+  document.getElementById("currentPlan").textContent = userPlan;
+  document.getElementById("cvLimit").textContent = plans[userPlan].cvLimit;
+  document.getElementById("cvUsed").textContent = cvViewed;
+}
+
+// ================= UPGRADE FUNCTION =================
+window.upgradePlan = (planName) => {
+  userPlan = planName;
+  cvViewed = 0; // reset used CVs when upgrading
+  updatePlanDisplay();
+  alert(`Plan upgraded to ${planName}!`);
+};
+
+// ================= CV VIEW LIMIT CHECK =================
+const originalViewCV = window.viewCV;
+window.viewCV = (url) => {
+  if (cvViewed >= plans[userPlan].cvLimit) {
+    alert(`CV view limit reached for ${userPlan} plan. Upgrade to view more CVs.`);
+    return;
+  }
+  cvViewed++;
+  updatePlanDisplay();
+  originalViewCV(url);
+};
+
+// ================= INITIAL LOAD =================
+renderPlanCards();
+updatePlanDisplay();
 </script>
+
 
 </body>
 </html>
