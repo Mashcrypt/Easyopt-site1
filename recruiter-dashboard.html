@@ -296,7 +296,7 @@ textarea {
   </div>
 
 </div>
-   
+
 <!-- ================= BILLING ================= -->
 <div id="billing" class="section hidden">
   <h2>Plan & Billing</h2>
@@ -315,12 +315,14 @@ textarea {
       <span id="cvLimit">20</span>
     </div>
   </div>
+
+  <button class="primary-btn">Upgrade Plan</button>
 </div>
 
-<!-- ======================================================
-     FIREBASE + DASHBOARD SCRIPT
-====================================================== -->
 <script type="module">
+/* ======================================================
+   FIREBASE IMPORTS
+====================================================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, getIdTokenResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -344,26 +346,21 @@ const db = getFirestore(app);
 window.showSection = (id) => {
   document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
-
   document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
   event.target.classList.add('active');
 };
 
 /* ======================================================
-   HARD RECRUITER SECURITY GATE
+   RECRUITER SECURITY GATE
 ====================================================== */
 onAuthStateChanged(auth, async (user) => {
   if (!user) { window.location.href = "login.html"; return; }
-
   const token = await getIdTokenResult(user, true);
-
   if (!token.claims.recruiter) {
     alert("Access denied. Recruiter approval required.");
     window.location.href = "index.html";
     return;
   }
-
-  // Load dashboard data
   loadJobs();
   loadApplicants();
 });
@@ -379,7 +376,6 @@ document.getElementById('logoutBtn').onclick = () => signOut(auth);
 document.getElementById('postJobBtn').onclick = async () => {
   const title = jobTitle.value.trim();
   if (!title) return alert("Job title required");
-
   await addDoc(collection(db, "jobs"), {
     title,
     description: jobDescription.value,
@@ -388,7 +384,6 @@ document.getElementById('postJobBtn').onclick = async () => {
     status: "active",
     createdAt: serverTimestamp()
   });
-
   alert("Job posted");
 };
 
@@ -402,19 +397,17 @@ async function loadJobs() {
   list.innerHTML = "";
   snap.forEach(doc => {
     const job = doc.data();
-    list.innerHTML += `
-      <div class="job">
-        <h4>${job.title}</h4>
-        <span class="badge ${job.status}">${job.status.toUpperCase()}</span>
-      </div>
-    `;
+    list.innerHTML += `<div class="job"><h4>${job.title}</h4><span class="badge ${job.status}">${job.status.toUpperCase()}</span></div>`;
   });
   totalJobs.textContent = snap.size;
 }
 
 /* ======================================================
-   LOAD APPLICANTS
+   LOAD APPLICANTS + CV ACCESS
 ====================================================== */
+let userPlan = "Free";
+let cvViewed = 0;
+
 async function loadApplicants() {
   const q = query(collection(db, "applications"), where("recruiterId", "==", auth.currentUser.uid));
   const snap = await getDocs(q);
@@ -422,50 +415,18 @@ async function loadApplicants() {
   list.innerHTML = "";
   snap.forEach(doc => {
     const app = doc.data();
-    list.innerHTML += `
-      <div class="applicant">
-        <strong>${app.name}</strong><br>
-        <span class="status">${app.status || "New"}</span><br><br>
-        <button class="primary-btn" onclick="viewCV('${app.cvUrl}')">View CV</button>
-      </div>
-    `;
+    const isLocked = cvViewed >= plans[userPlan].cvLimit;
+    list.innerHTML += `<div class="applicant"><strong>${app.name}</strong><br><span class="status">${app.status || "New"}</span><br><br><button class="primary-btn" ${isLocked ? "disabled" : ""} onclick="viewCV('${app.cvUrl}')">${isLocked ? "Locked (Upgrade to view)" : "View CV"}</button></div>`;
   });
   totalApplicants.textContent = snap.size;
 }
 
 /* ======================================================
-   VIEW CV LOGIC
+   CV VIEW FUNCTION WITH LIMIT
 ====================================================== */
-window.viewCV = (url) => { window.open(url, "_blank"); };
-
-/* ======================================================
-   PLAN CARDS & UPGRADE LOGIC
-====================================================== */
-const plans = {
-  Free: { price: 0, cvLimit: 20, benefits: ["Post jobs", "View limited CVs"] },
-  Pro: { price: 49, cvLimit: 100, benefits: ["Post jobs", "Unlimited CV views", "Priority support"] },
-  Enterprise: { price: 149, cvLimit: 500, benefits: ["All Pro benefits", "Dedicated account manager", "Advanced analytics"] }
-};
-
-let userPlan = "Free"; 
-let cvViewed = 0;
-
-function updatePlanDisplay() {
-  document.getElementById("currentPlan").textContent = userPlan;
-  document.getElementById("cvLimit").textContent = plans[userPlan].cvLimit;
-  document.getElementById("cvUsed").textContent = cvViewed;
-}
-
-window.upgradePlan = (planName) => {
-  userPlan = planName;
-  cvViewed = 0;
-  updatePlanDisplay();
-  alert(`Plan upgraded to ${planName}!`);
-};
-
-const originalViewCV = window.viewCV;
+const originalViewCV = window.viewCV || ((url)=>window.open(url,"_blank"));
 window.viewCV = (url) => {
-  if (cvViewed >= plans[userPlan].cvLimit) {
+  if(cvViewed>=plans[userPlan].cvLimit){
     alert(`CV view limit reached for ${userPlan} plan. Upgrade to view more CVs.`);
     return;
   }
@@ -474,26 +435,57 @@ window.viewCV = (url) => {
   originalViewCV(url);
 };
 
+/* ======================================================
+   PLANS DATA
+====================================================== */
+const plans = {
+  Free: { price: 0, cvLimit: 20, benefits: ["Post jobs", "View limited CVs"] },
+  Pro: { price: 49, cvLimit: 100, benefits: ["Post jobs", "Unlimited CV views", "Priority support"] },
+  Enterprise: { price: 149, cvLimit: 500, benefits: ["All Pro benefits", "Dedicated account manager", "Advanced analytics"] }
+};
+
+/* ======================================================
+   UPDATE PLAN DISPLAY
+====================================================== */
+function updatePlanDisplay() {
+  document.getElementById("currentPlan").textContent = userPlan;
+  document.getElementById("cvLimit").textContent = plans[userPlan].cvLimit;
+  document.getElementById("cvUsed").textContent = cvViewed;
+}
+
+/* ======================================================
+   PLAN CARDS
+====================================================== */
 function renderPlanCards() {
   const billingSection = document.getElementById("billing");
   let cardsHtml = `<div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:20px;">`;
-  for (const key in plans) {
+  for(const key in plans){
     const plan = plans[key];
-    cardsHtml += `
-      <div style="background:#fff; flex:1 1 200px; border-radius:14px; padding:20px; box-shadow:0 8px 20px rgba(0,0,0,0.08); text-align:center;">
-        <h3 style="margin-bottom:6px;">${key}</h3>
-        <p style="font-weight:700; font-size:20px; margin:6px 0;">$${plan.price}/mo</p>
-        <p style="font-size:14px; color:#6b7280;">CV Limit: ${plan.cvLimit}</p>
-        <ul style="text-align:left; padding-left:20px; font-size:13px; margin:12px 0;">
-          ${plan.benefits.map(b => `<li>${b}</li>`).join("")}
-        </ul>
-        <button style="background:#1e3a8a; color:#fff; padding:10px 14px; border:none; border-radius:8px; font-weight:600; cursor:pointer;" onclick="upgradePlan('${key}')">Select Plan</button>
-      </div>`;
+    cardsHtml += `<div style="background:#fff; flex:1 1 200px; border-radius:14px; padding:20px; box-shadow:0 8px 20px rgba(0,0,0,0.08); text-align:center;">
+    <h3 style="margin-bottom:6px;">${key}</h3>
+    <p style="font-weight:700; font-size:20px; margin:6px 0;">$${plan.price}/mo</p>
+    <p style="font-size:14px; color:#6b7280;">CV Limit: ${plan.cvLimit}</p>
+    <ul style="text-align:left; padding-left:20px; font-size:13px; margin:12px 0;">${plan.benefits.map(b=>`<li>${b}</li>`).join("")}</ul>
+    <button style="background:#1e3a8a; color:#fff; padding:10px 14px; border:none; border-radius:8px; font-weight:600; cursor:pointer;" onclick="upgradePlan('${key}')">Select Plan</button>
+    </div>`;
   }
   cardsHtml += `</div>`;
   billingSection.innerHTML += cardsHtml;
 }
 
+/* ======================================================
+   UPGRADE PLAN FUNCTION
+====================================================== */
+window.upgradePlan = (planName) => {
+  userPlan = planName;
+  cvViewed = 0;
+  updatePlanDisplay();
+  alert(`Plan upgraded to ${planName}!`);
+};
+
+/* ======================================================
+   INITIALIZE
+====================================================== */
 renderPlanCards();
 updatePlanDisplay();
 </script>
