@@ -3,282 +3,371 @@
 <head>
 <meta charset="UTF-8">
 <title>Recruiter Dashboard – Career Unified</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-/* Hide page until recruiter claim is verified */
-body { display:none; }
-
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:'Inter',sans-serif;
-  background:#f4f6fb;
-  color:#111827;
+/* =========================================================
+   GLOBAL BASE
+========================================================= */
+* {
+  box-sizing: border-box;
 }
 
-/* ================= HEADER ================= */
-header{
-  background:linear-gradient(135deg,#1e3a8a,#2563eb);
-  padding:60px 40px;
-  color:#fff;
-  text-align:center;
-  position:relative;
-}
-header h1{font-size:2.8rem;font-weight:800}
-header p{opacity:.9;margin-top:10px}
-
-/* Logout button (small, non-intrusive) */
-.logout-btn{
-  position:absolute;
-  top:20px;
-  right:30px;
-  background:#ef4444;
-  color:#fff;
-  border:none;
-  padding:10px 16px;
-  border-radius:8px;
-  font-weight:600;
-  cursor:pointer;
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #f4f6fb;
+  color: #111827;
+  display: flex;
+  min-height: 100vh;
 }
 
-/* ================= STATS ================= */
-.stats{
-  max-width:1300px;
-  margin:-40px auto 60px;
-  padding:0 40px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:24px;
-}
-.stat{
-  background:#fff;
-  padding:28px;
-  border-radius:16px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-  text-align:center;
-}
-.stat h4{font-size:.8rem;text-transform:uppercase;color:#6b7280}
-.stat span{font-size:2.5rem;font-weight:800;color:#2563eb}
-
-/* ================= SEARCH ================= */
-.search-bar{
-  max-width:1300px;
-  margin:0 auto 40px;
-  padding:0 40px;
-  display:grid;
-  grid-template-columns:2fr 1fr 1fr;
-  gap:16px;
-}
-.search-bar input,
-.search-bar select{
-  padding:14px 16px;
-  border-radius:10px;
-  border:1px solid #d1d5db;
-  font-size:.95rem;
+/* =========================================================
+   SIDEBAR
+========================================================= */
+.sidebar {
+  width: 240px;
+  background: #1e3a8a;
+  color: #fff;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ================= CV GRID ================= */
-.cv-grid{
-  max-width:1300px;
-  margin:0 auto 80px;
-  padding:0 40px;
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-  gap:28px;
-}
-.cv-card{
-  background:#fff;
-  border-radius:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
-  overflow:hidden;
-  position:relative;
-}
-.cv-card.locked::after{
-  content:"Upgrade to View";
-  position:absolute;
-  inset:0;
-  background:rgba(17,24,39,.85);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  font-size:1.1rem;
-}
-.cv-card header{
-  padding:24px;
-  background:#f9fafb;
-}
-.cv-card h3{font-size:1.1rem;font-weight:700}
-.cv-card p{font-size:.9rem;color:#6b7280}
-.cv-card footer{
-  padding:20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.cv-card button{
-  padding:10px 16px;
-  border:none;
-  border-radius:8px;
-  font-weight:600;
-  cursor:pointer;
-  background:#2563eb;
-  color:#fff;
+.sidebar h2 {
+  font-size: 18px;
+  margin-bottom: 30px;
 }
 
-/* ================= MODAL ================= */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:1000;
-}
-.modal.active{display:flex}
-.modal-content{
-  background:#fff;
-  width:900px;
-  max-width:95%;
-  max-height:90vh;
-  overflow:auto;
-  border-radius:20px;
-  padding:40px;
-  position:relative;
-}
-.modal-close{
-  position:absolute;
-  top:20px;
-  right:20px;
-  font-size:1.4rem;
-  cursor:pointer;
+.sidebar a {
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  display: block;
+  font-size: 14px;
 }
 
-/* ================= PRICING & ANALYTICS ================= */
-.pricing, .analytics{
-  max-width:1300px;
-  margin:0 auto 100px;
-  padding:40px;
-  background:#fff;
-  border-radius:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,.08);
+.sidebar a.active,
+.sidebar a:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+.main {
+  flex: 1;
+  padding: 28px;
+  overflow-y: auto;
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.topbar h1 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.logout-btn {
+  background: #ef4444;
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* =========================================================
+   STATS CARDS
+========================================================= */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.stat-card h3 {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.stat-card span {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+.section {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 26px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.section h2 {
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+
+/* =========================================================
+   JOB FORM
+========================================================= */
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.primary-btn {
+  background: #1e3a8a;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #162c6f;
+}
+
+/* =========================================================
+   JOB LIST
+========================================================= */
+.job {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 14px 0;
+}
+
+.job:last-child {
+  border-bottom: none;
+}
+
+.job h4 {
+  margin: 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.badge.active { background: #dcfce7; color: #166534; }
+.badge.closed { background: #fee2e2; color: #991b1b; }
+
+/* =========================================================
+   APPLICANTS
+========================================================= */
+.applicant {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.applicant:last-child {
+  border-bottom: none;
+}
+
+.status {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   HIDDEN
+========================================================= */
+.hidden {
+  display: none;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Recruiter Dashboard</h1>
-  <p>Discover talent. Unlock insights. Hire faster.</p>
+<!-- ======================================================
+     SIDEBAR
+====================================================== -->
+<div class="sidebar">
+  <h2>Career Unified</h2>
+  <a href="#" class="active" onclick="showSection('overview')">Overview</a>
+  <a href="#" onclick="showSection('postJob')">Post Job</a>
+  <a href="#" onclick="showSection('jobs')">My Jobs</a>
+  <a href="#" onclick="showSection('applicants')">Applicants</a>
+  <a href="#" onclick="showSection('company')">Company Profile</a>
+</div>
 
-  <!-- Logout button -->
-  <button class="logout-btn" onclick="logout()">Logout</button>
-</header>
+<!-- ======================================================
+     MAIN
+====================================================== -->
+<div class="main">
 
-<section class="stats">
-  <div class="stat"><h4>CVs Viewed</h4><span id="viewsCount">12</span></div>
-  <div class="stat"><h4>Credits</h4><span id="creditsCount">5</span></div>
-  <div class="stat"><h4>Plan</h4><span id="planType">Free</span></div>
-</section>
-
-<section class="cv-grid">
-  <div class="cv-card locked">
-    <header>
-      <h3>Sarah Johnson</h3>
-      <p>Marketing Manager</p>
-    </header>
-    <footer>
-      <span>8 yrs exp</span>
-      <button onclick="openCV()">View CV</button>
-    </footer>
+  <div class="topbar">
+    <h1>Recruiter Dashboard</h1>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
   </div>
-</section>
 
-<section class="analytics">
-  <h2>Analytics</h2>
-  <canvas id="viewsChart"></canvas>
-</section>
+  <!-- ================= OVERVIEW ================= -->
+  <div id="overview" class="section">
+    <div class="stats">
+      <div class="stat-card">
+        <h3>Total Jobs</h3>
+        <span id="totalJobs">0</span>
+      </div>
+      <div class="stat-card">
+        <h3>Active Jobs</h3>
+        <span id="activeJobs">0</span>
+      </div>
+      <div class="stat-card">
+        <h3>Total Applicants</h3>
+        <span id="totalApplicants">0</span>
+      </div>
+      <div class="stat-card">
+        <h3>New (7 days)</h3>
+        <span id="newApplicants">0</span>
+      </div>
+    </div>
+  </div>
 
-<!-- ================= FIREBASE SECURITY GATE ================= -->
+  <!-- ================= POST JOB ================= -->
+  <div id="postJob" class="section hidden">
+    <h2>Post a Job</h2>
+    <input id="jobTitle" placeholder="Job title">
+    <textarea id="jobDescription" placeholder="Job description"></textarea>
+    <select id="jobType">
+      <option>Full Time</option>
+      <option>Part Time</option>
+      <option>Internship</option>
+    </select>
+    <button class="primary-btn" id="postJobBtn">Post Job</button>
+  </div>
+
+  <!-- ================= JOBS ================= -->
+  <div id="jobs" class="section hidden">
+    <h2>My Jobs</h2>
+    <div id="jobsList"></div>
+  </div>
+
+  <!-- ================= APPLICANTS ================= -->
+  <div id="applicants" class="section hidden">
+    <h2>Applicants</h2>
+    <div id="applicantsList"></div>
+  </div>
+
+  <!-- ================= COMPANY ================= -->
+  <div id="company" class="section hidden">
+    <h2>Company Profile</h2>
+    <input id="companyName" placeholder="Company name">
+    <textarea id="companyDesc" placeholder="Company description"></textarea>
+    <button class="primary-btn">Save</button>
+  </div>
+
+</div>
+
 <script type="module">
-/*
-  This script ENFORCES recruiter-only access.
-  Even if someone types the URL manually, they will be blocked.
-*/
-
+/* ======================================================
+   FIREBASE IMPORTS
+====================================================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getIdTokenResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getAuth, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+/* ======================================================
+   FIREBASE CONFIG
+====================================================== */
 const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
   authDomain: "career-unified.firebaseapp.com",
-  projectId: "career-unified",
-  storageBucket: "career-unified.firebasestorage.app",
-  messagingSenderId: "101656817742",
-  appId: "1:101656817742:web:22c9a58a822a714e54931f"
+  projectId: "career-unified"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// HARD SECURITY CHECK
-onAuthStateChanged(auth, async (user) => {
+/* ======================================================
+   NAVIGATION
+====================================================== */
+window.showSection = (id) => {
+  document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
 
-  // Not logged in → kick out
+  document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+};
+
+/* ======================================================
+   AUTH GUARD
+====================================================== */
+onAuthStateChanged(auth, user => {
   if (!user) {
     window.location.href = "login.html";
-    return;
   }
-
-  // Get token + custom claims
-  const token = await getIdTokenResult(user, true);
-
-  // Not an approved recruiter → kick out
-  if (!token.claims.recruiter) {
-    alert("Access denied: Recruiter approval required.");
-    window.location.href = "index.html";
-    return;
-  }
-
-  // ✅ Approved recruiter → show page
-  document.body.style.display = "block";
 });
 
-// Logout function
-window.logout = async function(){
-  await signOut(auth);
-  window.location.href = "index.html";
+/* ======================================================
+   LOGOUT
+====================================================== */
+document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+/* ======================================================
+   POST JOB
+====================================================== */
+document.getElementById('postJobBtn').onclick = async () => {
+  const title = jobTitle.value.trim();
+  if (!title) return alert("Job title required");
+
+  await addDoc(collection(db, "jobs"), {
+    title,
+    description: jobDescription.value,
+    type: jobType.value,
+    recruiterId: auth.currentUser.uid,
+    status: "active",
+    createdAt: serverTimestamp()
+  });
+
+  alert("Job posted");
 };
-</script>
-
-<script>
-// Existing dashboard logic (UNCHANGED)
-let plan="Free";
-
-function openCV(){
-  if(plan==="Free"){
-    alert("Upgrade to view full CV");
-    return;
-  }
-}
-new Chart(document.getElementById("viewsChart"),{
-  type:"line",
-  data:{
-    labels:["Mon","Tue","Wed","Thu","Fri"],
-    datasets:[{label:"CV Views",data:[2,4,6,8,10],borderColor:"#2563eb",tension:.4}]
-  }
-});
 </script>
 
 </body>
 </html>
+
 
 
