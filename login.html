@@ -3,102 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <title>Login – Career Unified</title>
-<link rel="stylesheet" href="css/style.css">
+
 <style>
-/* =========================
-   GENERAL BODY STYLES
-========================= */
+/* =========================================================
+   RESET & BASE
+========================================================= */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-  height: 100vh;
+  min-height: 100vh;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0;
 }
 
-/* =========================
-   LOGIN CONTAINER
-========================= */
+/* =========================================================
+   LOGIN CARD
+========================================================= */
 .login-container {
-  background: #fff;
-  padding: 40px 35px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  width: 380px;
-  max-width: 90%;
+  background: #ffffff;
+  width: 420px;
+  max-width: 95%;
+  padding: 44px 38px;
+  border-radius: 20px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.2);
   text-align: center;
+  animation: fadeUp 0.5s ease;
 }
 
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   HEADINGS
+========================================================= */
 .login-container h2 {
-  margin-bottom: 25px;
+  margin-bottom: 6px;
   color: #1e3a8a;
+  font-size: 1.9rem;
   font-weight: 700;
-  font-size: 1.8rem;
 }
 
-/* =========================
+.subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 26px;
+}
+
+/* =========================================================
    INPUT FIELDS
-========================= */
+========================================================= */
+.field {
+  position: relative;
+}
+
 .login-container input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 13px 14px;
   margin: 10px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
   font-size: 14px;
+  transition: border 0.25s ease, box-shadow 0.25s ease;
 }
 
-.login-container button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  font-size: 15px;
+.login-container input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* =========================================================
+   PASSWORD TOGGLE
+========================================================= */
+.toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
-  transition: 0.3s ease;
+  font-size: 13px;
+  color: #2563eb;
+  font-weight: 600;
 }
 
-/* =========================
+/* =========================================================
+   BUTTONS
+========================================================= */
+button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* =========================================================
    LOGIN BUTTON
-========================= */
+========================================================= */
 #loginBtn {
   background: #1e3a8a;
-  color: #fff;
+  color: #ffffff;
 }
 
-#loginBtn:hover { background: #162c6f; }
+#loginBtn:hover {
+  background: #162c6f;
+  box-shadow: 0 10px 18px rgba(30,58,138,0.25);
+}
 
-/* =========================
+/* =========================================================
+   DIVIDER
+========================================================= */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 22px 0 12px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+/* =========================================================
    GOOGLE BUTTON
-========================= */
+========================================================= */
 .google-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
-  color: #000;
-  border: 1px solid #ccc;
-  margin-top: 10px;
+  gap: 10px;
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
 }
 
-.google-btn img {
+.google-btn:hover {
+  background: #f9fafb;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+
+.google-icon {
   width: 20px;
-  margin-right: 10px;
+  height: 20px;
 }
 
-.google-btn:hover { background: #f5f5f5; }
-
-/* =========================
-   LINKS & MESSAGES
-========================= */
+/* =========================================================
+   LINKS & FOOTER
+========================================================= */
 .login-container p {
-  margin-top: 15px;
+  margin-top: 18px;
   font-size: 13px;
-  color: #555;
+  color: #4b5563;
 }
 
 .login-container p a {
@@ -107,99 +193,114 @@ body {
   font-weight: 600;
 }
 
-#errorMsg {
-  color: red;
-  margin-top: 8px;
-  font-size: 13px;
+.login-container p a:hover {
+  text-decoration: underline;
 }
 
-/* =========================
-   FORGOT PASSWORD LINK
-========================= */
 #forgotPassword {
-  margin-top: 5px;
-  display: block;
+  display: inline-block;
+  margin-top: 6px;
   font-size: 13px;
-  color: #1e3a8a;
-  text-decoration: underline;
+  color: #2563eb;
   cursor: pointer;
+  text-decoration: underline;
+}
+
+#errorMsg {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #dc2626;
+  min-height: 18px;
 }
 </style>
 </head>
+
 <body>
 
 <div class="login-container">
-  <h2>Login to Career Unified</h2>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
+
+  <h2>Welcome back</h2>
+  <div class="subtitle">Log in to your Career Unified account</div>
+
+  <input type="email" id="email" placeholder="Email address">
+
+  <div class="field">
+    <input type="password" id="password" placeholder="Password">
+    <span class="toggle-password" id="togglePassword">Show</span>
+  </div>
 
   <!-- LOGIN BUTTON -->
-  <button id="loginBtn">Login</button>
+  <button id="loginBtn">Log in</button>
 
-  <!-- GOOGLE LOGIN BUTTON -->
+  <div class="divider"><span>or continue with</span></div>
+
+  <!-- GOOGLE LOGIN -->
   <button id="googleLogin" class="google-btn">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G Logo"> Login with Google
+    <svg class="google-icon" viewBox="0 0 48 48">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.7 1.22 9.18 3.6l6.86-6.86C35.9 2.38 30.47 0 24 0 14.62 0 6.52 5.38 2.56 13.22l8.02 6.22C12.36 13.09 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.5 24c0-1.64-.15-3.21-.43-4.73H24v9.02h12.66c-.55 2.97-2.2 5.49-4.66 7.19l7.18 5.58C43.44 36.98 46.5 30.98 46.5 24z"/>
+      <path fill="#FBBC05" d="M10.58 28.44c-.48-1.44-.76-2.97-.76-4.44s.27-3 .76-4.44l-8.02-6.22C.92 16.46 0 20.12 0 24s.92 7.54 2.56 10.66l8.02-6.22z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.9-2.13 15.86-5.78l-7.18-5.58c-1.99 1.34-4.53 2.13-8.68 2.13-6.26 0-11.64-3.59-13.42-8.94l-8.02 6.22C6.52 42.62 14.62 48 24 48z"/>
+    </svg>
+    Log in with Google
   </button>
 
-  <!-- FORGOT PASSWORD LINK -->
-  <span id="forgotPassword">Forgot Password?</span>
+  <span id="forgotPassword">Forgot password?</span>
 
-  <!-- SIGN UP LINK -->
-  <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+  <p>Don’t have an account? <a href="signup.html">Create one</a></p>
   <p id="errorMsg"></p>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-  getAuth, 
-  signInWithEmailAndPassword, 
-  GoogleAuthProvider, 
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithPopup,
   sendPasswordResetEmail,
   onAuthStateChanged,
   getIdTokenResult
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* =========================
-   FIREBASE CONFIG
-========================= */
+/* ================= FIREBASE CONFIG ================= */
 const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
   authDomain: "career-unified.firebaseapp.com",
   projectId: "career-unified",
   storageBucket: "career-unified.appspot.com",
   messagingSenderId: "101656817742",
-  appId: "1:101656817742:web:22c9a58a822a714e54931f",
-  measurementId: "G-2Z934XRVXT"
+  appId: "1:101656817742:web:22c9a58a822a714e54931f"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-/* =========================
-   HELPER FUNCTION: REDIRECT BASED ON CLAIMS
-========================= */
-async function redirectUser(user) {
-  // Get ID token to read custom claims
-  const tokenResult = await getIdTokenResult(user);
-  const claims = tokenResult.claims;
+/* ================= PASSWORD TOGGLE ================= */
+document.getElementById('togglePassword').onclick = () => {
+  const input = document.getElementById('password');
+  const toggle = document.getElementById('togglePassword');
+  if (input.type === "password") {
+    input.type = "text";
+    toggle.textContent = "Hide";
+  } else {
+    input.type = "password";
+    toggle.textContent = "Show";
+  }
+};
 
-  // If user is approved recruiter → recruiter-dashboard
-  if (claims.recruiter) {
+/* ================= REDIRECT BASED ON CLAIMS ================= */
+async function redirectUser(user) {
+  const tokenResult = await getIdTokenResult(user);
+  if (tokenResult.claims.recruiter) {
     window.location.href = "recruiter-dashboard.html";
   } else {
-    // Otherwise → normal jobs page
     window.location.href = "index.html";
   }
 }
 
-/* =========================
-   EMAIL/PASSWORD LOGIN
-========================= */
+/* ================= EMAIL LOGIN ================= */
 document.getElementById('loginBtn').onclick = async () => {
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value.trim();
@@ -213,16 +314,13 @@ document.getElementById('loginBtn').onclick = async () => {
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    // Redirect based on claims
     await redirectUser(userCredential.user);
   } catch (error) {
     errorMsg.textContent = error.message;
   }
 };
 
-/* =========================
-   GOOGLE LOGIN
-========================= */
+/* ================= GOOGLE LOGIN ================= */
 document.getElementById('googleLogin').onclick = async () => {
   const errorMsg = document.getElementById('errorMsg');
   errorMsg.textContent = '';
@@ -234,16 +332,14 @@ document.getElementById('googleLogin').onclick = async () => {
   }
 };
 
-/* =========================
-   FORGOT PASSWORD
-========================= */
+/* ================= FORGOT PASSWORD ================= */
 document.getElementById('forgotPassword').onclick = async () => {
   const email = document.getElementById('email').value.trim();
   const errorMsg = document.getElementById('errorMsg');
   errorMsg.textContent = '';
 
   if (!email) {
-    errorMsg.textContent = 'Please enter your email to reset password.';
+    errorMsg.textContent = 'Please enter your email to reset your password.';
     return;
   }
 
@@ -255,9 +351,7 @@ document.getElementById('forgotPassword').onclick = async () => {
   }
 };
 
-/* =========================
-   AUTO REDIRECT IF USER ALREADY LOGGED IN
-========================= */
+/* ================= AUTO REDIRECT ================= */
 onAuthStateChanged(auth, async user => {
   if (user) {
     await redirectUser(user);
@@ -267,5 +361,6 @@ onAuthStateChanged(auth, async user => {
 
 </body>
 </html>
+
 
 
