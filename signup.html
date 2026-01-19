@@ -233,6 +233,19 @@ button {
   color: #dc2626;
   min-height: 16px; /* ⬅ reduced */
 }
+
+   .role-card h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Space between text and line */
+}
+
+.vertical-line {
+  width: 1px;
+  height: 1em; /* Height matches the text size */
+  background-color: #ccc;
+  display: inline-block;
+}
 </style>
 </head>
 
@@ -244,10 +257,13 @@ button {
   <div class="subtitle">Choose how you want to use Career Unified</div>
 
   <!-- ROLE SELECTOR -->
-  <div class="role-selector">
-    <div class="role-card active" data-role="user">
-      <h4>Job Seeker | Student</h4>
-      <p>Find jobs & apply</p>
+  <div class="role-card active" data-role="user">
+  <h4>
+    <span>Job Seeker</span>
+    <span class="vertical-line"></span>
+    <span>Student</span>
+  </h4>
+  <p>Find jobs & apply</p>
     </div>
     <div class="role-card" data-role="recruiter">
       <h4>Recruiter</h4>
