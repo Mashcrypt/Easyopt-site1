@@ -118,7 +118,7 @@ onAuthStateChanged(auth, async user => {
     if (token.claims.recruiter) {
       window.location.href = "recruiter-dashboard.html"; // Approved recruiter
     } else {
-      window.location.href = "jobs.html"; // Normal user
+      window.location.href = "index.html"; // Normal user
     }
   }
 });
@@ -146,7 +146,7 @@ document.getElementById('signupBtn').onclick = async () => {
       createdAt: serverTimestamp()
     });
 
-    window.location.href = "jobs.html"; // Normal users
+    window.location.href = "index.html"; // Normal users
   } catch (error) {
     document.getElementById('errorMsg').textContent = error.message;
   }
