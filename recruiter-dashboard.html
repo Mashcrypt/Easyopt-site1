@@ -4,14 +4,12 @@
 <meta charset="UTF-8">
 <title>Recruiter Dashboard – Career Unified</title>
 
+<!-- ================== STYLES ================== -->
 <style>
 /* =========================================================
    GLOBAL BASE
 ========================================================= */
-* {
-  box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
@@ -32,12 +30,7 @@ body {
   display: flex;
   flex-direction: column;
 }
-
-.sidebar h2 {
-  font-size: 18px;
-  margin-bottom: 30px;
-}
-
+.sidebar h2 { font-size: 18px; margin-bottom: 30px; }
 .sidebar a {
   color: #e5e7eb;
   text-decoration: none;
@@ -47,21 +40,13 @@ body {
   display: block;
   font-size: 14px;
 }
-
 .sidebar a.active,
-.sidebar a:hover {
-  background: #2563eb;
-  color: #fff;
-}
+.sidebar a:hover { background: #2563eb; color: #fff; }
 
 /* =========================================================
    MAIN CONTENT
 ========================================================= */
-.main {
-  flex: 1;
-  padding: 28px;
-  overflow-y: auto;
-}
+.main { flex: 1; padding: 28px; overflow-y: auto; }
 
 /* =========================================================
    TOP BAR
@@ -72,12 +57,7 @@ body {
   align-items: center;
   margin-bottom: 28px;
 }
-
-.topbar h1 {
-  font-size: 22px;
-  font-weight: 700;
-}
-
+.topbar h1 { font-size: 22px; font-weight: 700; }
 .logout-btn {
   background: #ef4444;
   border: none;
@@ -96,25 +76,14 @@ body {
   gap: 16px;
   margin-bottom: 30px;
 }
-
 .stat-card {
   background: #fff;
   padding: 18px;
   border-radius: 14px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
-
-.stat-card h3 {
-  font-size: 13px;
-  color: #6b7280;
-  margin-bottom: 6px;
-}
-
-.stat-card span {
-  font-size: 26px;
-  font-weight: 700;
-  color: #1e3a8a;
-}
+.stat-card h3 { font-size: 13px; color: #6b7280; margin-bottom: 6px; }
+.stat-card span { font-size: 26px; font-weight: 700; color: #1e3a8a; }
 
 /* =========================================================
    SECTIONS
@@ -126,28 +95,13 @@ body {
   margin-bottom: 26px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
-
-.section h2 {
-  font-size: 18px;
-  margin-bottom: 14px;
-}
+.section h2 { font-size: 18px; margin-bottom: 14px; }
 
 /* =========================================================
    JOB FORM
 ========================================================= */
-input, textarea, select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-}
-
-textarea {
-  resize: vertical;
-}
-
+input, textarea, select { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; }
+textarea { resize: vertical; }
 .primary-btn {
   background: #1e3a8a;
   color: #fff;
@@ -157,35 +111,15 @@ textarea {
   font-weight: 600;
   cursor: pointer;
 }
-
-.primary-btn:hover {
-  background: #162c6f;
-}
+.primary-btn:hover { background: #162c6f; }
 
 /* =========================================================
    JOB LIST
 ========================================================= */
-.job {
-  border-bottom: 1px solid #e5e7eb;
-  padding: 14px 0;
-}
-
-.job:last-child {
-  border-bottom: none;
-}
-
-.job h4 {
-  margin: 0;
-}
-
-.badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  margin-top: 6px;
-}
-
+.job { border-bottom: 1px solid #e5e7eb; padding: 14px 0; }
+.job:last-child { border-bottom: none; }
+.job h4 { margin: 0; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; margin-top: 6px; }
 .badge.active { background: #dcfce7; color: #166534; }
 .badge.closed { background: #fee2e2; color: #991b1b; }
 
@@ -196,30 +130,27 @@ textarea {
   padding: 12px 0;
   border-bottom: 1px solid #e5e7eb;
 }
-
-.applicant:last-child {
-  border-bottom: none;
-}
-
-.status {
+.applicant:last-child { border-bottom: none; }
+.status { font-size: 12px; font-weight: 600; }
+.cv-snapshot {
+  background: #f1f5f9;
+  padding: 8px;
+  border-radius: 6px;
+  font-family: monospace;
   font-size: 12px;
-  font-weight: 600;
+  white-space: pre-wrap;
+  margin-bottom: 6px;
 }
 
 /* =========================================================
    HIDDEN
 ========================================================= */
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 </style>
 </head>
-
 <body>
 
-<!-- ======================================================
-     SIDEBAR
-====================================================== -->
+<!-- ================= SIDEBAR ================= -->
 <div class="sidebar">
   <h2>Career Unified</h2>
   <a href="#" class="active" onclick="showSection('overview')">Overview</a>
@@ -230,9 +161,7 @@ textarea {
   <a href="#" onclick="showSection('billing')">Billing & Plan</a>
 </div>
 
-<!-- ======================================================
-     MAIN
-====================================================== -->
+<!-- ================= MAIN ================= -->
 <div class="main">
 
   <div class="topbar">
@@ -243,22 +172,10 @@ textarea {
   <!-- ================= OVERVIEW ================= -->
   <div id="overview" class="section">
     <div class="stats">
-      <div class="stat-card">
-        <h3>Total Jobs</h3>
-        <span id="totalJobs">0</span>
-      </div>
-      <div class="stat-card">
-        <h3>Active Jobs</h3>
-        <span id="activeJobs">0</span>
-      </div>
-      <div class="stat-card">
-        <h3>Total Applicants</h3>
-        <span id="totalApplicants">0</span>
-      </div>
-      <div class="stat-card">
-        <h3>New (7 days)</h3>
-        <span id="newApplicants">0</span>
-      </div>
+      <div class="stat-card"><h3>Total Jobs</h3><span id="totalJobs">0</span></div>
+      <div class="stat-card"><h3>Active Jobs</h3><span id="activeJobs">0</span></div>
+      <div class="stat-card"><h3>Total Applicants</h3><span id="totalApplicants">0</span></div>
+      <div class="stat-card"><h3>New (7 days)</h3><span id="newApplicants">0</span></div>
     </div>
   </div>
 
@@ -295,34 +212,20 @@ textarea {
     <button class="primary-btn">Save</button>
   </div>
 
-</div>
-
-<!-- ================= BILLING ================= -->
-<div id="billing" class="section hidden">
-  <h2>Plan & Billing</h2>
-
-  <div class="stats">
-    <div class="stat-card">
-      <h3>Current Plan</h3>
-      <span id="currentPlan">Free</span>
+  <!-- ================= BILLING ================= -->
+  <div id="billing" class="section hidden">
+    <h2>Plan & Billing</h2>
+    <div class="stats">
+      <div class="stat-card"><h3>Current Plan</h3><span id="currentPlan">Free</span></div>
+      <div class="stat-card"><h3>CV Views Used</h3><span id="cvUsed">0</span></div>
+      <div class="stat-card"><h3>CV Limit</h3><span id="cvLimit">20</span></div>
     </div>
-    <div class="stat-card">
-      <h3>CV Views Used</h3>
-      <span id="cvUsed">0</span>
-    </div>
-    <div class="stat-card">
-      <h3>CV Limit</h3>
-      <span id="cvLimit">20</span>
-    </div>
+    <div id="planCardsContainer"></div>
   </div>
-
-  <button class="primary-btn">Upgrade Plan</button>
 </div>
 
+<!-- ================= SCRIPT ================= -->
 <script type="module">
-/* ======================================================
-   FIREBASE IMPORTS
-====================================================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut, getIdTokenResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -335,7 +238,6 @@ const firebaseConfig = {
   authDomain: "career-unified.firebaseapp.com",
   projectId: "career-unified"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -351,18 +253,17 @@ window.showSection = (id) => {
 };
 
 /* ======================================================
-   RECRUITER SECURITY GATE
+   SECURITY GATE (Recruiters only)
 ====================================================== */
 onAuthStateChanged(auth, async (user) => {
   if (!user) { window.location.href = "login.html"; return; }
   const token = await getIdTokenResult(user, true);
   if (!token.claims.recruiter) {
-    alert("Access denied. Recruiter approval required.");
-    window.location.href = "index.html";
-    return;
+    alert("Access denied. Recruiter only.");
+    window.location.href = "index.html"; return;
   }
-  loadJobs();
-  loadApplicants();
+  // Load dashboard
+  loadJobs(); loadApplicants(); renderPlanCards(); updatePlanDisplay();
 });
 
 /* ======================================================
@@ -371,127 +272,112 @@ onAuthStateChanged(auth, async (user) => {
 document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
 /* ======================================================
-   POST JOB
+   PLAN DATA
 ====================================================== */
-document.getElementById('postJobBtn').onclick = async () => {
-  const title = jobTitle.value.trim();
-  if (!title) return alert("Job title required");
-  await addDoc(collection(db, "jobs"), {
-    title,
-    description: jobDescription.value,
-    type: jobType.value,
-    recruiterId: auth.currentUser.uid,
-    status: "active",
-    createdAt: serverTimestamp()
-  });
-  alert("Job posted");
+const plans = {
+  Free: { price: 0, cvLimit: 20, benefits: ["Post jobs","Preview limited CVs"] },
+  Pro: { price: 49, cvLimit: 100, benefits: ["Post jobs","Full CV access","Priority support"] },
+  Enterprise: { price: 149, cvLimit: 500, benefits: ["All Pro benefits","Dedicated account manager","Advanced analytics"] }
 };
+let userPlan = "Free"; 
+let cvViewed = 0;
 
 /* ======================================================
-   LOAD JOBS
+   JOB FUNCTIONS
 ====================================================== */
+document.getElementById('postJobBtn').onclick = async () => {
+  const title = jobTitle.value.trim(); if(!title) return alert("Job title required");
+  await addDoc(collection(db,"jobs"),{
+    title, description: jobDescription.value, type: jobType.value,
+    recruiterId: auth.currentUser.uid, status:"active",
+    createdAt: serverTimestamp(), planExpiry: new Date(new Date().setMonth(new Date().getMonth()+1))
+  });
+  alert("Job posted"); loadJobs();
+};
+
 async function loadJobs() {
-  const q = query(collection(db, "jobs"), where("recruiterId", "==", auth.currentUser.uid));
-  const snap = await getDocs(q);
-  const list = document.getElementById("jobsList");
-  list.innerHTML = "";
+  const q = query(collection(db,"jobs"), where("recruiterId","==",auth.currentUser.uid));
+  const snap = await getDocs(q); const list = document.getElementById("jobsList"); list.innerHTML = "";
+  let activeJobs = 0;
   snap.forEach(doc => {
     const job = doc.data();
-    list.innerHTML += `<div class="job"><h4>${job.title}</h4><span class="badge ${job.status}">${job.status.toUpperCase()}</span></div>`;
+    const now = new Date();
+    const expiry = job.planExpiry ? new Date(job.planExpiry.seconds*1000) : now;
+    let status = job.status;
+    if(expiry < now) status = "closed";
+    if(status=="active") activeJobs++;
+    list.innerHTML += `<div class="job">
+      <h4>${job.title}</h4>
+      <span class="badge ${status}">${status.toUpperCase()}</span>
+      </div>`;
   });
-  totalJobs.textContent = snap.size;
+  totalJobs.textContent = snap.size; activeJobsElem.textContent = activeJobs;
 }
 
 /* ======================================================
-   LOAD APPLICANTS + CV ACCESS
+   APPLICANTS / CV SNAPSHOT
 ====================================================== */
-let userPlan = "Free";
-let cvViewed = 0;
-
 async function loadApplicants() {
-  const q = query(collection(db, "applications"), where("recruiterId", "==", auth.currentUser.uid));
-  const snap = await getDocs(q);
-  const list = document.getElementById("applicantsList");
-  list.innerHTML = "";
-  snap.forEach(doc => {
+  const q = query(collection(db,"applications"),where("recruiterId","==",auth.currentUser.uid));
+  const snap = await getDocs(q); const list = document.getElementById("applicantsList"); list.innerHTML="";
+  snap.forEach(doc=>{
     const app = doc.data();
-    const isLocked = cvViewed >= plans[userPlan].cvLimit;
-    list.innerHTML += `<div class="applicant"><strong>${app.name}</strong><br><span class="status">${app.status || "New"}</span><br><br><button class="primary-btn" ${isLocked ? "disabled" : ""} onclick="viewCV('${app.cvUrl}')">${isLocked ? "Locked (Upgrade to view)" : "View CV"}</button></div>`;
+    const cvText = app.cvText || "No preview available";
+    list.innerHTML += `<div class="applicant">
+      <strong>${app.name}</strong><br>
+      <span class="status">${app.status||"New"}</span><br>
+      <div class="cv-snapshot">${cvText.slice(0,300)}...</div>
+      <button class="primary-btn" onclick="viewCV('${app.cvUrl}')">View CV</button>
+    </div>`;
   });
   totalApplicants.textContent = snap.size;
 }
 
 /* ======================================================
-   CV VIEW FUNCTION WITH LIMIT
+   VIEW CV WITH PLAN LIMITS
 ====================================================== */
-const originalViewCV = window.viewCV || ((url)=>window.open(url,"_blank"));
 window.viewCV = (url) => {
-  if(cvViewed>=plans[userPlan].cvLimit){
-    alert(`CV view limit reached for ${userPlan} plan. Upgrade to view more CVs.`);
+  if(cvViewed >= plans[userPlan].cvLimit){
+    alert(`CV view limit reached for ${userPlan}. Upgrade to view more.`);
     return;
   }
-  cvViewed++;
-  updatePlanDisplay();
-  originalViewCV(url);
+  cvViewed++; updatePlanDisplay();
+  window.open(url,"_blank");
 };
 
 /* ======================================================
-   PLANS DATA
+   PLAN DISPLAY & UPGRADE
 ====================================================== */
-const plans = {
-  Free: { price: 0, cvLimit: 20, benefits: ["Post jobs", "View limited CVs"] },
-  Pro: { price: 49, cvLimit: 100, benefits: ["Post jobs", "Unlimited CV views", "Priority support"] },
-  Enterprise: { price: 149, cvLimit: 500, benefits: ["All Pro benefits", "Dedicated account manager", "Advanced analytics"] }
-};
-
-/* ======================================================
-   UPDATE PLAN DISPLAY
-====================================================== */
-function updatePlanDisplay() {
-  document.getElementById("currentPlan").textContent = userPlan;
-  document.getElementById("cvLimit").textContent = plans[userPlan].cvLimit;
-  document.getElementById("cvUsed").textContent = cvViewed;
-}
-
-/* ======================================================
-   PLAN CARDS
-====================================================== */
-function renderPlanCards() {
-  const billingSection = document.getElementById("billing");
-  let cardsHtml = `<div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:20px;">`;
+function renderPlanCards(){
+  const container = document.getElementById("planCardsContainer"); container.innerHTML="";
   for(const key in plans){
     const plan = plans[key];
-    cardsHtml += `<div style="background:#fff; flex:1 1 200px; border-radius:14px; padding:20px; box-shadow:0 8px 20px rgba(0,0,0,0.08); text-align:center;">
-    <h3 style="margin-bottom:6px;">${key}</h3>
-    <p style="font-weight:700; font-size:20px; margin:6px 0;">$${plan.price}/mo</p>
-    <p style="font-size:14px; color:#6b7280;">CV Limit: ${plan.cvLimit}</p>
-    <ul style="text-align:left; padding-left:20px; font-size:13px; margin:12px 0;">${plan.benefits.map(b=>`<li>${b}</li>`).join("")}</ul>
-    <button style="background:#1e3a8a; color:#fff; padding:10px 14px; border:none; border-radius:8px; font-weight:600; cursor:pointer;" onclick="upgradePlan('${key}')">Select Plan</button>
+    container.innerHTML+=`<div style="background:#fff;flex:1 1 200px;border-radius:14px;padding:20px;margin:10px;box-shadow:0 8px 20px rgba(0,0,0,0.08);display:inline-block;">
+      <h3>${key}</h3>
+      <p style="font-weight:700;font-size:20px;">$${plan.price}/mo</p>
+      <p>CV Limit: ${plan.cvLimit}</p>
+      <ul>${plan.benefits.map(b=>`<li>${b}</li>`).join("")}</ul>
+      <button style="background:#1e3a8a;color:#fff;padding:10px;border:none;border-radius:8px;cursor:pointer;" onclick="upgradePlan('${key}')">Select Plan</button>
     </div>`;
   }
-  cardsHtml += `</div>`;
-  billingSection.innerHTML += cardsHtml;
 }
 
-/* ======================================================
-   UPGRADE PLAN FUNCTION
-====================================================== */
-window.upgradePlan = (planName) => {
-  userPlan = planName;
-  cvViewed = 0;
-  updatePlanDisplay();
+function updatePlanDisplay(){
+  document.getElementById("currentPlan").textContent=userPlan;
+  document.getElementById("cvLimit").textContent=plans[userPlan].cvLimit;
+  document.getElementById("cvUsed").textContent=cvViewed;
+}
+
+window.upgradePlan=(planName)=>{
+  userPlan=planName; cvViewed=0; updatePlanDisplay();
   alert(`Plan upgraded to ${planName}!`);
 };
-
-/* ======================================================
-   INITIALIZE
-====================================================== */
-renderPlanCards();
-updatePlanDisplay();
 </script>
 
 </body>
 </html>
+
+
 
 
 
