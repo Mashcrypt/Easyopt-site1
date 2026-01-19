@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Sign Up – Career Unified</title>
-<link rel="stylesheet" href="css/style.css">
 
 <style>
 /* =========================================================
@@ -28,11 +27,11 @@ body {
 ========================================================= */
 .signup-container {
   background: #ffffff;
-  width: 400px;
-  max-width: 92%;
-  padding: 42px 36px;
-  border-radius: 18px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18);
+  width: 420px;
+  max-width: 95%;
+  padding: 44px 38px;
+  border-radius: 20px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
   text-align: center;
   animation: fadeUp 0.5s ease;
 }
@@ -40,7 +39,7 @@ body {
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -49,24 +48,67 @@ body {
 }
 
 /* =========================================================
-   HEADINGS & TEXT
+   HEADINGS
 ========================================================= */
 .signup-container h2 {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: #1e3a8a;
   font-size: 1.9rem;
   font-weight: 700;
 }
 
-.signup-container .subtitle {
+.subtitle {
   font-size: 13px;
   color: #6b7280;
-  margin-bottom: 24px;
+  margin-bottom: 26px;
+}
+
+/* =========================================================
+   ROLE SELECTOR
+========================================================= */
+.role-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.role-card {
+  flex: 1;
+  padding: 14px 10px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.role-card h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.role-card p {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.role-card.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.role-card:hover {
+  border-color: #2563eb;
 }
 
 /* =========================================================
    INPUT FIELDS
 ========================================================= */
+.field {
+  position: relative;
+}
+
 .signup-container input {
   width: 100%;
   padding: 13px 14px;
@@ -84,9 +126,23 @@ body {
 }
 
 /* =========================================================
-   PRIMARY BUTTON
+   PASSWORD TOGGLE
 ========================================================= */
-.signup-container button {
+.toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 13px;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+button {
   width: 100%;
   padding: 13px;
   margin-top: 14px;
@@ -98,7 +154,7 @@ body {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.signup-container button:active {
+button:active {
   transform: scale(0.98);
 }
 
@@ -146,7 +202,6 @@ body {
   background: #ffffff;
   color: #111827;
   border: 1px solid #d1d5db;
-  margin-top: 6px;
 }
 
 .google-btn:hover {
@@ -154,14 +209,13 @@ body {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Google SVG logo */
 .google-icon {
   width: 20px;
   height: 20px;
 }
 
 /* =========================================================
-   FOOTER TEXT
+   FOOTER
 ========================================================= */
 .signup-container p {
   margin-top: 18px;
@@ -191,19 +245,35 @@ body {
 <body>
 
 <div class="signup-container">
+
   <h2>Create your account</h2>
-  <div class="subtitle">Join Career Unified and unlock opportunities</div>
+  <div class="subtitle">Choose how you want to use Career Unified</div>
+
+  <!-- ROLE SELECTOR -->
+  <div class="role-selector">
+    <div class="role-card active" data-role="user">
+      <h4>Job Seeker</h4>
+      <p>Find jobs & apply</p>
+    </div>
+    <div class="role-card" data-role="recruiter">
+      <h4>Recruiter</h4>
+      <p>Post & manage jobs</p>
+    </div>
+  </div>
 
   <input type="text" id="fullName" placeholder="Full name">
   <input type="email" id="email" placeholder="Email address">
-  <input type="password" id="password" placeholder="Password">
+
+  <div class="field">
+    <input type="password" id="password" placeholder="Password">
+    <span class="toggle-password" id="togglePassword">Show</span>
+  </div>
 
   <button id="signupBtn">Create account</button>
 
   <div class="divider"><span>or continue with</span></div>
 
   <button id="googleSignup" class="google-btn">
-    <!-- OFFICIAL GOOGLE SVG (NEVER BREAKS) -->
     <svg class="google-icon" viewBox="0 0 48 48">
       <path fill="#EA4335" d="M24 9.5c3.54 0 6.7 1.22 9.18 3.6l6.86-6.86C35.9 2.38 30.47 0 24 0 14.62 0 6.52 5.38 2.56 13.22l8.02 6.22C12.36 13.09 17.74 9.5 24 9.5z"/>
       <path fill="#4285F4" d="M46.5 24c0-1.64-.15-3.21-.43-4.73H24v9.02h12.66c-.55 2.97-2.2 5.49-4.66 7.19l7.18 5.58C43.44 36.98 46.5 30.98 46.5 24z"/>
@@ -225,15 +295,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* 🔐 FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
   authDomain: "career-unified.firebaseapp.com",
   projectId: "career-unified",
   storageBucket: "career-unified.appspot.com",
   messagingSenderId: "101656817742",
-  appId: "1:101656817742:web:22c9a58a822a714e54931f",
-  measurementId: "G-2Z934XRVXT"
+  appId: "1:101656817742:web:22c9a58a822a714e54931f"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -241,7 +309,32 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-/* ---------------- AUTO REDIRECT IF ALREADY LOGGED IN ---------------- */
+/* ================= ROLE SELECTION ================= */
+let selectedRole = "user";
+
+document.querySelectorAll('.role-card').forEach(card => {
+  card.onclick = () => {
+    document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    selectedRole = card.dataset.role;
+  };
+});
+
+/* ================= PASSWORD TOGGLE ================= */
+document.getElementById('togglePassword').onclick = () => {
+  const passwordInput = document.getElementById('password');
+  const toggle = document.getElementById('togglePassword');
+
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    toggle.textContent = "Hide";
+  } else {
+    passwordInput.type = "password";
+    toggle.textContent = "Show";
+  }
+};
+
+/* ================= AUTO REDIRECT ================= */
 onAuthStateChanged(auth, async user => {
   if (user) {
     const token = await getIdTokenResult(user, true);
@@ -253,7 +346,7 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-/* ---------------- EMAIL/PASSWORD SIGNUP ---------------- */
+/* ================= EMAIL SIGNUP ================= */
 document.getElementById('signupBtn').onclick = async () => {
   const fullName = document.getElementById('fullName').value.trim();
   const email = document.getElementById('email').value.trim();
@@ -271,7 +364,7 @@ document.getElementById('signupBtn').onclick = async () => {
     await setDoc(doc(db, "users", userCredential.user.uid), {
       fullName,
       email,
-      role: "user",
+      role: selectedRole,
       createdAt: serverTimestamp()
     });
 
@@ -281,7 +374,7 @@ document.getElementById('signupBtn').onclick = async () => {
   }
 };
 
-/* ---------------- GOOGLE SIGNUP ---------------- */
+/* ================= GOOGLE SIGNUP ================= */
 document.getElementById('googleSignup').onclick = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
@@ -290,16 +383,11 @@ document.getElementById('googleSignup').onclick = async () => {
     await setDoc(doc(db, "users", user.uid), {
       fullName: user.displayName,
       email: user.email,
-      role: "user",
+      role: selectedRole,
       createdAt: serverTimestamp()
     }, { merge: true });
 
-    const token = await getIdTokenResult(user, true);
-    if (token.claims.recruiter) {
-      window.location.href = "index.html";
-    } else {
-      window.location.href = "index.html";
-    }
+    window.location.href = "index.html";
   } catch (error) {
     document.getElementById('errorMsg').textContent = error.message;
   }
@@ -308,6 +396,7 @@ document.getElementById('googleSignup').onclick = async () => {
 
 </body>
 </html>
+
 
 
 
