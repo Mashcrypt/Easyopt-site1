@@ -412,6 +412,109 @@ body {
   }
 }
 
+/* ======================================================
+   MANAGE JOBS
+====================================================== */
+
+.jobs-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}
+
+.jobs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.jobs-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.filter {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.jobs-table {
+  width: 100%;
+}
+
+.jobs-row {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1.5fr 1fr 1fr;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.jobs-row:last-child {
+  border-bottom: none;
+}
+
+.jobs-head {
+  font-weight: 600;
+  color: #2563eb;
+  background: #f8fafc;
+  padding: 14px 10px;
+  border-radius: 10px;
+}
+
+.job-location {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.applied {
+  color: #2563eb;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dates span {
+  display: block;
+}
+
+.dates small {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.status {
+  font-weight: 600;
+}
+
+.status.active {
+  color: #16a34a;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  border: none;
+  background: #eef2ff;
+  color: #1e3a8a;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.actions button:hover {
+  background: #e0e7ff;
+}
+
      
 </style>
 </head>
@@ -482,11 +585,92 @@ body {
     <p>Company profile management coming next.</p>
   </div>
 
-  <!-- JOBS -->
-  <div id="jobs" class="section">
+  
+ <!-- ================= MANAGE JOBS ================= -->
+<div id="jobs" class="section">
+  <h2>Manage Jobs</h2>
+  <p style="color:#6b7280; margin-bottom:20px;">Ready to jump back in?</p>
+
+  <div class="jobs-card">
+    <div class="jobs-header">
+      <h3>My Job Listings</h3>
+
+      <select class="filter">
+        <option>Last 6 Months</option>
+        <option>Last 12 Months</option>
+        <option>All Time</option>
+      </select>
+    </div>
+
+    <div class="jobs-table">
+
+      <!-- TABLE HEADER -->
+      <div class="jobs-row jobs-head">
+        <span>Title</span>
+        <span>Applications</span>
+        <span>Created & Expired</span>
+        <span>Status</span>
+        <span>Action</span>
+      </div>
+
+      <!-- JOB ROW -->
+      <div class="jobs-row">
+        <div>
+          <strong>Senior Full Stack Engineer</strong>
+          <div class="job-location">
+            <i class='bx bx-map'></i> London, UK
+          </div>
+        </div>
+
+        <div class="applied">3+ Applied</div>
+
+        <div class="dates">
+          <span>Oct 27, 2024</span>
+          <small>Expires: Apr 25, 2025</small>
+        </div>
+
+        <div class="status active">Active</div>
+
+        <div class="actions">
+          <button title="View"><i class='bx bx-show'></i></button>
+          <button title="Edit"><i class='bx bx-edit'></i></button>
+          <button title="Delete"><i class='bx bx-trash'></i></button>
+        </div>
+      </div>
+
+      <!-- JOB ROW -->
+      <div class="jobs-row">
+        <div>
+          <strong>Senior Product Designer</strong>
+          <div class="job-location">
+            <i class='bx bx-map'></i> London, UK
+          </div>
+        </div>
+
+        <div class="applied">3+ Applied</div>
+
+        <div class="dates">
+          <span>Oct 20, 2024</span>
+          <small>Expires: Apr 20, 2025</small>
+        </div>
+
+        <div class="status active">Active</div>
+
+        <div class="actions">
+          <button><i class='bx bx-show'></i></button>
+          <button><i class='bx bx-edit'></i></button>
+          <button><i class='bx bx-trash'></i></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
     <h2>Manage Jobs</h2>
     <p>Job posting & expiration logic will live here.</p>
   </div>
+     
 <!-- ================= POST A JOB ================= -->
 <div id="post-job" class="section">
 
@@ -748,6 +932,13 @@ document.getElementById("jobForm")?.addEventListener("submit", function (e) {
   alert("Job posted successfully (client-side demo).");
 
   this.reset();
+});
+
+/* This is for mange jobs */  
+     document.querySelectorAll('.actions button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    alert("Action triggered (wire to Firebase next)");
+  });
 });
 
      
