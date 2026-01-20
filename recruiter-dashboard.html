@@ -278,7 +278,141 @@ body {
   border-radius: 8px;
   cursor: pointer;
 }
+     
+   /* ======================================================
+   POST A JOB FORM STYLING
+====================================================== */
 
+#post-job h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+#post-job p {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* FORM CARD */
+#post-job .cv-card {
+  padding: 28px;
+}
+
+/* SECTION HEADINGS */
+#post-job h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 14px;
+}
+
+/* FORM GRID */
+#post-job .row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* FORM GROUP */
+#post-job .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+/* LABELS */
+#post-job label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+/* INPUTS */
+#post-job input,
+#post-job select,
+#post-job textarea {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  font-family: inherit;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+/* TEXTAREA */
+#post-job textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* FOCUS STATE */
+#post-job input:focus,
+#post-job select:focus,
+#post-job textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* CHECKBOX */
+#post-job input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+  transform: scale(1.1);
+}
+
+#post-job label input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* BUTTONS */
+#post-job .primary-btn {
+  background: #1e3a8a;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#post-job .primary-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* SECONDARY BUTTON */
+#post-job .primary-btn.secondary {
+  background: #6b7280;
+}
+
+#post-job .primary-btn.secondary:hover {
+  background: #4b5563;
+}
+
+/* BUTTON GROUP */
+#post-job .btn-group,
+#post-job .btn-container {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 600px) {
+  #post-job .cv-card {
+    padding: 20px;
+  }
+}
+
+     
 </style>
 </head>
 
