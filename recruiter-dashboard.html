@@ -258,7 +258,8 @@ body {
     <a onclick="showSection('jobs')"><i class='bx bx-briefcase'></i>Manage Jobs</a>
     <a onclick="showSection('cvs')"><i class='bx bx-file'></i>CV Library</a>
     <a onclick="showSection('billing')"><i class='bx bx-credit-card'></i>Packages</a>
-    <a><i class='bx bx-log-out'></i>Logout</a>
+    <a onclick="logoutUser()"><i class='bx bx-log-out'></i>Logout</a>
+
   </div>
 </div>
 
@@ -298,7 +299,63 @@ body {
   <div id="company" class="section"><h2>Company Profile</h2></div>
   <div id="jobs" class="section"><h2>Manage Jobs</h2></div>
   <div id="cvs" class="section"><h2>CV Library</h2></div>
-  <div id="billing" class="section"><h2>Packages & Billing</h2></div>
+  <div id="billing" class="section">
+  <h2>Packages & Billing</h2>
+
+  <div class="cv-grid">
+
+    <!-- FREE PLAN -->
+    <div class="cv-card">
+      <h3>Free</h3>
+      <p><strong>R0 / month</strong></p>
+      <ul>
+        <li>✔ Post Jobs</li>
+        <li>✔ View CV Snapshots</li>
+        <li>✖ Unlock CVs</li>
+        <li>✖ Priority Support</li>
+      </ul>
+      <button class="primary-btn" disabled>Current Plan</button>
+    </div>
+
+    <!-- STARTER PLAN -->
+    <div class="cv-card">
+      <h3>Starter</h3>
+      <p><strong>R299 / month</strong></p>
+      <ul>
+        <li>✔ 50 CV Unlocks</li>
+        <li>✔ CV Snapshots</li>
+        <li>✔ Email Support</li>
+      </ul>
+      <button onclick="selectPlan('starter')">Upgrade</button>
+    </div>
+
+    <!-- PRO PLAN -->
+    <div class="cv-card">
+      <h3>Pro</h3>
+      <p><strong>R699 / month</strong></p>
+      <ul>
+        <li>✔ 200 CV Unlocks</li>
+        <li>✔ Full CV Preview</li>
+        <li>✔ Priority Support</li>
+      </ul>
+      <button onclick="selectPlan('pro')">Upgrade</button>
+    </div>
+
+    <!-- ENTERPRISE PLAN -->
+    <div class="cv-card">
+      <h3>Enterprise</h3>
+      <p><strong>R1499 / month</strong></p>
+      <ul>
+        <li>✔ Unlimited CV Unlocks</li>
+        <li>✔ Dedicated Support</li>
+        <li>✔ Featured Recruiter</li>
+      </ul>
+      <button onclick="selectPlan('enterprise')">Contact Sales</button>
+    </div>
+
+  </div>
+</div>
+
 </div>
 
 <!-- MODAL -->
@@ -324,7 +381,22 @@ function openModal(){
 function closeModal(){
   document.getElementById('modal').style.display='none';
 }
+
+    <script>
+function logoutUser() {
+  // Later we will add Firebase signOut() here
+  window.location.href = "index.html"; // your home page
+}
 </script>
+
+</script>
+
+     <script>
+function selectPlan(plan) {
+  alert("You selected the " + plan.toUpperCase() + " plan.\nPayment integration coming next.");
+}
+</script>
+
 
 </body>
 </html>
