@@ -1614,11 +1614,30 @@ window.addEventListener("load", calculateCarousel);
 
 <!-- ================= FIREBASE CV UPLOAD ================= -->
 <script type="module">
+/* ===============================
+   FIREBASE IMPORTS
+================================ */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+import { 
+  getAuth, 
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getStorage, 
+  ref, 
+  uploadBytesResumable, 
+  getDownloadURL 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
+/* ===============================
+   FIREBASE CONFIG (YOUR REAL ONE)
+================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
   authDomain: "career-unified.firebaseapp.com",
@@ -1626,121 +1645,156 @@ const firebaseConfig = {
   storageBucket: "career-unified.firebasestorage.app"
 };
 
+/* ===============================
+   INIT
+================================ */
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// ============================================
-// CV UPLOAD HANDLER
-// ============================================
-document.getElementById('cvUpload').addEventListener('change', async (e) => {
-  const cvFile = e.target.files[0];
-  
-  if (!cvFile) return;
+let currentUser = null;
 
-  const user = auth.currentUser;
-  if (!user) {
-    alert('Please login first to upload your CV');
-    window.location.href = 'login.html';
-    return;
-  }
-
-  // Validate file type
-  const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-  if (!allowedTypes.includes(cvFile.type)) {
-    alert('Only PDF, DOC, and DOCX files are allowed');
-    e.target.value = '';
-    return;
-  }
-
-  // Validate file size (max 5MB)
-  if (cvFile.size > 5 * 1024 * 1024) {
-    alert('File size must be less than 5MB');
-    e.target.value = '';
-    return;
-  }
-
-  // Show loading message
-  const originalLabel = document.querySelector('label[for="cvUpload"]');
-  const originalText = originalLabel.textContent;
-  originalLabel.textContent = 'Uploading...';
-  originalLabel.style.pointerEvents = 'none';
-  originalLabel.style.opacity = '0.6';
-
-  try {
-    // 1. Upload CV file to Firebase Storage
-    const fileName = `cvs/${user.uid}_${Date.now()}_${cvFile.name}`;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, cvFile);
-
-    // Monitor upload progress
-    uploadTask.on('state_changed', 
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        originalLabel.textContent = `Uploading... ${Math.round(progress)}%`;
-      }
-    );
-
-    // Wait for upload to complete
-    await uploadTask;
-    
-    // Get download URL
-    const cvURL = await getDownloadURL(storageRef);
-
-    // 2. Save CV metadata to Firestore
-    await addDoc(collection(db, 'cvs'), {
-      userId: user.uid,
-      userEmail: user.email,
-      fullName: user.displayName || 'Anonymous User',
-      cvURL: cvURL,
-      cvFileName: cvFile.name,
-      cvFilePath: fileName,
-      uploadedAt: serverTimestamp(),
-      status: 'active',
-      viewCount: 0,
-      unlocked: false,
-      jobTitle: '',
-      experience: '',
-      skills: '',
-      location: ''
-    });
-
-    // Success!
-    alert('✅ CV uploaded successfully! Recruiters can now discover your profile.');
-    
-    // Reset file input
-    e.target.value = '';
-    
-  } catch (error) {
-    console.error('Upload error:', error);
-    alert('❌ Error uploading CV: ' + error.message);
-  } finally {
-    // Reset button
-    originalLabel.textContent = originalText;
-    originalLabel.style.pointerEvents = 'auto';
-    originalLabel.style.opacity = '1';
-  }
-});
-
-// Check authentication status
+/* ===============================
+   AUTH STATE (SINGLE SOURCE)
+================================ */
 onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    const uploadInput = document.getElementById('cvUpload');
-    
-    uploadInput.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (confirm('You need to be logged in to upload your CV. Go to login page?')) {
-        window.location.href = 'login.html';
-      }
-    });
-  }
+  currentUser = user;
 });
 
+/* ===============================
+   CV UPLOAD HANDLER
+================================ */
+const cvInput = document.getElementById("cvUpload");
+
+if (cvInput) {
+  cvInput.addEventListener("change", async (e) => {
+    const cvFile = e.target.files[0];
+    if (!cvFile) return;
+
+    /* ===============================
+       AUTH CHECK
+    ================================ */
+    if (!currentUser) {
+      alert("Please login first to upload your CV");
+      window.location.href = "login.html";
+      return;
+    }
+
+    /* ===============================
+       FILE VALIDATION
+    ================================ */
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ];
+
+    if (!allowedTypes.includes(cvFile.type)) {
+      alert("Only PDF, DOC, and DOCX files are allowed");
+      e.target.value = "";
+      return;
+    }
+
+    if (cvFile.size > 5 * 1024 * 1024) {
+      alert("File size must be less than 5MB");
+      e.target.value = "";
+      return;
+    }
+
+    /* ===============================
+       UI FEEDBACK
+    ================================ */
+    const label = document.querySelector('label[for="cvUpload"]');
+    const originalText = label ? label.textContent : null;
+
+    if (label) {
+      label.textContent = "Uploading...";
+      label.style.pointerEvents = "none";
+      label.style.opacity = "0.6";
+    }
+
+    try {
+      /* ===============================
+         STORAGE UPLOAD
+      ================================ */
+      const filePath = `cvs/${currentUser.uid}/${Date.now()}_${cvFile.name}`;
+      const storageRef = ref(storage, filePath);
+
+      const uploadTask = uploadBytesResumable(storageRef, cvFile);
+
+      // Convert uploadTask to Promise
+      await new Promise((resolve, reject) => {
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            if (label) {
+              const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              label.textContent = `Uploading... ${progress}%`;
+            }
+          },
+          (error) => reject(error),
+          () => resolve()
+        );
+      });
+
+      const cvURL = await getDownloadURL(storageRef);
+
+      /* ===============================
+         FIRESTORE METADATA
+      ================================ */
+      await addDoc(collection(db, "cvs"), {
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        fullName: currentUser.displayName || "Anonymous User",
+        cvURL,
+        cvFileName: cvFile.name,
+        cvFilePath: filePath,
+        uploadedAt: serverTimestamp(),
+        status: "active",
+        viewCount: 0,
+        unlocked: false,
+        jobTitle: "",
+        experience: "",
+        skills: "",
+        location: ""
+      });
+
+      alert("✅ CV uploaded successfully! Recruiters can now discover your profile.");
+      e.target.value = "";
+
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("❌ Error uploading CV: " + error.message);
+    } finally {
+      if (label && originalText) {
+        label.textContent = originalText;
+        label.style.pointerEvents = "auto";
+        label.style.opacity = "1";
+      }
+    }
+  });
+
+  /* ===============================
+     BLOCK CLICK IF LOGGED OUT
+  ================================ */
+  cvInput.addEventListener("click", (e) => {
+    if (!currentUser) {
+      e.preventDefault();
+      if (confirm("You need to be logged in to upload your CV. Go to login page?")) {
+        window.location.href = "login.html";
+      }
+    }
+  });
+}
 </script>
+
 
 </body>
 </html>
+
 
 
 
