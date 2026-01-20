@@ -5,17 +5,18 @@
 <title>Recruiter Dashboard | Career Unified</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- =========================
+<!-- ======================================================
      GOOGLE FONT
-========================= -->
+====================================================== -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- =========================
+<!-- ======================================================
      ICONS
-========================= -->
+====================================================== -->
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
 <style>
+
 /* ======================================================
    GLOBAL RESET
 ====================================================== */
@@ -46,13 +47,13 @@ body {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 30px;
 }
 
 .brand img {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
 }
 
@@ -66,6 +67,9 @@ body {
   color: #6b7280;
 }
 
+/* ======================================================
+   NAVIGATION
+====================================================== */
 .nav {
   margin-top: 30px;
 }
@@ -81,6 +85,7 @@ body {
   color: #374151;
   font-size: 14px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .nav a i {
@@ -138,7 +143,7 @@ body {
 }
 
 /* ======================================================
-   SECTION
+   SECTIONS
 ====================================================== */
 .section {
   display: none;
@@ -165,12 +170,30 @@ body {
 .cv-card {
   background: #ffffff;
   border-radius: 14px;
-  padding: 16px;
+  padding: 18px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.05);
   position: relative;
-  overflow: hidden;
 }
 
+.cv-card h3 {
+  margin-bottom: 6px;
+}
+
+.cv-card ul {
+  margin: 12px 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.cv-card p {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+/* ======================================================
+   CV SNAPSHOT
+====================================================== */
 .cv-snapshot {
   height: 160px;
   background: linear-gradient(135deg, #c7d2fe, #e0e7ff);
@@ -178,14 +201,18 @@ body {
   border-radius: 10px;
 }
 
+/* ======================================================
+   LOCK OVERLAY
+====================================================== */
 .lock {
   position: absolute;
   inset: 0;
+  background: rgba(255,255,255,0.85);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background: rgba(255,255,255,0.85);
+  border-radius: 14px;
 }
 
 .lock i {
@@ -194,14 +221,27 @@ body {
   margin-bottom: 6px;
 }
 
-.lock button {
+/* ======================================================
+   BUTTONS
+====================================================== */
+.primary-btn {
   margin-top: 10px;
-  padding: 8px 14px;
+  padding: 10px 16px;
   border-radius: 8px;
   border: none;
   background: #1e3a8a;
   color: #fff;
+  font-weight: 600;
   cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #162c6f;
+}
+
+.primary-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
 }
 
 /* ======================================================
@@ -214,29 +254,31 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
+  z-index: 999;
 }
 
 .modal-content {
   background: #fff;
-  padding: 24px;
+  padding: 26px;
   border-radius: 14px;
   width: 90%;
-  max-width: 500px;
+  max-width: 480px;
 }
 
-.modal h3 {
+.modal-content h3 {
   margin-bottom: 10px;
 }
 
 .close {
   margin-top: 16px;
-  padding: 8px 12px;
+  padding: 10px 14px;
   background: #ef4444;
   color: #fff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
 }
+
 </style>
 </head>
 
@@ -244,6 +286,7 @@ body {
 
 <!-- ================= SIDEBAR ================= -->
 <div class="sidebar">
+
   <div class="brand">
     <img src="https://dummyimage.com/80x80/2563eb/ffffff&text=CU">
     <div>
@@ -253,14 +296,14 @@ body {
   </div>
 
   <div class="nav">
-    <a class="active" onclick="showSection('dashboard')"><i class='bx bx-grid-alt'></i>Dashboard</a>
-    <a onclick="showSection('company')"><i class='bx bx-buildings'></i>Company Profile</a>
-    <a onclick="showSection('jobs')"><i class='bx bx-briefcase'></i>Manage Jobs</a>
-    <a onclick="showSection('cvs')"><i class='bx bx-file'></i>CV Library</a>
-    <a onclick="showSection('billing')"><i class='bx bx-credit-card'></i>Packages</a>
+    <a class="active" onclick="showSection('dashboard', this)"><i class='bx bx-grid-alt'></i>Dashboard</a>
+    <a onclick="showSection('company', this)"><i class='bx bx-buildings'></i>Company Profile</a>
+    <a onclick="showSection('jobs', this)"><i class='bx bx-briefcase'></i>Manage Jobs</a>
+    <a onclick="showSection('cvs', this)"><i class='bx bx-file'></i>CV Library</a>
+    <a onclick="showSection('billing', this)"><i class='bx bx-credit-card'></i>Packages</a>
     <a onclick="logoutUser()"><i class='bx bx-log-out'></i>Logout</a>
-
   </div>
+
 </div>
 
 <!-- ================= MAIN ================= -->
@@ -276,89 +319,99 @@ body {
   <!-- DASHBOARD -->
   <div id="dashboard" class="section active">
     <h2>Locked CV Previews</h2>
+
     <div class="cv-grid">
       <div class="cv-card">
         <div class="cv-snapshot"></div>
         <div class="lock">
           <i class='bx bx-lock'></i>
           <span>Upgrade to view CV</span>
-          <button onclick="openModal()">Upgrade</button>
+          <button class="primary-btn" onclick="openModal()">Upgrade</button>
         </div>
       </div>
+
       <div class="cv-card">
         <div class="cv-snapshot"></div>
         <div class="lock">
           <i class='bx bx-lock'></i>
           <span>Upgrade to view CV</span>
-          <button onclick="openModal()">Upgrade</button>
+          <button class="primary-btn" onclick="openModal()">Upgrade</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="company" class="section"><h2>Company Profile</h2></div>
-  <div id="jobs" class="section"><h2>Manage Jobs</h2></div>
-  <div id="cvs" class="section"><h2>CV Library</h2></div>
-  <div id="billing" class="section">
-  <h2>Packages & Billing</h2>
-
-  <div class="cv-grid">
-
-    <!-- FREE PLAN -->
-    <div class="cv-card">
-      <h3>Free</h3>
-      <p><strong>R0 / month</strong></p>
-      <ul>
-        <li>✔ Post Jobs</li>
-        <li>✔ View CV Snapshots</li>
-        <li>✖ Unlock CVs</li>
-        <li>✖ Priority Support</li>
-      </ul>
-      <button class="primary-btn" disabled>Current Plan</button>
-    </div>
-
-    <!-- STARTER PLAN -->
-    <div class="cv-card">
-      <h3>Starter</h3>
-      <p><strong>R299 / month</strong></p>
-      <ul>
-        <li>✔ 50 CV Unlocks</li>
-        <li>✔ CV Snapshots</li>
-        <li>✔ Email Support</li>
-      </ul>
-      <button onclick="selectPlan('starter')">Upgrade</button>
-    </div>
-
-    <!-- PRO PLAN -->
-    <div class="cv-card">
-      <h3>Pro</h3>
-      <p><strong>R699 / month</strong></p>
-      <ul>
-        <li>✔ 200 CV Unlocks</li>
-        <li>✔ Full CV Preview</li>
-        <li>✔ Priority Support</li>
-      </ul>
-      <button onclick="selectPlan('pro')">Upgrade</button>
-    </div>
-
-    <!-- ENTERPRISE PLAN -->
-    <div class="cv-card">
-      <h3>Enterprise</h3>
-      <p><strong>R1499 / month</strong></p>
-      <ul>
-        <li>✔ Unlimited CV Unlocks</li>
-        <li>✔ Dedicated Support</li>
-        <li>✔ Featured Recruiter</li>
-      </ul>
-      <button onclick="selectPlan('enterprise')">Contact Sales</button>
-    </div>
-
+  <!-- COMPANY -->
+  <div id="company" class="section">
+    <h2>Company Profile</h2>
+    <p>Company profile management coming next.</p>
   </div>
-</div>
+
+  <!-- JOBS -->
+  <div id="jobs" class="section">
+    <h2>Manage Jobs</h2>
+    <p>Job posting & expiration logic will live here.</p>
+  </div>
+
+  <!-- CVS -->
+  <div id="cvs" class="section">
+    <h2>CV Library</h2>
+    <p>Unlocked CVs will appear here after payment.</p>
+  </div>
+
+  <!-- BILLING -->
+  <div id="billing" class="section">
+    <h2>Packages & Billing</h2>
+
+    <div class="cv-grid">
+
+      <div class="cv-card">
+        <h3>Free</h3>
+        <p><strong>R0 / month</strong></p>
+        <ul>
+          <li>✔ Post Jobs</li>
+          <li>✔ View CV Snapshots</li>
+          <li>✖ Unlock CVs</li>
+        </ul>
+        <button class="primary-btn" disabled>Current Plan</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>Starter</h3>
+        <p><strong>R299 / month</strong></p>
+        <ul>
+          <li>✔ 50 CV Unlocks</li>
+          <li>✔ Email Support</li>
+        </ul>
+        <button class="primary-btn" onclick="selectPlan('Starter')">Upgrade</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>Pro</h3>
+        <p><strong>R699 / month</strong></p>
+        <ul>
+          <li>✔ 200 CV Unlocks</li>
+          <li>✔ Priority Support</li>
+        </ul>
+        <button class="primary-btn" onclick="selectPlan('Pro')">Upgrade</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>Enterprise</h3>
+        <p><strong>R1499 / month</strong></p>
+        <ul>
+          <li>✔ Unlimited Unlocks</li>
+          <li>✔ Dedicated Manager</li>
+        </ul>
+        <button class="primary-btn" onclick="selectPlan('Enterprise')">Contact Sales</button>
+      </div>
+
+    </div>
+  </div>
 
 </div>
 
-<!-- MODAL -->
+<!-- ================= MODAL ================= -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <h3>Upgrade Required</h3>
@@ -367,39 +420,50 @@ body {
   </div>
 </div>
 
+<!-- ================= SCRIPT ================= -->
 <script>
-function showSection(id){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+
+/* ======================================================
+   NAVIGATION
+====================================================== */
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
-  event.target.classList.add('active');
+
+  document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
 }
 
-function openModal(){
-  document.getElementById('modal').style.display='flex';
-}
-function closeModal(){
-  document.getElementById('modal').style.display='none';
+/* ======================================================
+   MODAL
+====================================================== */
+function openModal() {
+  document.getElementById('modal').style.display = 'flex';
 }
 
-    <script>
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+/* ======================================================
+   LOGOUT
+====================================================== */
 function logoutUser() {
-  // Later we will add Firebase signOut() here
-  window.location.href = "index.html"; // your home page
+  window.location.href = "index.html";
 }
-</script>
 
-</script>
-
-     <script>
+/* ======================================================
+   PLAN SELECTION
+====================================================== */
 function selectPlan(plan) {
-  alert("You selected the " + plan.toUpperCase() + " plan.\nPayment integration coming next.");
+  alert("You selected the " + plan + " plan.\nPayment integration coming next.");
 }
-</script>
 
+</script>
 
 </body>
 </html>
+
 
 
 
