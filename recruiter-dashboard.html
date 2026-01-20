@@ -941,13 +941,6 @@ document.getElementById("jobForm")?.addEventListener("submit", function (e) {
 
 <!-- ================= FIREBASE RECRUITER SECURITY GATE ================= -->
 <script type="module">
-/*
-  HARD SECURITY GATE
-  - Blocks non-logged-in users
-  - Blocks non-recruiters
-  - Blocks unapproved recruiters
-*/
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getIdTokenResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -956,47 +949,32 @@ const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
   authDomain: "career-unified.firebaseapp.com",
   projectId: "career-unified",
-  storageBucket: "career-unified.firebasestorage.app",
-  messagingSenderId: "101656817742",
-  appId: "1:101656817742:web:22c9a58a822a714e54931f"
 };
 
-// Init Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Hide page until verified
 document.body.style.display = "none";
 
 onAuthStateChanged(auth, async (user) => {
 
-  // ❌ Not logged in
   if (!user) {
     window.location.href = "login.html";
     return;
   }
 
-  // Get token with custom claims
-  const tokenResult = await getIdTokenResult(user, true);
-  const claims = tokenResult.claims;
+  const token = await getIdTokenResult(user, true);
 
-  // ❌ Not a recruiter
-  if (!claims.recruiter) {
-    alert("Access denied: Recruiter account required.");
+  if (!token.claims.recruiter) {
+    alert("Recruiter access only.");
     window.location.href = "index.html";
     return;
   }
 
-  // ❌ Recruiter not approved
-  if (!claims.approved) {
-    alert("Your recruiter account is pending approval.");
-    window.location.href = "pending-approval.html";
-    return;
-  }
-
-  // ✅ Approved recruiter → show page
+  // ✅ Allow page
   document.body.style.display = "flex";
 });
+
 
 </script>
 
