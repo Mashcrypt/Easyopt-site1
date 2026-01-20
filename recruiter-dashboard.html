@@ -1,45 +1,38 @@
-<!-- FULL FINAL RECRUITER DASHBOARD FILE
-READY TO PASTE
-FIXED SCRIPT ORDER
-FIXED FIREBASE GATE
-NO NESTED SCRIPTS
-SAFE AUTH FLOW
-
-NOTE:
-- This file assumes recruiter custom claims already exist
-- This file is GitHub Pages + Firebase compatible
-- This file is intentionally verbose and production-structured
--->
-
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>Recruiter Dashboard | Career Unified</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- ================= GOOGLE FONT ================= -->
-
+<!-- ======================================================
+     GOOGLE FONT
+====================================================== -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- ================= ICONS ================= -->
-
+<!-- ======================================================
+     ICONS
+====================================================== -->
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
 <style>
+
 /* ======================================================
    GLOBAL RESET
 ====================================================== */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
   font-family: 'Poppins', sans-serif;
   background: #f5f7fb;
   color: #111827;
+  display: flex;
+  min-height: 100vh;
 }
-
-#app { display: none; min-height: 100vh; display: flex; }
 
 /* ======================================================
    SIDEBAR
@@ -77,7 +70,9 @@ body {
 /* ======================================================
    NAVIGATION
 ====================================================== */
-.nav { margin-top: 30px; }
+.nav {
+  margin-top: 30px;
+}
 
 .nav a {
   display: flex;
@@ -93,7 +88,9 @@ body {
   transition: 0.2s;
 }
 
-.nav a i { font-size: 18px; }
+.nav a i {
+  font-size: 18px;
+}
 
 .nav a.active,
 .nav a:hover {
@@ -104,13 +101,14 @@ body {
 /* ======================================================
    MAIN CONTENT
 ====================================================== */
-.main { flex: 1; padding: 26px; overflow-y: auto; }
-
-.section { display: none; }
-.section.active { display: block; }
+.main {
+  flex: 1;
+  padding: 26px;
+  overflow-y: auto;
+}
 
 /* ======================================================
-   STATS
+   TOP STATS
 ====================================================== */
 .stats {
   display: grid;
@@ -124,35 +122,110 @@ body {
   border-radius: 14px;
   padding: 22px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   box-shadow: 0 8px 20px rgba(0,0,0,0.05);
 }
 
-.stat i { font-size: 32px; color: #2563eb; }
+.stat i {
+  font-size: 32px;
+  color: #2563eb;
+}
+
+.stat h3 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.stat span {
+  font-size: 13px;
+  color: #6b7280;
+}
 
 /* ======================================================
-   JOBS TABLE
+   SECTIONS
 ====================================================== */
-.jobs-card {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+.section {
+  display: none;
 }
 
-.jobs-row {
+.section.active {
+  display: block;
+}
+
+.section h2 {
+  font-size: 18px;
+  margin-bottom: 18px;
+}
+
+/* ======================================================
+   CV GRID
+====================================================== */
+.cv-grid {
   display: grid;
-  grid-template-columns: 2.5fr 1fr 1.5fr 1fr 1fr;
-  padding: 16px 0;
-  border-bottom: 1px solid #e5e7eb;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
 }
 
-.jobs-head { font-weight: 600; color: #2563eb; }
+.cv-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.cv-card h3 {
+  margin-bottom: 6px;
+}
+
+.cv-card ul {
+  margin: 12px 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.cv-card p {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+/* ======================================================
+   CV SNAPSHOT
+====================================================== */
+.cv-snapshot {
+  height: 160px;
+  background: linear-gradient(135deg, #c7d2fe, #e0e7ff);
+  filter: blur(6px);
+  border-radius: 10px;
+}
+
+/* ======================================================
+   LOCK OVERLAY
+====================================================== */
+.lock {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 14px;
+}
+
+.lock i {
+  font-size: 34px;
+  color: #ef4444;
+  margin-bottom: 6px;
+}
 
 /* ======================================================
    BUTTONS
 ====================================================== */
 .primary-btn {
+  margin-top: 10px;
   padding: 10px 16px;
   border-radius: 8px;
   border: none;
@@ -162,96 +235,707 @@ body {
   cursor: pointer;
 }
 
-.primary-btn:hover { background: #162c6f; }
-</style>
+.primary-btn:hover {
+  background: #162c6f;
+}
 
+.primary-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ======================================================
+   MODAL
+====================================================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 26px;
+  border-radius: 14px;
+  width: 90%;
+  max-width: 480px;
+}
+
+.modal-content h3 {
+  margin-bottom: 10px;
+}
+
+.close {
+  margin-top: 16px;
+  padding: 10px 14px;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+     
+   /* ======================================================
+   POST A JOB FORM STYLING
+====================================================== */
+
+#post-job h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+#post-job p {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* FORM CARD */
+#post-job .cv-card {
+  padding: 28px;
+}
+
+/* SECTION HEADINGS */
+#post-job h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 14px;
+}
+
+/* FORM GRID */
+#post-job .row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* FORM GROUP */
+#post-job .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+/* LABELS */
+#post-job label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+/* INPUTS */
+#post-job input,
+#post-job select,
+#post-job textarea {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  font-family: inherit;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+/* TEXTAREA */
+#post-job textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* FOCUS STATE */
+#post-job input:focus,
+#post-job select:focus,
+#post-job textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* CHECKBOX */
+#post-job input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+  transform: scale(1.1);
+}
+
+#post-job label input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* BUTTONS */
+#post-job .primary-btn {
+  background: #1e3a8a;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#post-job .primary-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* SECONDARY BUTTON */
+#post-job .primary-btn.secondary {
+  background: #6b7280;
+}
+
+#post-job .primary-btn.secondary:hover {
+  background: #4b5563;
+}
+
+/* BUTTON GROUP */
+#post-job .btn-group,
+#post-job .btn-container {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 600px) {
+  #post-job .cv-card {
+    padding: 20px;
+  }
+}
+
+/* ======================================================
+   MANAGE JOBS
+====================================================== */
+
+.jobs-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}
+
+.jobs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.jobs-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.filter {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.jobs-table {
+  width: 100%;
+}
+
+.jobs-row {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1.5fr 1fr 1fr;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.jobs-row:last-child {
+  border-bottom: none;
+}
+
+.jobs-head {
+  font-weight: 600;
+  color: #2563eb;
+  background: #f8fafc;
+  padding: 14px 10px;
+  border-radius: 10px;
+}
+
+.job-location {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.applied {
+  color: #2563eb;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dates span {
+  display: block;
+}
+
+.dates small {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.status {
+  font-weight: 600;
+}
+
+.status.active {
+  color: #16a34a;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  border: none;
+  background: #eef2ff;
+  color: #1e3a8a;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.actions button:hover {
+  background: #e0e7ff;
+}
+
+     
+</style>
 </head>
 
 <body>
 
-<!-- ================= APP WRAPPER ================= -->
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
 
-<div id="app">
+  <div class="brand">
+    <img src="https://dummyimage.com/80x80/2563eb/ffffff&text=CU">
+    <div>
+      <h2>Career Unified</h2>
+      <div class="location">Recruiter Dashboard</div>
+    </div>
+  </div>
 
-  <!-- ================= SIDEBAR ================= -->
+  <div class="nav">
+    <a class="active" onclick="showSection('dashboard', this)"><i class='bx bx-grid-alt'></i>Dashboard</a>
+    <a onclick="showSection('company', this)"><i class='bx bx-buildings'></i>Company Profile</a>
+    <a onclick="showSection('post-job', this)"><i class='bx bx-plus-circle'></i>Post a Job</a>
+    <a onclick="showSection('jobs', this)"><i class='bx bx-briefcase'></i>Manage Jobs</a>
+    <a onclick="showSection('cvs', this)"><i class='bx bx-file'></i>CV Library</a>
+    <a onclick="showSection('billing', this)"><i class='bx bx-credit-card'></i>Packages</a>
+    <a onclick="logoutUser()"><i class='bx bx-log-out'></i>Logout</a>
+  </div>
 
-  <div class="sidebar">
-    <div class="brand">
-      <img src="https://dummyimage.com/80x80/2563eb/ffffff&text=CU">
-      <div>
-        <h2>Career Unified</h2>
-        <div class="location">Recruiter Dashboard</div>
+</div>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+  <!-- TOP STATS -->
+  <div class="stats">
+    <div class="stat"><div><h3>5246</h3><span>Jobs Posted</span></div><i class='bx bx-paper-plane'></i></div>
+    <div class="stat"><div><h3>107</h3><span>In Review</span></div><i class='bx bx-star'></i></div>
+    <div class="stat"><div><h3>835</h3><span>Shortlisted CVs</span></div><i class='bx bx-user-check'></i></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="section active">
+    <h2>Locked CV Previews</h2>
+
+    <div class="cv-grid">
+      <div class="cv-card">
+        <div class="cv-snapshot"></div>
+        <div class="lock">
+          <i class='bx bx-lock'></i>
+          <span>Upgrade to view CV</span>
+          <button class="primary-btn" onclick="openModal()">Upgrade</button>
+        </div>
+      </div>
+
+      <div class="cv-card">
+        <div class="cv-snapshot"></div>
+        <div class="lock">
+          <i class='bx bx-lock'></i>
+          <span>Upgrade to view CV</span>
+          <button class="primary-btn" onclick="openModal()">Upgrade</button>
+        </div>
       </div>
     </div>
-
-```
-<div class="nav">
-  <a class="active" onclick="showSection('dashboard', this)"><i class='bx bx-grid-alt'></i>Dashboard</a>
-  <a onclick="showSection('post-job', this)"><i class='bx bx-plus-circle'></i>Post Job</a>
-  <a onclick="showSection('jobs', this)"><i class='bx bx-briefcase'></i>Manage Jobs</a>
-  <a onclick="logoutUser()"><i class='bx bx-log-out'></i>Logout</a>
-</div>
-```
-
   </div>
 
-  <!-- ================= MAIN ================= -->
+  <!-- COMPANY -->
+  <div id="company" class="section">
+    <h2>Company Profile</h2>
+    <p>Company profile management coming next.</p>
+  </div>
 
-  <div class="main">
-
-```
-<div class="stats">
-  <div class="stat"><div><h3>12</h3><span>Jobs Posted</span></div><i class='bx bx-paper-plane'></i></div>
-  <div class="stat"><div><h3>34</h3><span>Applications</span></div><i class='bx bx-user'></i></div>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="section active">
-  <h2>Welcome Recruiter</h2>
-  <p>Only approved recruiters can see this page.</p>
-</div>
-
-<!-- POST JOB -->
-<div id="post-job" class="section">
-  <h2>Post a Job</h2>
-  <form id="jobForm">
-    <input placeholder="Job Title" required />
-    <button class="primary-btn">Publish</button>
-  </form>
-</div>
-
-<!-- MANAGE JOBS -->
+  
+ <!-- ================= MANAGE JOBS ================= -->
 <div id="jobs" class="section">
   <h2>Manage Jobs</h2>
+  <p style="color:#6b7280; margin-bottom:20px;">Ready to jump back in?</p>
+
   <div class="jobs-card">
-    <div class="jobs-row jobs-head">
-      <span>Title</span><span>Apps</span><span>Date</span><span>Status</span><span>Action</span>
+    <div class="jobs-header">
+      <h3>My Job Listings</h3>
+
+      <select class="filter">
+        <option>Last 6 Months</option>
+        <option>Last 12 Months</option>
+        <option>All Time</option>
+      </select>
     </div>
-    <div class="jobs-row">
-      <span>Frontend Dev</span><span>5</span><span>Jan 2026</span><span>Active</span>
-      <button class="primary-btn">View</button>
+
+    <div class="jobs-table">
+
+      <!-- TABLE HEADER -->
+      <div class="jobs-row jobs-head">
+        <span>Title</span>
+        <span>Applications</span>
+        <span>Created & Expired</span>
+        <span>Status</span>
+        <span>Action</span>
+      </div>
+
+      <!-- JOB ROW -->
+      <div class="jobs-row">
+        <div>
+          <strong>Senior Full Stack Engineer</strong>
+          <div class="job-location">
+            <i class='bx bx-map'></i> London, UK
+          </div>
+        </div>
+
+        <div class="applied">3+ Applied</div>
+
+        <div class="dates">
+          <span>Oct 27, 2024</span>
+          <small>Expires: Apr 25, 2025</small>
+        </div>
+
+        <div class="status active">Active</div>
+
+        <div class="actions">
+          <button title="View"><i class='bx bx-show'></i></button>
+          <button title="Edit"><i class='bx bx-edit'></i></button>
+          <button title="Delete"><i class='bx bx-trash'></i></button>
+        </div>
+      </div>
+
+      <!-- JOB ROW -->
+      <div class="jobs-row">
+        <div>
+          <strong>Senior Product Designer</strong>
+          <div class="job-location">
+            <i class='bx bx-map'></i> London, UK
+          </div>
+        </div>
+
+        <div class="applied">3+ Applied</div>
+
+        <div class="dates">
+          <span>Oct 20, 2024</span>
+          <small>Expires: Apr 20, 2025</small>
+        </div>
+
+        <div class="status active">Active</div>
+
+        <div class="actions">
+          <button><i class='bx bx-show'></i></button>
+          <button><i class='bx bx-edit'></i></button>
+          <button><i class='bx bx-trash'></i></button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-```
+     
+<!-- ================= POST A JOB ================= -->
+<div id="post-job" class="section">
 
+  <div style="margin-bottom: 20px;">
+    <h2>Post a Job</h2>
+    <p style="color:#6b7280;">Find the perfect candidate for your team</p>
+  </div>
+
+  <div class="cv-card">
+
+    <form id="jobForm">
+
+      <!-- JOB DETAILS -->
+      <h3 style="margin-bottom:16px;">Job Details</h3>
+
+      <div class="form-group">
+        <label>Job Title <span style="color:red">*</span></label>
+        <input type="text" name="title" required placeholder="e.g. Senior Frontend Developer">
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Job Category *</label>
+          <select name="category" required>
+            <option value="">Select category</option>
+            <option>IT & Software</option>
+            <option>Design</option>
+            <option>Marketing</option>
+            <option>Sales</option>
+            <option>Finance</option>
+            <option>HR</option>
+            <option>Engineering</option>
+            <option>Healthcare</option>
+            <option>Education</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Job Type *</label>
+          <select name="type" required>
+            <option value="">Select type</option>
+            <option>Full Time</option>
+            <option>Part Time</option>
+            <option>Contract</option>
+            <option>Freelance</option>
+            <option>Internship</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Experience Level *</label>
+          <select name="experience" required>
+            <option value="">Select level</option>
+            <option>Entry</option>
+            <option>Mid</option>
+            <option>Senior</option>
+            <option>Lead</option>
+            <option>Executive</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Salary Range</label>
+          <input type="text" name="salary" placeholder="e.g. R30,000 – R50,000">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Job Description *</label>
+        <textarea name="description" rows="5" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Requirements</label>
+        <textarea name="requirements" rows="4"></textarea>
+      </div>
+
+      <!-- LOCATION -->
+      <h3 style="margin:30px 0 16px;">Location</h3>
+
+      <div class="row">
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" name="city" required>
+        </div>
+
+        <div class="form-group">
+          <label>Country *</label>
+          <input type="text" name="country" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="remote">
+          Remote Position
+        </label>
+      </div>
+
+      <!-- COMPANY -->
+      <h3 style="margin:30px 0 16px;">Company Information</h3>
+
+      <div class="form-group">
+        <label>Company Name *</label>
+        <input type="text" name="company" required>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Website</label>
+          <input type="url" name="website">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Logo URL</label>
+        <input type="url" name="logo">
+      </div>
+
+      <div class="form-group">
+        <label>Application Deadline</label>
+        <input type="text" name="deadline" placeholder="e.g. 31 Jan 2026">
+      </div>
+
+      <!-- ACTIONS -->
+      <div style="display:flex; gap:12px; margin-top:20px;">
+        <button type="submit" class="primary-btn">Publish Job</button>
+        <button type="button" class="primary-btn" style="background:#6b7280">Save Draft</button>
+      </div>
+
+    </form>
   </div>
 </div>
 
-<!-- ================= NON-MODULE JS ================= -->
+  <!-- CVS -->
+  <div id="cvs" class="section">
+    <h2>CV Library</h2>
+    <p>Unlocked CVs will appear here after payment.</p>
+  </div>
 
+  <!-- BILLING -->
+  <div id="billing" class="section">
+    <h2>Packages & Billing</h2>
+
+    <div class="cv-grid">
+
+      <div class="cv-card">
+        <h3>Free</h3>
+        <p><strong>R0 / month</strong></p>
+        <ul>
+          <li>✔ Post Jobs</li>
+          <li>✔ View CV Snapshots</li>
+          <li>✖ Unlock CVs</li>
+        </ul>
+        <button class="primary-btn" disabled>Current Plan</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>Starter</h3>
+        <p><strong>R299 / month</strong></p>
+        <ul>
+          <li>✔ 50 CV Unlocks</li>
+          <li>✔ Email Support</li>
+        </ul>
+        <button class="primary-btn" onclick="selectPlan('Starter')">Upgrade</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>Pro</h3>
+        <p><strong>R699 / month</strong></p>
+        <ul>
+          <li>✔ 200 CV Unlocks</li>
+          <li>✔ Priority Support</li>
+        </ul>
+        <button class="primary-btn" onclick="selectPlan('Pro')">Upgrade</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>Enterprise</h3>
+        <p><strong>R1499 / month</strong></p>
+        <ul>
+          <li>✔ Unlimited Unlocks</li>
+          <li>✔ Dedicated Manager</li>
+        </ul>
+        <button class="primary-btn" onclick="selectPlan('Enterprise')">Contact Sales</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>Upgrade Required</h3>
+    <p>Please upgrade your subscription to unlock CVs.</p>
+    <button class="close" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<!-- ================= SCRIPT ================= -->
 <script>
+
+/* ======================================================
+   NAVIGATION
+====================================================== */
 function showSection(id, el) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+
   document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
   el.classList.add('active');
 }
 
-function logoutUser() {
-  window.location.href = 'login.html';
+/* ======================================================
+   MODAL
+====================================================== */
+function openModal() {
+  document.getElementById('modal').style.display = 'flex';
 }
-</script>
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+/* ======================================================
+   LOGOUT
+====================================================== */
+function logoutUser() {
+  window.location.href = "index.html";
+}
+
+/* ======================================================
+   PLAN SELECTION
+====================================================== */
+function selectPlan(plan) {
+  alert("You selected the " + plan + " plan.\nPayment integration coming next.");
+}
+     
+/* This is for posting a job*/
+document.getElementById("jobForm")?.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const jobData = Object.fromEntries(formData.entries());
+  jobData.remote = this.remote.checked;
+
+  console.log("Job Posted:", jobData);
+
+  alert("Job posted successfully (client-side demo).");
+
+  this.reset();
+});
+
+/* This is for mange jobs */  
+     document.querySelectorAll('.actions button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    alert("Action triggered (wire to Firebase next)");
+  });
+});
 
 <!-- ================= FIREBASE SECURITY GATE ================= -->
 
@@ -285,6 +969,7 @@ onAuthStateChanged(auth, async (user) => {
 
   document.getElementById('app').style.display = 'flex';
 });
+   
 </script>
 
 </body>
