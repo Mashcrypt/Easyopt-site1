@@ -1529,25 +1529,12 @@ function updateCV() {
    FIREBASE IMPORTS
 ================================ */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-  getAuth, 
-  onAuthStateChanged 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { 
-  getStorage, 
-  ref, 
-  uploadBytesResumable, 
-  getDownloadURL 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 /* ===============================
-   FIREBASE CONFIG (YOUR REAL ONE)
+   FIREBASE CONFIG
 ================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
@@ -1567,7 +1554,7 @@ const storage = getStorage(app);
 let currentUser = null;
 
 /* ===============================
-   AUTH STATE (SINGLE SOURCE)
+   AUTH STATE
 ================================ */
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
@@ -1583,18 +1570,12 @@ if (cvInput) {
     const cvFile = e.target.files[0];
     if (!cvFile) return;
 
-    /* ===============================
-       AUTH CHECK
-    ================================ */
     if (!currentUser) {
       alert("Please login first to upload your CV");
       window.location.href = "login.html";
       return;
     }
 
-    /* ===============================
-       FILE VALIDATION
-    ================================ */
     const allowedTypes = [
       "application/pdf",
       "application/msword",
@@ -1613,11 +1594,8 @@ if (cvInput) {
       return;
     }
 
-    /* ===============================
-       UI FEEDBACK
-    ================================ */
     const label = document.querySelector('label[for="cvUpload"]');
-    const originalText = label ? label.textContent : null;
+    const originalText = label ? label.textContent : "";
 
     if (label) {
       label.textContent = "Uploading...";
@@ -1626,37 +1604,28 @@ if (cvInput) {
     }
 
     try {
-      /* ===============================
-         STORAGE UPLOAD
-      ================================ */
-      const filePath = `cvs/${user.uid}/${Date.now()}_${cvFile.name}`;
+      /* === FIXED LINE (use currentUser) === */
+      const filePath = `cvs/${currentUser.uid}/${Date.now()}_${cvFile.name}`;
       const storageRef = ref(storage, filePath);
-
 
       const uploadTask = uploadBytesResumable(storageRef, cvFile);
 
-      // Convert uploadTask to Promise
       await new Promise((resolve, reject) => {
         uploadTask.on(
           "state_changed",
-          (snapshot) => {
+          (snap) => {
             if (label) {
-              const progress = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-              );
-              label.textContent = `Uploading... ${progress}%`;
+              const percent = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+              label.textContent = `Uploading... ${percent}%`;
             }
           },
-          (error) => reject(error),
-          () => resolve()
+          reject,
+          resolve
         );
       });
 
       const cvURL = await getDownloadURL(storageRef);
 
-      /* ===============================
-         FIRESTORE METADATA
-      ================================ */
       await addDoc(collection(db, "cvs"), {
         userId: currentUser.uid,
         userEmail: currentUser.email,
@@ -1667,21 +1636,17 @@ if (cvInput) {
         uploadedAt: serverTimestamp(),
         status: "active",
         viewCount: 0,
-        unlocked: false,
-        jobTitle: "",
-        experience: "",
-        skills: "",
-        location: ""
+        unlocked: false
       });
 
-      alert("✅ CV uploaded successfully! Recruiters can now discover your profile.");
+      alert("✅ CV uploaded successfully!");
       e.target.value = "";
 
     } catch (error) {
       console.error("Upload error:", error);
       alert("❌ Error uploading CV: " + error.message);
     } finally {
-      if (label && originalText) {
+      if (label) {
         label.textContent = originalText;
         label.style.pointerEvents = "auto";
         label.style.opacity = "1";
@@ -1689,9 +1654,6 @@ if (cvInput) {
     }
   });
 
-  /* ===============================
-     BLOCK CLICK IF LOGGED OUT
-  ================================ */
   cvInput.addEventListener("click", (e) => {
     if (!currentUser) {
       e.preventDefault();
@@ -1704,8 +1666,10 @@ if (cvInput) {
 </script>
 
 
+
 </body>
 </html>
+
 
 
 
