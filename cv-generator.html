@@ -1493,21 +1493,6 @@ console.log('✅ CV Builder JS loaded successfully');
 <script>
   
 
-track.addEventListener("touchend", () => {
-  const diff = startX - endX;
-
-  if (Math.abs(diff) > 50) {
-    if (diff > 0) {
-      slideCarousel(1);  // swipe left
-    } else {
-      slideCarousel(-1); // swipe right
-    }
-  }
-
-  startX = 0;
-  endX = 0;
-});
-
 /* ---------- CV UPDATE ---------- */
 function updateCV() {
   document.getElementById("cvName").innerText =
@@ -1533,17 +1518,7 @@ function updateCV() {
 }
 
 
-/* ---------- INIT ---------- */
-function calculateCarousel() {
-  if (!track || !cards.length) return;
 
-  const cardWidth = cards[0].offsetWidth + 20; // 20 = gap
-  track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
-}
-
-  
-window.addEventListener("resize", calculateCarousel);
-window.addEventListener("load", calculateCarousel);
 </script>
 
   </script>
@@ -1730,6 +1705,7 @@ if (cvInput) {
 
 </body>
 </html>
+
 
 
 
