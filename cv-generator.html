@@ -1629,8 +1629,9 @@ if (cvInput) {
       /* ===============================
          STORAGE UPLOAD
       ================================ */
-      const filePath = `cvs/${currentUser.uid}/${Date.now()}_${cvFile.name}`;
+      const filePath = `cvs/${user.uid}/${Date.now()}_${cvFile.name}`;
       const storageRef = ref(storage, filePath);
+
 
       const uploadTask = uploadBytesResumable(storageRef, cvFile);
 
@@ -1705,6 +1706,7 @@ if (cvInput) {
 
 </body>
 </html>
+
 
 
 
