@@ -1495,14 +1495,10 @@ console.log('✅ CV Builder JS loaded successfully');
    SAFE DROP-IN FIX
 ================================ */
 
-// Note: Variables already declared at the top, using existing ones
-if (typeof currentSlide === 'undefined') {
-  var currentSlide = 0;
-}
+let currentSlide = 0;
 
-// Reuse existing track reference if available
-const carouselTrackElement = document.getElementById("carouselTrack");
-const templateCards = document.querySelectorAll(".template-card");
+const track = document.getElementById("carouselTrack");
+const cards = document.querySelectorAll(".template-card");
 
 let cardWidth = 0;
 let visibleCards = 3;
@@ -1798,6 +1794,8 @@ if (cvInput) {
 
 </body>
 </html>
+
+
 
 
 
