@@ -1567,15 +1567,130 @@ const cvInput = document.getElementById("cvUpload");
 
 if (cvInput) {
   cvInput.addEventListener("change", async (e) => {
-    const cvFile = e.target.files[0];
-    if (!cvFile) return;
+  const cvFile = e.target.files[0];
+  if (!cvFile) return;
 
-    if (!currentUser) {
-      alert("Please login first to upload your CV");
-      window.location.href = "login.html";
-      return;
+  // WAIT for auth to be ready
+  const user = await new Promise((resolve) => {
+    if (auth.currentUser) {
+      resolve(auth.currentUser);
+    } else {
+      const unsubscribe = onAuthStateChanged(auth, (u) => {
+        unsubscribe();
+        resolve(u);
+      });
     }
+  });
 
+  if (!user) {
+    alert("Please login first to upload your CV");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const allowedTypes = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ];
+
+  if (!allowedTypes.includes(cvFile.type)) {
+    alert("Only PDF, DOC, and DOCX files are allowed");
+    e.target.value = "";
+    return;
+  }
+
+  if (cvFile.size > 5 * 1024 * 1024) {
+    alert("File size must be less than 5MB");
+    e.target.value = "";
+    return;
+  }
+
+  const label = document.querySelector('label[for="cvUpload"]');
+  const originalText = label ? label.textContent : "";
+
+  if (label) {
+    label.textContent = "Uploading...";
+    label.style.pointerEvents = "none";
+    label.style.opacity = "0.6";
+  }
+
+  try {
+    // Use 'user' instead of 'currentUser'
+    const filePath = `cvs/${user.uid}/${Date.now()}_${cvFile.name}`;
+    const storageRef = ref(storage, filePath);
+
+    console.log('Upload path:', filePath);
+    console.log('User ID:', user.uid);
+
+    const uploadTask = uploadBytesResumable(storageRef, cvFile);
+
+    await new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snap) => {
+          if (label) {
+            const percent = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+            label.textContent = `Uploading... ${percent}%`;
+          }
+        },
+        reject,
+        resolve
+      );
+    });
+
+    console.log('Upload complete, getting download URL...');
+
+    const cvURL = await getDownloadURL(storageRef);
+
+    console.log('Download URL:', cvURL);
+
+    await addDoc(collection(db, "cvs"), {
+      userId: user.uid,
+      userEmail: user.email,
+      fullName: user.displayName || "Anonymous User",
+      cvURL,
+      cvFileName: cvFile.name,
+      cvFilePath: filePath,
+      uploadedAt: serverTimestamp(),
+      status: "active",
+      viewCount: 0,
+      unlocked: false
+    });
+
+    alert("✅ CV uploaded successfully!");
+    e.target.value = "";
+
+  } catch (error) {
+    console.error("Upload error:", error);
+    console.error("Error code:", error.code);
+    console.error("Error message:", error.message);
+    alert("❌ Error uploading CV: " + error.message);
+  } finally {
+    if (label) {
+      label.textContent = originalText;
+      label.style.pointerEvents = "auto";
+      label.style.opacity = "1";
+    }
+  }
+});
+```
+
+---
+
+## **Step 4: Test Again**
+
+1. **Save the file**
+2. **Hard refresh** (Ctrl + Shift + R)
+3. **Make sure you're logged in first**
+4. **Try uploading**
+5. **Check the console** - you should see logs like:
+```
+   Upload path: cvs/abc123/1234567890_resume.pdf
+   User ID: abc123
+   Upload complete, getting download URL...
+   Download URL: https://...
+   
     const allowedTypes = [
       "application/pdf",
       "application/msword",
@@ -1669,6 +1784,7 @@ if (cvInput) {
 
 </body>
 </html>
+
 
 
 
