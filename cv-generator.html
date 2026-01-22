@@ -1534,6 +1534,14 @@ function updateCV() {
 
 
 /* ---------- INIT ---------- */
+function calculateCarousel() {
+  if (!track || !cards.length) return;
+
+  const cardWidth = cards[0].offsetWidth + 20; // 20 = gap
+  track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+}
+
+  
 window.addEventListener("resize", calculateCarousel);
 window.addEventListener("load", calculateCarousel);
 </script>
@@ -1722,6 +1730,7 @@ if (cvInput) {
 
 </body>
 </html>
+
 
 
 
