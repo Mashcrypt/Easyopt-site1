@@ -1492,41 +1492,6 @@ console.log('✅ CV Builder JS loaded successfully');
 
 <script>
   
-/* ---------- ARROW CONTROLS ---------- */
-function slideCarousel(direction) {
-  currentSlide += direction;
-  updateCarousel();
-}
-
-/* ---------- TEMPLATE SELECT ---------- */
-function selectTemplate(card) {
-  cards.forEach(c => c.classList.remove("selected"));
-  card.classList.add("selected");
-
-  selectedTemplate = card.dataset.style;
-
-  document.getElementById("builder").classList.add("active");
-
-  const preview = document.getElementById("cvPreview");
-  preview.className = `cv ${selectedTemplate}`;
-
-  window.scrollTo({
-    top: document.getElementById("builder").offsetTop - 80,
-    behavior: "smooth"
-  });
-}
-
-/* ---------- TOUCH / SWIPE SUPPORT ---------- */
-let startX = 0;
-let endX = 0;
-
-track.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
-});
-
-track.addEventListener("touchmove", e => {
-  endX = e.touches[0].clientX;
-});
 
 track.addEventListener("touchend", () => {
   const diff = startX - endX;
@@ -1757,6 +1722,7 @@ if (cvInput) {
 
 </body>
 </html>
+
 
 
 
