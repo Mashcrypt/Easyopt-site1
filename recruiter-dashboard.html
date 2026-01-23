@@ -955,6 +955,16 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getIdTokenResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+import { 
+  getFirestore, 
+  collection, 
+  getDocs, 
+  query, 
+  orderBy 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
   authDomain: "career-unified.firebaseapp.com",
@@ -963,6 +973,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
+
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -980,8 +992,53 @@ onAuthStateChanged(auth, async (user) => {
 
   // Show page only after authorization confirmed
   document.body.classList.add('authorized');
+  loadCVs();
+
 });
-   
+     
+ async function loadCVs() {
+  const cvsContainer = document.querySelector("#cvs");
+
+  cvsContainer.innerHTML = `
+    <h2>CV Library</h2>
+    <div class="cv-grid" id="cvGrid"></div>
+  `;
+
+  const grid = document.getElementById("cvGrid");
+
+  try {
+    const q = query(collection(db, "cvs"), orderBy("createdAt", "desc"));
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      grid.innerHTML = "<p>No CVs uploaded yet.</p>";
+      return;
+    }
+
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      const card = document.createElement("div");
+      card.className = "cv-card";
+
+      card.innerHTML = `
+        <h3>${data.fullName || "Candidate"}</h3>
+        <p>${data.title || "Job Seeker"}</p>
+        <p><small>${data.email || ""}</small></p>
+        <button class="primary-btn" onclick="window.open('${data.fileURL}', '_blank')">
+          View CV
+        </button>
+      `;
+
+      grid.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error("CV load error:", err);
+    grid.innerHTML = "<p>Error loading CVs.</p>";
+  }
+}
+  
 </script>
 
 </body>
