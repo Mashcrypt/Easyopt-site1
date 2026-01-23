@@ -568,26 +568,7 @@ body {
   <!-- DASHBOARD -->
   <div id="dashboard" class="section active">
     <h2>Locked CV Previews</h2>
-
-    <div class="cv-grid">
-      <div class="cv-card">
-        <div class="cv-snapshot"></div>
-        <div class="lock">
-          <i class='bx bx-lock'></i>
-          <span>Upgrade to view CV</span>
-          <button class="primary-btn" onclick="openModal()">Upgrade</button>
-        </div>
-      </div>
-
-      <div class="cv-card">
-        <div class="cv-snapshot"></div>
-        <div class="lock">
-          <i class='bx bx-lock'></i>
-          <span>Upgrade to view CV</span>
-          <button class="primary-btn" onclick="openModal()">Upgrade</button>
-        </div>
-      </div>
-    </div>
+    <div class="cv-grid" id="previewGrid"></div>
   </div>
 
   <!-- COMPANY -->
@@ -596,7 +577,6 @@ body {
     <p>Company profile management coming next.</p>
   </div>
 
-  
  <!-- ================= MANAGE JOBS ================= -->
 <div id="jobs" class="section">
   <h2>Manage Jobs</h2>
@@ -615,7 +595,6 @@ body {
 
     <div class="jobs-table">
 
-      <!-- TABLE HEADER -->
       <div class="jobs-row jobs-head">
         <span>Title</span>
         <span>Applications</span>
@@ -624,49 +603,14 @@ body {
         <span>Action</span>
       </div>
 
-      <!-- JOB ROW -->
       <div class="jobs-row">
         <div>
           <strong>Senior Full Stack Engineer</strong>
-          <div class="job-location">
-            <i class='bx bx-map'></i> London, UK
-          </div>
+          <div class="job-location"><i class='bx bx-map'></i> London, UK</div>
         </div>
-
         <div class="applied">3+ Applied</div>
-
-        <div class="dates">
-          <span>Oct 27, 2024</span>
-          <small>Expires: Apr 25, 2025</small>
-        </div>
-
+        <div class="dates"><span>Oct 27, 2024</span><small>Expires: Apr 25, 2025</small></div>
         <div class="status active">Active</div>
-
-        <div class="actions">
-          <button title="View"><i class='bx bx-show'></i></button>
-          <button title="Edit"><i class='bx bx-edit'></i></button>
-          <button title="Delete"><i class='bx bx-trash'></i></button>
-        </div>
-      </div>
-
-      <!-- JOB ROW -->
-      <div class="jobs-row">
-        <div>
-          <strong>Senior Product Designer</strong>
-          <div class="job-location">
-            <i class='bx bx-map'></i> London, UK
-          </div>
-        </div>
-
-        <div class="applied">3+ Applied</div>
-
-        <div class="dates">
-          <span>Oct 20, 2024</span>
-          <small>Expires: Apr 20, 2025</small>
-        </div>
-
-        <div class="status active">Active</div>
-
         <div class="actions">
           <button><i class='bx bx-show'></i></button>
           <button><i class='bx bx-edit'></i></button>
@@ -677,204 +621,32 @@ body {
     </div>
   </div>
 </div>
-     
+
 <!-- ================= POST A JOB ================= -->
 <div id="post-job" class="section">
-
-  <div style="margin-bottom: 20px;">
-    <h2>Post a Job</h2>
-    <p style="color:#6b7280;">Find the perfect candidate for your team</p>
-  </div>
-
+  <h2>Post a Job</h2>
   <div class="cv-card">
-
     <form id="jobForm">
-
-      <!-- JOB DETAILS -->
-      <h3 style="margin-bottom:16px;">Job Details</h3>
-
-      <div class="form-group">
-        <label>Job Title <span style="color:red">*</span></label>
-        <input type="text" name="title" required placeholder="e.g. Senior Frontend Developer">
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <label>Job Category *</label>
-          <select name="category" required>
-            <option value="">Select category</option>
-            <option>IT & Software</option>
-            <option>Design</option>
-            <option>Marketing</option>
-            <option>Sales</option>
-            <option>Finance</option>
-            <option>HR</option>
-            <option>Engineering</option>
-            <option>Healthcare</option>
-            <option>Education</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Job Type *</label>
-          <select name="type" required>
-            <option value="">Select type</option>
-            <option>Full Time</option>
-            <option>Part Time</option>
-            <option>Contract</option>
-            <option>Freelance</option>
-            <option>Internship</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <label>Experience Level *</label>
-          <select name="experience" required>
-            <option value="">Select level</option>
-            <option>Entry</option>
-            <option>Mid</option>
-            <option>Senior</option>
-            <option>Lead</option>
-            <option>Executive</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Salary Range</label>
-          <input type="text" name="salary" placeholder="e.g. R30,000 – R50,000">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Job Description *</label>
-        <textarea name="description" rows="5" required></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Requirements</label>
-        <textarea name="requirements" rows="4"></textarea>
-      </div>
-
-      <!-- LOCATION -->
-      <h3 style="margin:30px 0 16px;">Location</h3>
-
-      <div class="row">
-        <div class="form-group">
-          <label>City *</label>
-          <input type="text" name="city" required>
-        </div>
-
-        <div class="form-group">
-          <label>Country *</label>
-          <input type="text" name="country" required>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>
-          <input type="checkbox" name="remote">
-          Remote Position
-        </label>
-      </div>
-
-      <!-- COMPANY -->
-      <h3 style="margin:30px 0 16px;">Company Information</h3>
-
-      <div class="form-group">
-        <label>Company Name *</label>
-        <input type="text" name="company" required>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <label>Email *</label>
-          <input type="email" name="email" required>
-        </div>
-
-        <div class="form-group">
-          <label>Website</label>
-          <input type="url" name="website">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Logo URL</label>
-        <input type="url" name="logo">
-      </div>
-
-      <div class="form-group">
-        <label>Application Deadline</label>
-        <input type="text" name="deadline" placeholder="e.g. 31 Jan 2026">
-      </div>
-
-      <!-- ACTIONS -->
-      <div style="display:flex; gap:12px; margin-top:20px;">
-        <button type="submit" class="primary-btn">Publish Job</button>
-        <button type="button" class="primary-btn" style="background:#6b7280">Save Draft</button>
-      </div>
-
+      <input type="text" name="title" required placeholder="Job Title">
+      <button type="submit" class="primary-btn">Publish Job</button>
     </form>
   </div>
 </div>
 
-  <!-- CVS -->
-  <div id="cvs" class="section">
-    <h2>CV Library</h2>
-    <p>Unlocked CVs will appear here after payment.</p>
+<!-- CVS -->
+<div id="cvs" class="section">
+  <h2>CV Library</h2>
+  <div class="cv-grid" id="cvGrid"></div>
+</div>
+
+<!-- BILLING -->
+<div id="billing" class="section">
+  <h2>Packages & Billing</h2>
+  <div class="cv-grid">
+    <div class="cv-card"><h3>Starter</h3><button class="primary-btn" onclick="selectPlan('Starter')">Upgrade</button></div>
+    <div class="cv-card"><h3>Pro</h3><button class="primary-btn" onclick="selectPlan('Pro')">Upgrade</button></div>
   </div>
-
-  <!-- BILLING -->
-  <div id="billing" class="section">
-    <h2>Packages & Billing</h2>
-
-    <div class="cv-grid">
-
-      <div class="cv-card">
-        <h3>Free</h3>
-        <p><strong>R0 / month</strong></p>
-        <ul>
-          <li>✔ Post Jobs</li>
-          <li>✔ View CV Snapshots</li>
-          <li>✖ Unlock CVs</li>
-        </ul>
-        <button class="primary-btn" disabled>Current Plan</button>
-      </div>
-
-      <div class="cv-card">
-        <h3>Starter</h3>
-        <p><strong>R299 / month</strong></p>
-        <ul>
-          <li>✔ 50 CV Unlocks</li>
-          <li>✔ Email Support</li>
-        </ul>
-        <button class="primary-btn" onclick="selectPlan('Starter')">Upgrade</button>
-      </div>
-
-      <div class="cv-card">
-        <h3>Pro</h3>
-        <p><strong>R699 / month</strong></p>
-        <ul>
-          <li>✔ 200 CV Unlocks</li>
-          <li>✔ Priority Support</li>
-        </ul>
-        <button class="primary-btn" onclick="selectPlan('Pro')">Upgrade</button>
-      </div>
-
-      <div class="cv-card">
-        <h3>Enterprise</h3>
-        <p><strong>R1499 / month</strong></p>
-        <ul>
-          <li>✔ Unlimited Unlocks</li>
-          <li>✔ Dedicated Manager</li>
-        </ul>
-        <button class="primary-btn" onclick="selectPlan('Enterprise')">Contact Sales</button>
-      </div>
-
-    </div>
-  </div>
+</div>
 
 </div>
 
@@ -882,88 +654,27 @@ body {
 <div class="modal" id="modal">
   <div class="modal-content">
     <h3>Upgrade Required</h3>
-    <p>Please upgrade your subscription to unlock CVs.</p>
     <button class="close" onclick="closeModal()">Close</button>
   </div>
 </div>
 
-<!-- ================= SCRIPT ================= -->
 <script>
-
-/* ======================================================
-   NAVIGATION
-====================================================== */
 function showSection(id, el) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-
   document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
   el.classList.add('active');
 }
-
-/* ======================================================
-   MODAL
-====================================================== */
-function openModal() {
-  document.getElementById('modal').style.display = 'flex';
-}
-
-function closeModal() {
-  document.getElementById('modal').style.display = 'none';
-}
-
-/* ======================================================
-   LOGOUT
-====================================================== */
-function logoutUser() {
-  window.location.href = "index.html";
-}
-
-/* ======================================================
-   PLAN SELECTION
-====================================================== */
-function selectPlan(plan) {
-  alert("You selected the " + plan + " plan.\nPayment integration coming next.");
-}
-     
-/* This is for posting a job*/
-document.getElementById("jobForm")?.addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const formData = new FormData(this);
-  const jobData = Object.fromEntries(formData.entries());
-  jobData.remote = this.remote.checked;
-
-  console.log("Job Posted:", jobData);
-
-  alert("Job posted successfully (client-side demo).");
-
-  this.reset();
-});
-
-/* This is for mange jobs */  
-     document.querySelectorAll('.actions button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    alert("Action triggered (wire to Firebase next)");
-  });
-});
-     
+function openModal(){ document.getElementById('modal').style.display='flex'; }
+function closeModal(){ document.getElementById('modal').style.display='none'; }
+function logoutUser(){ window.location.href='index.html'; }
+function selectPlan(p){ alert("Selected: "+p); }
 </script>
-     
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getIdTokenResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-import { 
-  getFirestore, 
-  collection, 
-  getDocs, 
-  query, 
-  orderBy 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
@@ -975,71 +686,31 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.replace('login.html');
-    return;
-  }
-
-  const token = await getIdTokenResult(user, true);
-
-  if (!token.claims.recruiter) {
-    alert('Recruiter access only');
-    window.location.replace('index.html');
-    return;
-  }
-
-  // Show page only after authorization confirmed
-  document.body.classList.add('authorized');
+onAuthStateChanged(auth, user=>{
+  if(!user) return location.href="login.html";
   loadCVs();
-
 });
-     
- async function loadCVs() {
-  const cvsContainer = document.querySelector("#cvs");
 
-  cvsContainer.innerHTML = `
-    <h2>CV Library</h2>
-    <div class="cv-grid" id="cvGrid"></div>
-  `;
-
-  const grid = document.getElementById("cvGrid");
-
-  try {
-    const q = query(collection(db, "cvs"), orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(q);
-
-    if (snapshot.empty) {
-      grid.innerHTML = "<p>No CVs uploaded yet.</p>";
-      return;
-    }
-
-    snapshot.forEach(doc => {
-      const data = doc.data();
-
-      const card = document.createElement("div");
-      card.className = "cv-card";
-
-      card.innerHTML = `
-        <h3>${data.fullName || "Candidate"}</h3>
-        <p>${data.title || "Job Seeker"}</p>
-        <p><small>${data.email || ""}</small></p>
-        <button class="primary-btn" onclick="window.open('${data.fileURL}', '_blank')">
-          View CV
-        </button>
-      `;
-
-      grid.appendChild(card);
-    });
-
-  } catch (err) {
-    console.error("CV load error:", err);
-    grid.innerHTML = "<p>Error loading CVs.</p>";
-  }
+async function loadCVs(){
+  const grid=document.getElementById("cvGrid");
+  grid.innerHTML="";
+  const q=query(collection(db,"cvs"),orderBy("uploadedAt","desc"));
+  const snap=await getDocs(q);
+  snap.forEach(doc=>{
+    const d=doc.data();
+    const card=document.createElement("div");
+    card.className="cv-card";
+    card.innerHTML=`
+      <h3>${d.fullName||"Candidate"}</h3>
+      <p>${d.jobTitle||""}</p>
+      ${d.unlocked?`<button class="primary-btn" onclick="window.open('${d.cvURL}')">View CV</button>`:`<button class="primary-btn" onclick="openModal()">Locked</button>`}
+    `;
+    grid.appendChild(card);
+  });
 }
-  
 </script>
+
+
 
 </body>
 </html>
