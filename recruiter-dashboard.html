@@ -1061,6 +1061,7 @@ body {
      
 </style>
 </head>
+
 <body>
 
 <div id="app" class="authorized">
@@ -1174,35 +1175,36 @@ function updateStats(){
 }
 
 async function loadCVs(){
+  const q = query(collection(db,"cvs"),orderBy("uploadedAt","desc"));
+  const snap = await getDocs(q);
+
   const grid = document.getElementById("cvGrid");
-  grid.innerHTML = "<p>Loading...</p>";
+  const preview = document.getElementById("previewGrid");
+  grid.innerHTML = "";
+  preview.innerHTML = "";
 
-  try {
-    const snap = await getDocs(collection(db,"cvs"));
+  for(const d of snap.docs){
+    const cv = d.data();
+    const id = d.id;
 
-    if(snap.empty){
-      grid.innerHTML = "<p>No CVs found.</p>";
-      return;
-    }
+    const unlocked = await isUnlocked(id);
 
-    grid.innerHTML = "";
-    snap.forEach(doc=>{
-      const d = doc.data();
-      const div = document.createElement("div");
-      div.className = "cv-card";
-      div.innerHTML = `
-        <h3>${d.fullName || "Candidate"}</h3>
-        <p>${d.userEmail || ""}</p>
-      `;
-      grid.appendChild(div);
-    });
+    const card = document.createElement("div");
+    card.className="cv-card";
 
-  } catch (err){
-    console.error(err);
-    grid.innerHTML = "<p style='color:red'>Firestore blocked: " + err.message + "</p>";
+    card.innerHTML = `
+      <div class="cv-snapshot" style="background-image:url('${cv.snapshotURL}')"></div>
+      <h3>${cv.fullName}</h3>
+      <p>${cv.jobTitle}</p>
+      ${unlocked
+        ? `<button onclick="window.open('${cv.cvURL}')">View</button>`
+        : `<button onclick="askUnlock('${id}')">Unlock</button>`}
+    `;
+
+    grid.appendChild(card);
+    preview.appendChild(card.cloneNode(true));
   }
 }
-
 
 async function isUnlocked(cvId){
   const ref = doc(db,"recruiter_unlocks",currentUser.uid+"_"+cvId);
@@ -1255,7 +1257,6 @@ function showSection(id,el){
 </script>
 
 </body>
-
 
 </html>
 
