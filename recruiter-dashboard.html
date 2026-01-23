@@ -686,25 +686,41 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-onAuthStateChanged(auth, user=>{
-  if(!user) return location.href="login.html";
-  loadCVs();
+/* ===============================
+   AUTH GATE
+================================ */
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    window.location.href = "login.html";
+  } else {
+    document.body.classList.add("authorized"); // 🔥 SHOW PAGE
+    loadCVs();
+  }
 });
 
-async function loadCVs(){
-  const grid=document.getElementById("cvGrid");
-  grid.innerHTML="";
-  const q=query(collection(db,"cvs"),orderBy("uploadedAt","desc"));
-  const snap=await getDocs(q);
-  snap.forEach(doc=>{
-    const d=doc.data();
-    const card=document.createElement("div");
-    card.className="cv-card";
-    card.innerHTML=`
-      <h3>${d.fullName||"Candidate"}</h3>
-      <p>${d.jobTitle||""}</p>
-      ${d.unlocked?`<button class="primary-btn" onclick="window.open('${d.cvURL}')">View CV</button>`:`<button class="primary-btn" onclick="openModal()">Locked</button>`}
+/* ===============================
+   LOAD CVS
+================================ */
+async function loadCVs() {
+  const grid = document.getElementById("cvGrid");
+  grid.innerHTML = "";
+
+  const q = query(collection(db, "cvs"), orderBy("uploadedAt", "desc"));
+  const snap = await getDocs(q);
+
+  snap.forEach(doc => {
+    const d = doc.data();
+    const card = document.createElement("div");
+    card.className = "cv-card";
+
+    card.innerHTML = `
+      <h3>${d.fullName || "Candidate"}</h3>
+      <p>${d.jobTitle || ""}</p>
+      ${d.unlocked
+        ? `<button class="primary-btn" onclick="window.open('${d.cvURL}', '_blank')">View CV</button>`
+        : `<button class="primary-btn" onclick="openModal()">Locked</button>`}
     `;
+
     grid.appendChild(card);
   });
 }
