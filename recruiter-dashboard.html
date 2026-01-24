@@ -1083,7 +1083,7 @@ body {
 
   <!-- TOP STATS -->
   <div class="stats">
-    <div class="stat"><div><h3 id="totalCVs">0</h3><span>Total CVs</span></div><i class='bx bx-file'></i></div>
+    <div class="stat"><div><h3 id="totalCVs">0</h3><span>Total CVs Available</span></div><i class='bx bx-file'></i></div>
     <div class="stat"><div><h3 id="unlockedCVs">0</h3><span>Unlocked CVs</span></div><i class='bx bx-lock-open'></i></div>
     <div class="stat"><div><h3 id="remainingUnlocks">0</h3><span>Remaining Unlocks</span></div><i class='bx bx-user-check'></i></div>
   </div>
@@ -1346,10 +1346,10 @@ body {
 
   <!-- CV LIBRARY -->
   <div id="cvs" class="section">
-    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
       <div>
         <h2>CV Library</h2>
-        <p style="color:#6b7280;">Browse and unlock candidate CVs</p>
+        <p style="color:#6b7280;" id="cvLibrarySubtext">Browse and unlock candidate CVs</p>
       </div>
       <div id="currentPlanBadge" style="padding: 8px 16px; background: #eef2ff; color: #1e3a8a; border-radius: 8px; font-weight: 600; font-size: 14px;">
         Free Plan
@@ -1373,7 +1373,7 @@ body {
         <p><strong>R0 / month</strong></p>
         <ul>
           <li>✔ Post Jobs</li>
-          <li>✔ View CV Previews (Blurred)</li>
+          <li>✔ View 10 CV Previews (Blurred)</li>
           <li>✖ Unlock CVs</li>
         </ul>
         <button class="primary-btn" id="freePlanBtn" disabled>Current Plan</button>
@@ -1383,6 +1383,7 @@ body {
         <h3>Starter</h3>
         <p><strong>R299 / month</strong></p>
         <ul>
+          <li>✔ View All CVs</li>
           <li>✔ 50 CV Unlocks</li>
           <li>✔ Email Support</li>
           <li>✔ Job Posting</li>
@@ -1394,6 +1395,7 @@ body {
         <h3>Pro</h3>
         <p><strong>R699 / month</strong></p>
         <ul>
+          <li>✔ View All CVs</li>
           <li>✔ 200 CV Unlocks</li>
           <li>✔ Priority Support</li>
           <li>✔ Advanced Filters</li>
@@ -1405,6 +1407,7 @@ body {
         <h3>Enterprise</h3>
         <p><strong>R1499 / month</strong></p>
         <ul>
+          <li>✔ View All CVs</li>
           <li>✔ Unlimited Unlocks</li>
           <li>✔ Dedicated Manager</li>
           <li>✔ API Access</li>
@@ -1501,6 +1504,7 @@ import {
   getDocs, 
   query, 
   orderBy,
+  limit,
   doc,
   getDoc,
   setDoc,
@@ -1521,6 +1525,7 @@ const db = getFirestore(app);
 
 let currentRecruiter = null;
 let recruiterData = null;
+let allCVsCount = 0;
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -1593,17 +1598,40 @@ async function loadCVs() {
   grid.innerHTML = '<p style="text-align: center; color: #6b7280;">Loading CVs...</p>';
 
   try {
-    const q = query(collection(db, "cvs"), orderBy("uploadedAt", "desc"));
-    const snapshot = await getDocs(q);
+    // First, get total count of all CVs
+    const countQuery = query(collection(db, "cvs"));
+    const countSnapshot = await getDocs(countQuery);
+    allCVsCount = countSnapshot.size;
+    
+    // Update total CVs stat with actual count from Firebase
+    document.getElementById('totalCVs').textContent = allCVsCount;
 
-    if (snapshot.empty) {
+    if (allCVsCount === 0) {
       grid.innerHTML = "<p style='text-align: center; color: #6b7280;'>No CVs uploaded yet.</p>";
-      document.getElementById('totalCVs').textContent = '0';
+      updateCVLibrarySubtext();
       return;
     }
 
+    // Determine how many CVs to show based on plan
+    let cvQuery;
+    let maxCVsToShow;
+    
+    if (recruiterData.plan === 'free') {
+      // Free plan: Show only 10 CVs
+      maxCVsToShow = 10;
+      cvQuery = query(collection(db, "cvs"), orderBy("uploadedAt", "desc"), limit(10));
+    } else {
+      // Paid plans: Show all CVs
+      maxCVsToShow = allCVsCount;
+      cvQuery = query(collection(db, "cvs"), orderBy("uploadedAt", "desc"));
+    }
+    
+    const snapshot = await getDocs(cvQuery);
+
     grid.innerHTML = '';
-    document.getElementById('totalCVs').textContent = snapshot.size;
+    
+    // Update subtext based on plan
+    updateCVLibrarySubtext();
 
     snapshot.forEach(cvDoc => {
       const data = cvDoc.data();
@@ -1665,11 +1693,28 @@ async function loadCVs() {
 }
 
 /* ======================================================
+   UPDATE CV LIBRARY SUBTEXT
+====================================================== */
+function updateCVLibrarySubtext() {
+  const subtext = document.getElementById('cvLibrarySubtext');
+  
+  if (recruiterData.plan === 'free') {
+    if (allCVsCount > 10) {
+      subtext.innerHTML = `Showing 10 of ${allCVsCount} CVs <span style="color: #ef4444; font-weight: 600;">(Upgrade to view all)</span>`;
+    } else {
+      subtext.textContent = `Showing ${allCVsCount} of ${allCVsCount} CVs`;
+    }
+  } else {
+    subtext.textContent = `Showing all ${allCVsCount} CVs`;
+  }
+}
+
+/* ======================================================
    UNLOCK CV FUNCTION
 ====================================================== */
 window.unlockCV = async function(cvId, cvURL, cvName) {
   if (!recruiterData || recruiterData.plan === 'free') {
-    openModal('You need to upgrade to a paid plan to unlock CVs.');
+    openModal('You need to upgrade to a paid plan to unlock CVs. Free plan only allows viewing 10 CV previews.');
     return;
   }
   
@@ -1681,11 +1726,11 @@ window.unlockCV = async function(cvId, cvURL, cvName) {
   
   // Check if has remaining unlocks (except enterprise)
   if (recruiterData.plan !== 'enterprise' && recruiterData.unlocksRemaining <= 0) {
-    openModal('You have no remaining unlocks. Please upgrade your plan.');
+    openModal('You have no remaining unlocks. Please upgrade your plan or purchase more unlocks.');
     return;
   }
   
-  if (!confirm(`Unlock CV for ${cvName}? This will use 1 unlock credit.`)) {
+  if (!confirm(`Unlock CV for ${cvName}?\n\nThis will use 1 unlock credit.\n\nRemaining after unlock: ${recruiterData.plan === 'enterprise' ? '∞' : recruiterData.unlocksRemaining - 1}`)) {
     return;
   }
   
@@ -1715,11 +1760,11 @@ window.unlockCV = async function(cvId, cvURL, cvName) {
     // Open CV in new tab
     window.open(cvURL, '_blank');
     
-    alert('CV unlocked successfully!');
+    alert('✅ CV unlocked successfully!');
     
   } catch (error) {
     console.error('Error unlocking CV:', error);
-    alert('Error unlocking CV. Please try again.');
+    alert('❌ Error unlocking CV. Please try again.');
   }
 }
 
@@ -1727,7 +1772,16 @@ window.unlockCV = async function(cvId, cvURL, cvName) {
    PLAN SELECTION
 ====================================================== */
 window.selectPlan = async function(plan, unlocks) {
-  if (!confirm(`Upgrade to ${plan.toUpperCase()} plan? (Payment integration coming soon)`)) {
+  const planNames = {
+    starter: 'STARTER',
+    pro: 'PRO',
+    enterprise: 'ENTERPRISE'
+  };
+  
+  const planName = planNames[plan];
+  const unlocksText = unlocks === -1 ? 'unlimited' : unlocks;
+  
+  if (!confirm(`Upgrade to ${planName} plan?\n\n✓ View all ${allCVsCount} CVs\n✓ ${unlocksText} CV unlocks\n\n(Payment integration coming soon)`)) {
     return;
   }
   
@@ -1741,7 +1795,7 @@ window.selectPlan = async function(plan, unlocks) {
       upgradedAt: new Date().toISOString()
     });
     
-    alert(`Successfully upgraded to ${plan.toUpperCase()} plan!`);
+    alert(`✅ Successfully upgraded to ${planName} plan!\n\nYou can now view all CVs and unlock ${unlocksText} candidates.`);
     
     // Reload data
     await loadRecruiterData();
@@ -1750,7 +1804,7 @@ window.selectPlan = async function(plan, unlocks) {
     
   } catch (error) {
     console.error('Error upgrading plan:', error);
-    alert('Error upgrading plan. Please try again.');
+    alert('❌ Error upgrading plan. Please try again.');
   }
 }
 
@@ -1788,7 +1842,6 @@ function updatePlanBadges() {
 </script>
 
 </body>
-</html>
 
 </html>
 
