@@ -1055,199 +1055,740 @@ body {
 
 <body>
 
-<div id="app" class="authorized">
-
 <!-- ================= SIDEBAR ================= -->
 <div class="sidebar">
+
   <div class="brand">
-    <h2>Career Unified</h2>
-    <div class="location" id="planBadge">Loading plan...</div>
+    <img src="https://dummyimage.com/80x80/2563eb/ffffff&text=CU">
+    <div>
+      <h2>Career Unified</h2>
+      <div class="location">Recruiter Dashboard</div>
+    </div>
   </div>
 
   <div class="nav">
-    <a class="active" onclick="showSection('dashboard', this)">Dashboard</a>
-    <a onclick="showSection('cvs', this)">CV Library</a>
-    <a onclick="showSection('billing', this)">Packages</a>
-    <a onclick="logoutUser()">Logout</a>
+    <a class="active" onclick="showSection('dashboard', this)"><i class='bx bx-grid-alt'></i>Dashboard</a>
+    <a onclick="showSection('company', this)"><i class='bx bx-buildings'></i>Company Profile</a>
+    <a onclick="showSection('post-job', this)"><i class='bx bx-plus-circle'></i>Post a Job</a>
+    <a onclick="showSection('jobs', this)"><i class='bx bx-briefcase'></i>Manage Jobs</a>
+    <a onclick="showSection('cvs', this)"><i class='bx bx-file'></i>CV Library</a>
+    <a onclick="showSection('billing', this)"><i class='bx bx-credit-card'></i>Packages</a>
+    <a onclick="logoutUser()"><i class='bx bx-log-out'></i>Logout</a>
   </div>
+
 </div>
 
 <!-- ================= MAIN ================= -->
 <div class="main">
 
-<div class="stats">
-  <div class="stat"><div><h3 id="remaining">0</h3><span>Unlocks Left</span></div></div>
-  <div class="stat"><div><h3 id="used">0</h3><span>Used</span></div></div>
-  <div class="stat"><div><h3 id="total">0</h3><span>Total</span></div></div>
+  <!-- TOP STATS -->
+  <div class="stats">
+    <div class="stat"><div><h3 id="totalCVs">0</h3><span>Total CVs</span></div><i class='bx bx-file'></i></div>
+    <div class="stat"><div><h3 id="unlockedCVs">0</h3><span>Unlocked CVs</span></div><i class='bx bx-lock-open'></i></div>
+    <div class="stat"><div><h3 id="remainingUnlocks">0</h3><span>Remaining Unlocks</span></div><i class='bx bx-user-check'></i></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="section active">
+    <h2>Welcome to Your Recruiter Dashboard</h2>
+    <p style="color:#6b7280; margin-bottom:20px;">Manage your job postings and access candidate CVs</p>
+    
+    <div class="cv-grid">
+      <div class="cv-card">
+        <h3>📄 CV Library</h3>
+        <p>Access uploaded CVs from job seekers</p>
+        <button class="primary-btn" onclick="showSection('cvs', document.querySelector('.nav a:nth-child(5)'))">Browse CVs</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>💼 Post a Job</h3>
+        <p>Create new job listings</p>
+        <button class="primary-btn" onclick="showSection('post-job', document.querySelector('.nav a:nth-child(3)'))">Post Job</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>📊 Manage Jobs</h3>
+        <p>View and edit your job postings</p>
+        <button class="primary-btn" onclick="showSection('jobs', document.querySelector('.nav a:nth-child(4)'))">View Jobs</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPANY -->
+  <div id="company" class="section">
+    <h2>Company Profile</h2>
+    <p>Company profile management coming next.</p>
+  </div>
+
+  
+ <!-- ================= MANAGE JOBS ================= -->
+<div id="jobs" class="section">
+  <h2>Manage Jobs</h2>
+  <p style="color:#6b7280; margin-bottom:20px;">Ready to jump back in?</p>
+
+  <div class="jobs-card">
+    <div class="jobs-header">
+      <h3>My Job Listings</h3>
+
+      <select class="filter">
+        <option>Last 6 Months</option>
+        <option>Last 12 Months</option>
+        <option>All Time</option>
+      </select>
+    </div>
+
+    <div class="jobs-table">
+
+      <!-- TABLE HEADER -->
+      <div class="jobs-row jobs-head">
+        <span>Title</span>
+        <span>Applications</span>
+        <span>Created & Expired</span>
+        <span>Status</span>
+        <span>Action</span>
+      </div>
+
+      <!-- JOB ROW -->
+      <div class="jobs-row">
+        <div>
+          <strong>Senior Full Stack Engineer</strong>
+          <div class="job-location">
+            <i class='bx bx-map'></i> London, UK
+          </div>
+        </div>
+
+        <div class="applied">3+ Applied</div>
+
+        <div class="dates">
+          <span>Oct 27, 2024</span>
+          <small>Expires: Apr 25, 2025</small>
+        </div>
+
+        <div class="status active">Active</div>
+
+        <div class="actions">
+          <button title="View"><i class='bx bx-show'></i></button>
+          <button title="Edit"><i class='bx bx-edit'></i></button>
+          <button title="Delete"><i class='bx bx-trash'></i></button>
+        </div>
+      </div>
+
+      <!-- JOB ROW -->
+      <div class="jobs-row">
+        <div>
+          <strong>Senior Product Designer</strong>
+          <div class="job-location">
+            <i class='bx bx-map'></i> London, UK
+          </div>
+        </div>
+
+        <div class="applied">3+ Applied</div>
+
+        <div class="dates">
+          <span>Oct 20, 2024</span>
+          <small>Expires: Apr 20, 2025</small>
+        </div>
+
+        <div class="status active">Active</div>
+
+        <div class="actions">
+          <button><i class='bx bx-show'></i></button>
+          <button><i class='bx bx-edit'></i></button>
+          <button><i class='bx bx-trash'></i></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+     
+<!-- ================= POST A JOB ================= -->
+<div id="post-job" class="section">
+
+  <div style="margin-bottom: 20px;">
+    <h2>Post a Job</h2>
+    <p style="color:#6b7280;">Find the perfect candidate for your team</p>
+  </div>
+
+  <div class="cv-card">
+
+    <form id="jobForm">
+
+      <!-- JOB DETAILS -->
+      <h3 style="margin-bottom:16px;">Job Details</h3>
+
+      <div class="form-group">
+        <label>Job Title <span style="color:red">*</span></label>
+        <input type="text" name="title" required placeholder="e.g. Senior Frontend Developer">
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Job Category *</label>
+          <select name="category" required>
+            <option value="">Select category</option>
+            <option>IT & Software</option>
+            <option>Design</option>
+            <option>Marketing</option>
+            <option>Sales</option>
+            <option>Finance</option>
+            <option>HR</option>
+            <option>Engineering</option>
+            <option>Healthcare</option>
+            <option>Education</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Job Type *</label>
+          <select name="type" required>
+            <option value="">Select type</option>
+            <option>Full Time</option>
+            <option>Part Time</option>
+            <option>Contract</option>
+            <option>Freelance</option>
+            <option>Internship</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Experience Level *</label>
+          <select name="experience" required>
+            <option value="">Select level</option>
+            <option>Entry</option>
+            <option>Mid</option>
+            <option>Senior</option>
+            <option>Lead</option>
+            <option>Executive</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Salary Range</label>
+          <input type="text" name="salary" placeholder="e.g. R30,000 – R50,000">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Job Description *</label>
+        <textarea name="description" rows="5" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Requirements</label>
+        <textarea name="requirements" rows="4"></textarea>
+      </div>
+
+      <!-- LOCATION -->
+      <h3 style="margin:30px 0 16px;">Location</h3>
+
+      <div class="row">
+        <div class="form-group">
+          <label>City *</label>
+          <input type="text" name="city" required>
+        </div>
+
+        <div class="form-group">
+          <label>Country *</label>
+          <input type="text" name="country" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="remote">
+          Remote Position
+        </label>
+      </div>
+
+      <!-- COMPANY -->
+      <h3 style="margin:30px 0 16px;">Company Information</h3>
+
+      <div class="form-group">
+        <label>Company Name *</label>
+        <input type="text" name="company" required>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Website</label>
+          <input type="url" name="website">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Logo URL</label>
+        <input type="url" name="logo">
+      </div>
+
+      <div class="form-group">
+        <label>Application Deadline</label>
+        <input type="text" name="deadline" placeholder="e.g. 31 Jan 2026">
+      </div>
+
+      <!-- ACTIONS -->
+      <div style="display:flex; gap:12px; margin-top:20px;">
+        <button type="submit" class="primary-btn">Publish Job</button>
+        <button type="button" class="primary-btn" style="background:#6b7280">Save Draft</button>
+      </div>
+
+    </form>
+  </div>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="section active">
-  <h2>Premium CV Snapshots</h2>
-  <div class="cv-grid" id="previewGrid"></div>
-</div>
+  <!-- CV LIBRARY -->
+  <div id="cvs" class="section">
+    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2>CV Library</h2>
+        <p style="color:#6b7280;">Browse and unlock candidate CVs</p>
+      </div>
+      <div id="currentPlanBadge" style="padding: 8px 16px; background: #eef2ff; color: #1e3a8a; border-radius: 8px; font-weight: 600; font-size: 14px;">
+        Free Plan
+      </div>
+    </div>
+    
+    <div id="cvGrid" class="cv-grid">
+      <p style="text-align: center; color: #6b7280;">Loading CVs...</p>
+    </div>
+  </div>
 
-<!-- CV LIBRARY -->
-<div id="cvs" class="section">
-  <h2>All CVs</h2>
-  <div class="cv-grid" id="cvGrid"></div>
-</div>
+  <!-- BILLING -->
+  <div id="billing" class="section">
+    <h2>Packages & Billing</h2>
+    <p style="color:#6b7280; margin-bottom:20px;">Choose a plan that fits your needs</p>
 
-<!-- BILLING -->
-<div id="billing" class="section">
-  <h2>Upgrade Plan</h2>
-  <button onclick="upgrade('Starter')">Starter</button>
-  <button onclick="upgrade('Pro')">Pro</button>
-  <button onclick="upgrade('Enterprise')">Enterprise</button>
-</div>
+    <div class="cv-grid">
+
+      <div class="cv-card">
+        <h3>Free</h3>
+        <p><strong>R0 / month</strong></p>
+        <ul>
+          <li>✔ Post Jobs</li>
+          <li>✔ View CV Previews (Blurred)</li>
+          <li>✖ Unlock CVs</li>
+        </ul>
+        <button class="primary-btn" id="freePlanBtn" disabled>Current Plan</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>Starter</h3>
+        <p><strong>R299 / month</strong></p>
+        <ul>
+          <li>✔ 50 CV Unlocks</li>
+          <li>✔ Email Support</li>
+          <li>✔ Job Posting</li>
+        </ul>
+        <button class="primary-btn" id="starterPlanBtn" onclick="selectPlan('starter', 50)">Upgrade</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>Pro</h3>
+        <p><strong>R699 / month</strong></p>
+        <ul>
+          <li>✔ 200 CV Unlocks</li>
+          <li>✔ Priority Support</li>
+          <li>✔ Advanced Filters</li>
+        </ul>
+        <button class="primary-btn" id="proPlanBtn" onclick="selectPlan('pro', 200)">Upgrade</button>
+      </div>
+
+      <div class="cv-card">
+        <h3>Enterprise</h3>
+        <p><strong>R1499 / month</strong></p>
+        <ul>
+          <li>✔ Unlimited Unlocks</li>
+          <li>✔ Dedicated Manager</li>
+          <li>✔ API Access</li>
+        </ul>
+        <button class="primary-btn" id="enterprisePlanBtn" onclick="selectPlan('enterprise', -1)">Upgrade</button>
+      </div>
+
+    </div>
+  </div>
 
 </div>
 
 <!-- ================= MODAL ================= -->
 <div class="modal" id="modal">
   <div class="modal-content">
-    <h3>Confirm Unlock</h3>
-    <p>This will use 1 credit.</p>
-    <button onclick="confirmUnlock()">Unlock</button>
-    <button onclick="closeModal()">Cancel</button>
+    <h3>Upgrade Required</h3>
+    <p id="modalMessage">Please upgrade your subscription to unlock CVs.</p>
+    <div style="display: flex; gap: 12px; margin-top: 16px;">
+      <button class="primary-btn" onclick="showSection('billing', document.querySelector('.nav a:nth-child(6)')); closeModal()">View Plans</button>
+      <button class="close" onclick="closeModal()">Close</button>
+    </div>
   </div>
 </div>
 
+<!-- ================= SCRIPT ================= -->
+<script>
+
+/* ======================================================
+   NAVIGATION
+====================================================== */
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+/* ======================================================
+   MODAL
+====================================================== */
+function openModal(message) {
+  if (message) {
+    document.getElementById('modalMessage').textContent = message;
+  }
+  document.getElementById('modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+/* ======================================================
+   LOGOUT
+====================================================== */
+function logoutUser() {
+  if (confirm('Are you sure you want to logout?')) {
+    window.location.href = "index.html";
+  }
+}
+
+/* This is for posting a job*/
+document.getElementById("jobForm")?.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const jobData = Object.fromEntries(formData.entries());
+  jobData.remote = this.remote.checked;
+
+  console.log("Job Posted:", jobData);
+
+  alert("Job posted successfully (client-side demo).");
+
+  this.reset();
+});
+
+/* This is for manage jobs */  
+document.querySelectorAll('.actions button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    alert("Action triggered (wire to Firebase next)");
+  });
+});
+     
+</script>
+     
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getIdTokenResult } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-const app = initializeApp({
+import { 
+  getFirestore, 
+  collection, 
+  getDocs, 
+  query, 
+  orderBy,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  increment
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
   apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
   authDomain: "career-unified.firebaseapp.com",
-  projectId: "career-unified"
-});
+  projectId: "career-unified",
+  storageBucket: "career-unified.firebasestorage.app"
+};
 
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-let currentUser;
-let recruiter;
-let selectedCV = null;
+let currentRecruiter = null;
+let recruiterData = null;
 
-onAuthStateChanged(auth, user => {
-  if(!user){
-    window.location.href = "login.html";
-  } else {
-    document.body.classList.add("authorized"); // 🔓 SHOW PAGE
-    loadCVs();
-  }
-});
-
-
-async function loadRecruiter(){
-  const ref = doc(db,"recruiters",currentUser.uid);
-  const snap = await getDoc(ref);
-
-  if(!snap.exists()){
-    await setDoc(ref,{
-      plan:"Free",
-      unlockLimit:5,
-      usedUnlocks:0,
-      expiresAt: Date.now()+30*86400000
-    });
-  }
-
-  recruiter = (await getDoc(ref)).data();
-  updateStats();
-}
-
-function updateStats(){
-  document.getElementById("remaining").innerText = recruiter.unlockLimit - recruiter.usedUnlocks;
-  document.getElementById("used").innerText = recruiter.usedUnlocks;
-  document.getElementById("total").innerText = recruiter.unlockLimit;
-  document.getElementById("planBadge").innerText = recruiter.plan+" Plan";
-}
-
-async function loadCVs(){
-  const q = query(collection(db,"cvs"),orderBy("uploadedAt","desc"));
-  const snap = await getDocs(q);
-
-  const grid = document.getElementById("cvGrid");
-  const preview = document.getElementById("previewGrid");
-  grid.innerHTML = "";
-  preview.innerHTML = "";
-
-  for(const d of snap.docs){
-    const cv = d.data();
-    const id = d.id;
-
-    const unlocked = await isUnlocked(id);
-
-    const card = document.createElement("div");
-    card.className="cv-card";
-
-    card.innerHTML = `
-      <div class="cv-snapshot" style="background-image:url('${cv.snapshotURL}')"></div>
-      <h3>${cv.fullName}</h3>
-      <p>${cv.jobTitle}</p>
-      ${unlocked
-        ? `<button onclick="window.open('${cv.cvURL}')">View</button>`
-        : `<button onclick="askUnlock('${id}')">Unlock</button>`}
-    `;
-
-    grid.appendChild(card);
-    preview.appendChild(card.cloneNode(true));
-  }
-}
-
-async function isUnlocked(cvId){
-  const ref = doc(db,"recruiter_unlocks",currentUser.uid+"_"+cvId);
-  return (await getDoc(ref)).exists();
-}
-
-function askUnlock(id){
-  if(recruiter.usedUnlocks >= recruiter.unlockLimit){
-    alert("Upgrade required");
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.replace('login.html');
     return;
   }
-  selectedCV = id;
-  openModal();
-}
 
-async function confirmUnlock(){
-  const ref = doc(db,"recruiter_unlocks",currentUser.uid+"_"+selectedCV);
-  await setDoc(ref,{
-    uid:currentUser.uid,
-    cvId:selectedCV,
-    unlockedAt:Date.now()
-  });
+  const token = await getIdTokenResult(user, true);
 
-  recruiter.usedUnlocks++;
-  await updateDoc(doc(db,"recruiters",currentUser.uid),{
-    usedUnlocks: recruiter.usedUnlocks
-  });
+  if (!token.claims.recruiter) {
+    alert('Recruiter access only');
+    window.location.replace('index.html');
+    return;
+  }
 
-  closeModal();
+  currentRecruiter = user;
+  
+  // Load or create recruiter subscription data
+  await loadRecruiterData();
+  
+  // Show page only after authorization confirmed
+  document.body.classList.add('authorized');
+  
+  // Load CVs
   loadCVs();
-  updateStats();
+  
+  // Update plan badges
+  updatePlanBadges();
+});
+
+/* ======================================================
+   LOAD RECRUITER SUBSCRIPTION DATA
+====================================================== */
+async function loadRecruiterData() {
+  try {
+    const recruiterRef = doc(db, 'recruiters', currentRecruiter.uid);
+    const recruiterSnap = await getDoc(recruiterRef);
+    
+    if (recruiterSnap.exists()) {
+      recruiterData = recruiterSnap.data();
+    } else {
+      // Create default free plan data
+      recruiterData = {
+        plan: 'free',
+        unlocksRemaining: 0,
+        totalUnlocks: 0,
+        unlockedCVs: [],
+        createdAt: new Date().toISOString()
+      };
+      
+      await setDoc(recruiterRef, recruiterData);
+    }
+    
+    // Update stats
+    document.getElementById('remainingUnlocks').textContent = 
+      recruiterData.plan === 'enterprise' ? '∞' : recruiterData.unlocksRemaining || 0;
+    document.getElementById('unlockedCVs').textContent = recruiterData.unlockedCVs?.length || 0;
+    
+  } catch (error) {
+    console.error('Error loading recruiter data:', error);
+    recruiterData = { plan: 'free', unlocksRemaining: 0, unlockedCVs: [] };
+  }
 }
 
-function upgrade(plan){
-  let limits = {Starter:30,Pro:100,Enterprise:999};
-  updateDoc(doc(db,"recruiters",currentUser.uid),{
-    plan:plan,
-    unlockLimit:limits[plan],
-    usedUnlocks:0
-  }).then(loadRecruiter);
+/* ======================================================
+   LOAD CVs FROM FIRESTORE
+====================================================== */
+async function loadCVs() {
+  const grid = document.getElementById("cvGrid");
+  grid.innerHTML = '<p style="text-align: center; color: #6b7280;">Loading CVs...</p>';
+
+  try {
+    const q = query(collection(db, "cvs"), orderBy("uploadedAt", "desc"));
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      grid.innerHTML = "<p style='text-align: center; color: #6b7280;'>No CVs uploaded yet.</p>";
+      document.getElementById('totalCVs').textContent = '0';
+      return;
+    }
+
+    grid.innerHTML = '';
+    document.getElementById('totalCVs').textContent = snapshot.size;
+
+    snapshot.forEach(cvDoc => {
+      const data = cvDoc.data();
+      const cvId = cvDoc.id;
+      
+      const isUnlocked = recruiterData.unlockedCVs?.includes(cvId) || false;
+      const canUnlock = recruiterData.plan !== 'free';
+
+      const card = document.createElement("div");
+      card.className = "cv-card";
+      card.style.position = "relative";
+
+      // Calculate days since upload
+      const uploadDate = data.uploadedAt?.toDate() || new Date();
+      const daysAgo = Math.floor((new Date() - uploadDate) / (1000 * 60 * 60 * 24));
+
+      card.innerHTML = `
+        <div style="${!isUnlocked ? 'filter: blur(4px);' : ''}">
+          <h3>${data.fullName || "Anonymous User"}</h3>
+          <p><strong>${data.jobTitle || "Job Seeker"}</strong></p>
+          <p style="font-size: 13px; color: #6b7280;">
+            <i class='bx bx-map'></i> ${data.location || "Location not specified"}
+          </p>
+          <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+            <i class='bx bx-briefcase'></i> ${data.experience || "Not specified"}
+          </p>
+          <p style="font-size: 12px; color: #9ca3af; margin-top: 8px;">
+            <i class='bx bx-time'></i> Uploaded ${daysAgo === 0 ? 'today' : daysAgo + ' days ago'}
+          </p>
+        </div>
+        
+        ${!isUnlocked ? `
+          <div class="lock">
+            <i class='bx bx-lock'></i>
+            <span style="font-size: 14px; margin-top: 8px;">
+              ${canUnlock ? 'Click to unlock' : 'Upgrade to unlock'}
+            </span>
+            <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')">
+              ${canUnlock ? 'Unlock CV' : 'Upgrade Plan'}
+            </button>
+          </div>
+        ` : `
+          <button class="primary-btn" onclick="window.open('${data.cvURL}', '_blank')" style="margin-top: 12px;">
+            <i class='bx bx-download'></i> Download CV
+          </button>
+          <p style="font-size: 11px; color: #10b981; margin-top: 8px; text-align: center;">
+            ✓ Unlocked
+          </p>
+        `}
+      `;
+
+      grid.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error("CV load error:", err);
+    grid.innerHTML = "<p style='color: #ef4444;'>Error loading CVs. Please refresh the page.</p>";
+  }
 }
 
-function openModal(){document.getElementById("modal").style.display="flex";}
-function closeModal(){document.getElementById("modal").style.display="none";}
-function logoutUser(){auth.signOut().then(()=>location.href="index.html");}
-function showSection(id,el){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+/* ======================================================
+   UNLOCK CV FUNCTION
+====================================================== */
+window.unlockCV = async function(cvId, cvURL, cvName) {
+  if (!recruiterData || recruiterData.plan === 'free') {
+    openModal('You need to upgrade to a paid plan to unlock CVs.');
+    return;
+  }
+  
+  // Check if already unlocked
+  if (recruiterData.unlockedCVs?.includes(cvId)) {
+    window.open(cvURL, '_blank');
+    return;
+  }
+  
+  // Check if has remaining unlocks (except enterprise)
+  if (recruiterData.plan !== 'enterprise' && recruiterData.unlocksRemaining <= 0) {
+    openModal('You have no remaining unlocks. Please upgrade your plan.');
+    return;
+  }
+  
+  if (!confirm(`Unlock CV for ${cvName}? This will use 1 unlock credit.`)) {
+    return;
+  }
+  
+  try {
+    const recruiterRef = doc(db, 'recruiters', currentRecruiter.uid);
+    
+    // Update recruiter data
+    if (recruiterData.plan === 'enterprise') {
+      // Enterprise has unlimited unlocks
+      await updateDoc(recruiterRef, {
+        unlockedCVs: [...(recruiterData.unlockedCVs || []), cvId]
+      });
+    } else {
+      // Deduct 1 unlock
+      await updateDoc(recruiterRef, {
+        unlocksRemaining: increment(-1),
+        unlockedCVs: [...(recruiterData.unlockedCVs || []), cvId]
+      });
+    }
+    
+    // Reload recruiter data
+    await loadRecruiterData();
+    
+    // Reload CVs to show unlocked state
+    loadCVs();
+    
+    // Open CV in new tab
+    window.open(cvURL, '_blank');
+    
+    alert('CV unlocked successfully!');
+    
+  } catch (error) {
+    console.error('Error unlocking CV:', error);
+    alert('Error unlocking CV. Please try again.');
+  }
 }
+
+/* ======================================================
+   PLAN SELECTION
+====================================================== */
+window.selectPlan = async function(plan, unlocks) {
+  if (!confirm(`Upgrade to ${plan.toUpperCase()} plan? (Payment integration coming soon)`)) {
+    return;
+  }
+  
+  try {
+    const recruiterRef = doc(db, 'recruiters', currentRecruiter.uid);
+    
+    await updateDoc(recruiterRef, {
+      plan: plan,
+      unlocksRemaining: unlocks,
+      totalUnlocks: unlocks,
+      upgradedAt: new Date().toISOString()
+    });
+    
+    alert(`Successfully upgraded to ${plan.toUpperCase()} plan!`);
+    
+    // Reload data
+    await loadRecruiterData();
+    updatePlanBadges();
+    loadCVs();
+    
+  } catch (error) {
+    console.error('Error upgrading plan:', error);
+    alert('Error upgrading plan. Please try again.');
+  }
+}
+
+/* ======================================================
+   UPDATE PLAN BADGES
+====================================================== */
+function updatePlanBadges() {
+  const planName = recruiterData.plan?.toUpperCase() || 'FREE';
+  document.getElementById('currentPlanBadge').textContent = `${planName} Plan`;
+  
+  // Update billing page buttons
+  const buttons = {
+    free: document.getElementById('freePlanBtn'),
+    starter: document.getElementById('starterPlanBtn'),
+    pro: document.getElementById('proPlanBtn'),
+    enterprise: document.getElementById('enterprisePlanBtn')
+  };
+  
+  // Reset all buttons
+  Object.values(buttons).forEach(btn => {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = btn.id === 'freePlanBtn' ? 'Current Plan' : 'Upgrade';
+    }
+  });
+  
+  // Mark current plan
+  const currentBtn = buttons[recruiterData.plan];
+  if (currentBtn) {
+    currentBtn.disabled = true;
+    currentBtn.textContent = 'Current Plan';
+  }
+}
+
 </script>
 
 </body>
+</html>
 
 </html>
 
