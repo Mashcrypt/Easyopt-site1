@@ -1095,19 +1095,19 @@ body {
     
     <div class="cv-grid">
       <div class="cv-card">
-        <h3>📄 CV Library</h3>
+        <h3> CV Library</h3>
         <p>Access uploaded CVs from job seekers</p>
         <button class="primary-btn" onclick="showSection('cvs', document.querySelector('.nav a:nth-child(5)'))">Browse CVs</button>
       </div>
 
       <div class="cv-card">
-        <h3>💼 Post a Job</h3>
+        <h3> Post a Job</h3>
         <p>Create new job listings</p>
         <button class="primary-btn" onclick="showSection('post-job', document.querySelector('.nav a:nth-child(3)'))">Post Job</button>
       </div>
 
       <div class="cv-card">
-        <h3>📊 Manage Jobs</h3>
+        <h3> Manage Jobs</h3>
         <p>View and edit your job postings</p>
         <button class="primary-btn" onclick="showSection('jobs', document.querySelector('.nav a:nth-child(4)'))">View Jobs</button>
       </div>
@@ -1372,9 +1372,9 @@ body {
         <h3>Free</h3>
         <p><strong>R0 / month</strong></p>
         <ul>
-          <li>✔ Post Jobs</li>
-          <li>✔ View 10 CV Previews (Blurred)</li>
-          <li>✖ Unlock CVs</li>
+          <li> Post Jobs</li>
+          <li> View 10 CV Previews (Blurred)</li>
+          <li> No Unlocked CVs</li>
         </ul>
         <button class="primary-btn" id="freePlanBtn" disabled>Current Plan</button>
       </div>
@@ -1383,10 +1383,11 @@ body {
         <h3>Starter</h3>
         <p><strong>R299 / month</strong></p>
         <ul>
-          <li>✔ View All CVs</li>
-          <li>✔ 50 CV Unlocks</li>
-          <li>✔ Email Support</li>
-          <li>✔ Job Posting</li>
+          <li> View All CVs</li>
+          <li> 50 CV Unlocks</li>
+          <li> Email Support</li>
+          <li> Job Posting</li>
+          <li> One job featured badge</li>
         </ul>
         <button class="primary-btn" id="starterPlanBtn" onclick="selectPlan('starter', 50)">Upgrade</button>
       </div>
@@ -1395,10 +1396,11 @@ body {
         <h3>Pro</h3>
         <p><strong>R699 / month</strong></p>
         <ul>
-          <li>✔ View All CVs</li>
-          <li>✔ 200 CV Unlocks</li>
-          <li>✔ Priority Support</li>
-          <li>✔ Advanced Filters</li>
+          <li> View All CVs</li>
+          <li> 200 CV Unlocks</li>
+          <li> Priority Support</li>
+          <li> Advanced Filters</li>
+          <li> Four job featured badge</li>
         </ul>
         <button class="primary-btn" id="proPlanBtn" onclick="selectPlan('pro', 200)">Upgrade</button>
       </div>
@@ -1407,10 +1409,11 @@ body {
         <h3>Enterprise</h3>
         <p><strong>R1499 / month</strong></p>
         <ul>
-          <li>✔ View All CVs</li>
-          <li>✔ Unlimited Unlocks</li>
-          <li>✔ Dedicated Manager</li>
-          <li>✔ API Access</li>
+          <li> View All CVs</li>
+          <li> Unlimited Unlocks</li>
+          <li> Dedicated Manager</li>
+          <li> API Access</li>
+          <li> Unlimited job featured badge</li>
         </ul>
         <button class="primary-btn" id="enterprisePlanBtn" onclick="selectPlan('enterprise', -1)">Upgrade</button>
       </div>
@@ -1798,11 +1801,11 @@ window.unlockCV = async function(cvId, cvURL, cvName) {
     // Open CV in new tab
     window.open(cvURL, '_blank');
     
-    alert('✅ CV unlocked successfully!');
+    alert(' CV unlocked successfully!');
     
   } catch (error) {
     console.error('Error unlocking CV:', error);
-    alert('❌ Error unlocking CV. Please try again.');
+    alert(' Error unlocking CV. Please try again.');
   }
 }
 
@@ -1833,7 +1836,7 @@ window.selectPlan = async function(plan, unlocks) {
       upgradedAt: new Date().toISOString()
     });
     
-    alert(`✅ Successfully upgraded to ${planName} plan!\n\nYou can now view all CVs and unlock ${unlocksText} candidates.`);
+    alert(` Successfully upgraded to ${planName} plan!\n\nYou can now view all CVs and unlock ${unlocksText} candidates.`);
     
     // Reload data
     await loadRecruiterData();
@@ -1842,7 +1845,7 @@ window.selectPlan = async function(plan, unlocks) {
     
   } catch (error) {
     console.error('Error upgrading plan:', error);
-    alert('❌ Error upgrading plan. Please try again.');
+    alert(' Error upgrading plan. Please try again.');
   }
 }
 
