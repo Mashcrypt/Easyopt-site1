@@ -1617,13 +1617,13 @@ async function loadCVs() {
     let maxCVsToShow;
     
     if (recruiterData.plan === 'free') {
-      // Free plan: Show only 10 CVs
+      // Free plan: Show only 10 CVs (no sorting until index is ready)
       maxCVsToShow = 10;
-      cvQuery = query(collection(db, "cvs"), orderBy("uploadedAt", "desc"), limit(10));
+      cvQuery = query(collection(db, "cvs"), limit(10));
     } else {
-      // Paid plans: Show all CVs
+      // Paid plans: Show all CVs (no sorting until index is ready)
       maxCVsToShow = allCVsCount;
-      cvQuery = query(collection(db, "cvs"), orderBy("uploadedAt", "desc"));
+      cvQuery = query(collection(db, "cvs"));
     }
     
     const snapshot = await getDocs(cvQuery);
@@ -1633,12 +1633,25 @@ async function loadCVs() {
     // Update subtext based on plan
     updateCVLibrarySubtext();
 
+    // Convert to array and sort manually by uploadedAt
+    const cvDocs = [];
     snapshot.forEach(cvDoc => {
-      const data = cvDoc.data();
+      cvDocs.push({ id: cvDoc.id, data: cvDoc.data() });
+    });
+    
+    // Sort by uploadedAt (newest first)
+    cvDocs.sort((a, b) => {
+      const dateA = a.data.uploadedAt?.toDate() || new Date(0);
+      const dateB = b.data.uploadedAt?.toDate() || new Date(0);
+      return dateB - dateA;
+    });
+
+    cvDocs.forEach(cvDoc => {
+      const data = cvDoc.data;
       const cvId = cvDoc.id;
       
       const isUnlocked = recruiterData.unlockedCVs?.includes(cvId) || false;
-      const canUnlock = recruiterData.plan !== 'free';
+      const isFree = recruiterData.plan === 'free';
 
       const card = document.createElement("div");
       card.className = "cv-card";
@@ -1648,8 +1661,11 @@ async function loadCVs() {
       const uploadDate = data.uploadedAt?.toDate() || new Date();
       const daysAgo = Math.floor((new Date() - uploadDate) / (1000 * 60 * 60 * 24));
 
+      // Free users see blurred preview, paid users see clear unless not unlocked
+      const shouldBlur = isFree || !isUnlocked;
+
       card.innerHTML = `
-        <div style="${!isUnlocked ? 'filter: blur(4px);' : ''}">
+        <div style="${shouldBlur ? 'filter: blur(3px);' : ''}">
           <h3>${data.fullName || "Anonymous User"}</h3>
           <p><strong>${data.jobTitle || "Job Seeker"}</strong></p>
           <p style="font-size: 13px; color: #6b7280;">
@@ -1658,27 +1674,37 @@ async function loadCVs() {
           <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
             <i class='bx bx-briefcase'></i> ${data.experience || "Not specified"}
           </p>
+          <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+            <i class='bx bx-briefcase'></i> Skills: ${data.skills || "Not specified"}
+          </p>
           <p style="font-size: 12px; color: #9ca3af; margin-top: 8px;">
             <i class='bx bx-time'></i> Uploaded ${daysAgo === 0 ? 'today' : daysAgo + ' days ago'}
           </p>
         </div>
         
-        ${!isUnlocked ? `
-          <div class="lock">
-            <i class='bx bx-lock'></i>
-            <span style="font-size: 14px; margin-top: 8px;">
-              ${canUnlock ? 'Click to unlock' : 'Upgrade to unlock'}
-            </span>
-            <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')">
-              ${canUnlock ? 'Unlock CV' : 'Upgrade Plan'}
-            </button>
-          </div>
-        ` : `
+        ${isUnlocked ? `
+          <!-- CV is unlocked - show download button -->
           <button class="primary-btn" onclick="window.open('${data.cvURL}', '_blank')" style="margin-top: 12px;">
             <i class='bx bx-download'></i> Download CV
           </button>
           <p style="font-size: 11px; color: #10b981; margin-top: 8px; text-align: center;">
             ✓ Unlocked
+          </p>
+        ` : isFree ? `
+          <!-- Free plan - show upgrade button (no full lock overlay) -->
+          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')" style="margin-top: 12px; background: #f59e0b;">
+            <i class='bx bx-lock'></i> Upgrade to Unlock
+          </button>
+          <p style="font-size: 11px; color: #f59e0b; margin-top: 8px; text-align: center;">
+            Free Preview
+          </p>
+        ` : `
+          <!-- Paid plan but not unlocked - show unlock button -->
+          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')" style="margin-top: 12px;">
+            <i class='bx bx-lock-open'></i> Unlock CV (${recruiterData.plan === 'enterprise' ? '∞' : recruiterData.unlocksRemaining} remaining)
+          </button>
+          <p style="font-size: 11px; color: #2563eb; margin-top: 8px; text-align: center;">
+            Click to unlock
           </p>
         `}
       `;
@@ -1688,9 +1714,11 @@ async function loadCVs() {
 
   } catch (err) {
     console.error("CV load error:", err);
+    console.error("Error details:", err.code, err.message);
     grid.innerHTML = "<p style='color: #ef4444;'>Error loading CVs. Please refresh the page.</p>";
   }
 }
+
 
 /* ======================================================
    UPDATE CV LIBRARY SUBTEXT
