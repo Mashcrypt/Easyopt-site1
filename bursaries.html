@@ -191,14 +191,15 @@ let selectedIndex = null;
 
 async function fetchBursaries() {
   bursaries = await window.sanityClient.fetch(`*[_type=="bursary"] | order(deadline asc){
-    _id,
-    name,
-    provider,
-    faculty,
-    description,
-    deadline,
-    link
-  }`);
+  _id,
+  name,
+  provider,
+  faculty,
+  description,
+  deadline,
+  applicationLink
+}`);
+
 
   // populate faculties
   const faculties = Array.from(new Set(bursaries.map(b=>b.faculty))).sort();
@@ -246,15 +247,24 @@ function renderBursaries(filter='All') {
     bursaryList.appendChild(li);
   });
 }
+  
+function extractLink(raw) {
+  if (!raw) return null;
+
+  if (typeof raw === "string") return raw.trim();
+
+  if (raw.current) return raw.current.trim();
+
+  if (raw.href) return raw.href.trim();
+
+  return null;
+}
 
 function showPreview(b){
-  let safeUrl = null;
+  let safeUrl = extractLink(b.applicationLink);
 
-  if (b.link) {
-    safeUrl = b.link.trim();
-    if (!safeUrl.startsWith('http')) {
-      safeUrl = 'https://' + safeUrl;
-    }
+  if (safeUrl && !safeUrl.startsWith("http")) {
+    safeUrl = "https://" + safeUrl;
   }
 
   bursaryPreview.innerHTML = `
@@ -275,6 +285,7 @@ function showPreview(b){
 }
 
 
+
 function toggleDesc(index){
   const descEl=document.getElementById(`desc-${index}`);
   const b=bursaries[index];
@@ -293,6 +304,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 </script>
 </body>
 </html>
+
 
 
 
