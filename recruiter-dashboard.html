@@ -1813,6 +1813,20 @@ let currentRecruiter = null;
 let recruiterData = null;
 let allCVsCount = 0;
 
+// NEW: Global variables for new features
+let allCVsData = [];
+let selectedForComparison = [];
+let favorites = [];
+let candidatePipeline = {
+  new: [],
+  contacted: [],
+  interview: [],
+  offer: [],
+  hired: [],
+  rejected: []
+};
+let candidateNotes = {};
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.replace('login.html');
@@ -1829,16 +1843,9 @@ onAuthStateChanged(auth, async (user) => {
 
   currentRecruiter = user;
   
-  // Load or create recruiter subscription data
   await loadRecruiterData();
-  
-  // Show page only after authorization confirmed
   document.body.classList.add('authorized');
-  
-  // Load CVs
   loadCVs();
-  
-  // Update plan badges
   updatePlanBadges();
 });
 
@@ -1853,7 +1860,6 @@ async function loadRecruiterData() {
     if (recruiterSnap.exists()) {
       recruiterData = recruiterSnap.data();
     } else {
-      // Create default free plan data
       recruiterData = {
         plan: 'free',
         unlocksRemaining: 0,
@@ -1865,7 +1871,6 @@ async function loadRecruiterData() {
       await setDoc(recruiterRef, recruiterData);
     }
     
-    // Update stats
     document.getElementById('remainingUnlocks').textContent = 
       recruiterData.plan === 'enterprise' ? '∞' : recruiterData.unlocksRemaining || 0;
     document.getElementById('unlockedCVs').textContent = recruiterData.unlockedCVs?.length || 0;
@@ -1884,12 +1889,10 @@ async function loadCVs() {
   grid.innerHTML = '<p style="text-align: center; color: #6b7280;">Loading CVs...</p>';
 
   try {
-    // First, get total count of all CVs
     const countQuery = query(collection(db, "cvs"));
     const countSnapshot = await getDocs(countQuery);
     allCVsCount = countSnapshot.size;
     
-    // Update total CVs stat with actual count from Firebase
     document.getElementById('totalCVs').textContent = allCVsCount;
 
     if (allCVsCount === 0) {
@@ -1898,123 +1901,54 @@ async function loadCVs() {
       return;
     }
 
-    // Determine how many CVs to show based on plan
     let cvQuery;
     let maxCVsToShow;
     
     if (recruiterData.plan === 'free') {
-      // Free plan: Show first 10 CVs clearly, then show blurred previews for the rest
-      maxCVsToShow = Math.min(allCVsCount, 20); // Show up to 20 (10 clear + 10 blurred)
+      maxCVsToShow = Math.min(allCVsCount, 20);
       cvQuery = query(collection(db, "cvs"), limit(maxCVsToShow));
     } else {
-      // Paid plans: Show all CVs
       maxCVsToShow = allCVsCount;
       cvQuery = query(collection(db, "cvs"));
     }
     
     const snapshot = await getDocs(cvQuery);
-
     grid.innerHTML = '';
-    
-    // Update subtext based on plan
     updateCVLibrarySubtext();
 
-    // Convert to array and sort manually by uploadedAt
     const cvDocs = [];
     snapshot.forEach(cvDoc => {
       cvDocs.push({ id: cvDoc.id, data: cvDoc.data() });
     });
     
-    // Sort by uploadedAt (newest first)
     cvDocs.sort((a, b) => {
       const dateA = a.data.uploadedAt?.toDate() || new Date(0);
       const dateB = b.data.uploadedAt?.toDate() || new Date(0);
       return dateB - dateA;
     });
 
-allCVsData = cvDocs.map(doc => ({
-  id: doc.id,
-  ...doc.data,
-  experience: doc.data.experience || '1-3 years', // Add default
-  availability: doc.data.availability || 'immediate', // Add default
-  yearsExp: parseInt(doc.data.experience?.split('-')[0] || '1') // Extract years
-}));
+    // NEW: Store all CVs data for filtering
+    allCVsData = cvDocs.map(doc => ({
+      id: doc.id,
+      ...doc.data,
+      fullName: doc.data.fullName || "Anonymous User",
+      jobTitle: doc.data.jobTitle || "Job Seeker",
+      location: doc.data.location || "Location not specified",
+      skills: doc.data.skills || "Not specified",
+      experience: doc.data.experience || '1-3 years',
+      availability: doc.data.availability || 'immediate',
+      yearsExp: parseInt(doc.data.experience?.split('-')[0] || '1'),
+      uploadedAt: doc.data.uploadedAt?.toDate() || new Date(),
+      cvURL: doc.data.cvURL || ''
+    }));
 
-// Initialize pipeline with all new CVs
-candidatePipeline.new = allCVsData.map(cv => cv.id);
+    // Initialize pipeline with all CVs in "new" stage
+    candidatePipeline.new = allCVsData.map(cv => cv.id);
 
-document.getElementById('totalCvCount').textContent = allCVsData.length;
-applyFilters(); // This will display the CVs with filters applied
-      
-      // Free plan: First 10 CVs are clear, 11+ are blurred
-      const isInFreeLimit = index < 10;
-      const shouldBlur = isFree ? !isInFreeLimit : !isUnlocked;
-
-      const card = document.createElement("div");
-      card.className = "cv-card";
-      card.style.position = "relative";
-
-      // Calculate days since upload
-      const uploadDate = data.uploadedAt?.toDate() || new Date();
-      const daysAgo = Math.floor((new Date() - uploadDate) / (1000 * 60 * 60 * 24));
-
-      card.innerHTML = `
-        <div style="${shouldBlur ? 'filter: blur(5px);' : ''}">
-          <h3>${data.fullName || "Anonymous User"}</h3>
-          <p><strong>${data.jobTitle || "Job Seeker"}</strong></p>
-          <p style="font-size: 13px; color: #6b7280;">
-            <i class='bx bx-map'></i> ${data.location || "Location not specified"}
-          </p>
-          <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
-            <i class='bx bx-briefcase'></i> ${data.experience || "Not specified"}
-          </p>
-          <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
-            <i class='bx bx-code-alt'></i> ${data.skills || "Not specified"}
-          </p>
-          <p style="font-size: 12px; color: #9ca3af; margin-top: 8px;">
-            <i class='bx bx-time'></i> Uploaded ${daysAgo === 0 ? 'today' : daysAgo + ' days ago'}
-          </p>
-        </div>
-        
-        ${isUnlocked ? `
-          <!-- CV is unlocked - show download button -->
-          <button class="primary-btn" onclick="window.open('${data.cvURL}', '_blank')" style="margin-top: 12px;">
-            <i class='bx bx-download'></i> Download CV
-          </button>
-          <p style="font-size: 11px; color: #10b981; margin-top: 8px; text-align: center;">
-            ✓ Unlocked
-          </p>
-        ` : isFree && isInFreeLimit ? `
-          <!-- Free plan - within first 10 CVs (clear view but can't download) -->
-          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')" style="margin-top: 12px; background: #f59e0b;">
-            <i class='bx bx-lock'></i> Upgrade to Download
-          </button>
-          <p style="font-size: 11px; color: #10b981; margin-top: 8px; text-align: center;">
-            ✓ Free Preview #${index + 1}
-          </p>
-        ` : isFree && !isInFreeLimit ? `
-          <!-- Free plan - beyond first 10 CVs (blurred) -->
-          <div style="position: absolute; bottom: 12px; left: 12px; right: 12px; text-align: center;">
-            <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')" style="width: 100%; background: #ef4444;">
-              <i class='bx bx-lock'></i> Upgrade to View More
-            </button>
-            <p style="font-size: 11px; color: #ef4444; margin-top: 8px;">
-              🔒 Upgrade to unlock CV #${index + 1}
-            </p>
-          </div>
-        ` : `
-          <!-- Paid plan but not unlocked - show unlock button -->
-          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')" style="margin-top: 12px;">
-            <i class='bx bx-lock-open'></i> Unlock CV (${recruiterData.plan === 'enterprise' ? '∞' : recruiterData.unlocksRemaining} remaining)
-          </button>
-          <p style="font-size: 11px; color: #2563eb; margin-top: 8px; text-align: center;">
-            Click to unlock
-          </p>
-        `}
-      `;
-
-      grid.appendChild(card);
-    });
+    document.getElementById('totalCvCount').textContent = allCVsData.length;
+    
+    // Use the new filter function to display CVs
+    applyFilters();
 
   } catch (err) {
     console.error("CV load error:", err);
@@ -2049,13 +1983,11 @@ window.unlockCV = async function(cvId, cvURL, cvName) {
     return;
   }
   
-  // Check if already unlocked
   if (recruiterData.unlockedCVs?.includes(cvId)) {
     window.open(cvURL, '_blank');
     return;
   }
   
-  // Check if has remaining unlocks (except enterprise)
   if (recruiterData.plan !== 'enterprise' && recruiterData.unlocksRemaining <= 0) {
     openModal('You have no remaining unlocks. Please upgrade your plan or purchase more unlocks.');
     return;
@@ -2068,34 +2000,25 @@ window.unlockCV = async function(cvId, cvURL, cvName) {
   try {
     const recruiterRef = doc(db, 'recruiters', currentRecruiter.uid);
     
-    // Update recruiter data
     if (recruiterData.plan === 'enterprise') {
-      // Enterprise has unlimited unlocks
       await updateDoc(recruiterRef, {
         unlockedCVs: [...(recruiterData.unlockedCVs || []), cvId]
       });
     } else {
-      // Deduct 1 unlock
       await updateDoc(recruiterRef, {
         unlocksRemaining: increment(-1),
         unlockedCVs: [...(recruiterData.unlockedCVs || []), cvId]
       });
     }
     
-    // Reload recruiter data
     await loadRecruiterData();
-    
-    // Reload CVs to show unlocked state
     loadCVs();
-    
-    // Open CV in new tab
     window.open(cvURL, '_blank');
-    
-    alert(' CV unlocked successfully!');
+    alert('✅ CV unlocked successfully!');
     
   } catch (error) {
     console.error('Error unlocking CV:', error);
-    alert(' Error unlocking CV. Please try again.');
+    alert('❌ Error unlocking CV. Please try again.');
   }
 }
 
@@ -2126,16 +2049,15 @@ window.selectPlan = async function(plan, unlocks) {
       upgradedAt: new Date().toISOString()
     });
     
-    alert(` Successfully upgraded to ${planName} plan!\n\nYou can now view all CVs and unlock ${unlocksText} candidates.`);
+    alert(`✅ Successfully upgraded to ${planName} plan!\n\nYou can now view all CVs and unlock ${unlocksText} candidates.`);
     
-    // Reload data
     await loadRecruiterData();
     updatePlanBadges();
     loadCVs();
     
   } catch (error) {
     console.error('Error upgrading plan:', error);
-    alert(' Error upgrading plan. Please try again.');
+    alert('❌ Error upgrading plan. Please try again.');
   }
 }
 
@@ -2146,7 +2068,6 @@ function updatePlanBadges() {
   const planName = recruiterData.plan?.toUpperCase() || 'FREE';
   document.getElementById('currentPlanBadge').textContent = `${planName} Plan`;
   
-  // Update billing page buttons
   const buttons = {
     free: document.getElementById('freePlanBtn'),
     starter: document.getElementById('starterPlanBtn'),
@@ -2154,7 +2075,6 @@ function updatePlanBadges() {
     enterprise: document.getElementById('enterprisePlanBtn')
   };
   
-  // Reset all buttons
   Object.values(buttons).forEach(btn => {
     if (btn) {
       btn.disabled = false;
@@ -2162,29 +2082,17 @@ function updatePlanBadges() {
     }
   });
   
-  // Mark current plan
   const currentBtn = buttons[recruiterData.plan];
   if (currentBtn) {
     currentBtn.disabled = true;
     currentBtn.textContent = 'Current Plan';
   }
 }
-// ADD THESE GLOBAL VARIABLES at the top of your Firebase script
-let allCVsData = [];
-let selectedForComparison = [];
-let favorites = [];
-let candidatePipeline = {
-  new: [],
-  contacted: [],
-  interview: [],
-  offer: [],
-  hired: [],
-  rejected: []
-};
-let candidateNotes = {};
 
-// FEATURE 1: SEARCH & FILTERS
-function toggleFilters() {
+/* ======================================================
+   FEATURE 1: SEARCH & FILTERS
+====================================================== */
+window.toggleFilters = function() {
   const panel = document.getElementById('filterPanel');
   const text = document.getElementById('filterToggleText');
   const chevron = document.getElementById('filterChevron');
@@ -2200,7 +2108,7 @@ function toggleFilters() {
   }
 }
 
-function applyFilters() {
+window.applyFilters = function() {
   const searchTerm = document.getElementById('cvSearch').value.toLowerCase();
   const expFilter = document.getElementById('filterExperience').value;
   const locationFilter = document.getElementById('filterLocation').value.toLowerCase();
@@ -2223,9 +2131,8 @@ function applyFilters() {
     return matchesSearch && matchesExp && matchesLocation && matchesSkills && matchesAvail;
   });
 
-  // Sort
   if (sortBy === 'newest') {
-    filtered.sort((a, b) => b.uploadedAt - a.uploadedAt);
+    filtered.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
   } else if (sortBy === 'experienced') {
     filtered.sort((a, b) => (b.yearsExp || 0) - (a.yearsExp || 0));
   } else if (sortBy === 'favorites') {
@@ -2240,7 +2147,7 @@ function applyFilters() {
   displayFilteredCVs(filtered);
 }
 
-function clearAllFilters() {
+window.clearAllFilters = function() {
   document.getElementById('cvSearch').value = '';
   document.getElementById('filterExperience').value = '';
   document.getElementById('filterLocation').value = '';
@@ -2274,15 +2181,15 @@ function displayFilteredCVs(cvs) {
     if (isSelected) card.style.border = "2px solid #2563eb";
     if (isFavorite) card.style.borderColor = "#fbbf24";
 
-    const uploadDate = data.uploadedAt?.toDate() || new Date();
+    const uploadDate = data.uploadedAt || new Date();
     const daysAgo = Math.floor((new Date() - uploadDate) / (1000 * 60 * 60 * 24));
 
     card.innerHTML = `
       <div style="${shouldBlur ? 'filter: blur(5px);' : ''}">
         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
           <div>
-            <h3>${data.fullName || "Anonymous User"}</h3>
-            <p><strong>${data.jobTitle || "Job Seeker"}</strong></p>
+            <h3>${data.fullName}</h3>
+            <p><strong>${data.jobTitle}</strong></p>
           </div>
           <i class='bx bxs-star favorite-star ${isFavorite ? 'active' : ''}" 
              onclick="toggleFavorite('${cvId}')" 
@@ -2290,13 +2197,13 @@ function displayFilteredCVs(cvs) {
           </i>
         </div>
         <p style="font-size: 13px; color: #6b7280;">
-          <i class='bx bx-map'></i> ${data.location || "Location not specified"}
+          <i class='bx bx-map'></i> ${data.location}
         </p>
         <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
-          <i class='bx bx-briefcase'></i> ${data.experience || "Not specified"}
+          <i class='bx bx-briefcase'></i> ${data.experience}
         </p>
         <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
-          <i class='bx bx-code-alt'></i> ${data.skills || "Not specified"}
+          <i class='bx bx-code-alt'></i> ${data.skills}
         </p>
         ${data.availability ? `
           <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
@@ -2322,17 +2229,17 @@ function displayFilteredCVs(cvs) {
             <i class='bx bx-download'></i>
           </button>
         ` : isFree && isInFreeLimit ? `
-          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')" 
+          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName}')" 
                   style="background: #f59e0b;">
             <i class='bx bx-lock'></i> Upgrade
           </button>
         ` : isFree ? `
-          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')" 
+          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName}')" 
                   style="background: #ef4444;">
             <i class='bx bx-lock'></i> Upgrade
           </button>
         ` : `
-          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')">
+          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName}')">
             <i class='bx bx-lock-open'></i> Unlock
           </button>
         `}
@@ -2343,8 +2250,10 @@ function displayFilteredCVs(cvs) {
   });
 }
 
-// FEATURE 2: COMPARISON TOOL
-function toggleCompareSelection(cvId) {
+/* ======================================================
+   FEATURE 2: COMPARISON TOOL
+====================================================== */
+window.toggleCompareSelection = function(cvId) {
   if (selectedForComparison.includes(cvId)) {
     selectedForComparison = selectedForComparison.filter(id => id !== cvId);
   } else {
@@ -2359,10 +2268,10 @@ function toggleCompareSelection(cvId) {
   const compareBtn = document.getElementById('compareBtn');
   compareBtn.style.display = selectedForComparison.length >= 2 ? 'block' : 'none';
 
-  applyFilters(); // Refresh display
+  applyFilters();
 }
 
-function toggleComparison() {
+window.toggleComparison = function() {
   const container = document.getElementById('comparisonContainer');
   if (container.style.display === 'none') {
     container.style.display = 'block';
@@ -2407,20 +2316,25 @@ function renderComparison() {
   });
 }
 
-function toggleFavorite(cvId) {
+window.toggleFavorite = function(cvId) {
   if (favorites.includes(cvId)) {
     favorites = favorites.filter(id => id !== cvId);
   } else {
     favorites.push(cvId);
   }
-  applyFilters(); // Refresh display
+  applyFilters();
   if (document.getElementById('comparisonContainer').style.display === 'block') {
     renderComparison();
   }
+  if (document.getElementById('pipelineBoard').style.display === 'block') {
+    renderPipeline();
+  }
 }
 
-// FEATURE 3: PIPELINE/KANBAN
-function togglePipeline() {
+/* ======================================================
+   FEATURE 3: PIPELINE/KANBAN
+====================================================== */
+window.togglePipeline = function() {
   const board = document.getElementById('pipelineBoard');
   const text = document.getElementById('pipelineToggleText');
   
@@ -2440,6 +2354,8 @@ function renderPipeline() {
   stages.forEach(stage => {
     const column = document.getElementById(stage + 'Column');
     const count = document.getElementById(stage + 'Count');
+    if (!column || !count) return;
+    
     column.innerHTML = '';
     count.textContent = candidatePipeline[stage].length;
 
@@ -2480,32 +2396,30 @@ function renderPipeline() {
   });
 }
 
-function allowDrop(ev) {
+window.allowDrop = function(ev) {
   ev.preventDefault();
 }
 
-function drag(ev, cvId) {
+window.drag = function(ev, cvId) {
   ev.dataTransfer.setData("cvId", cvId);
   ev.target.classList.add('dragging');
 }
 
-function drop(ev, newStage) {
+window.drop = function(ev, newStage) {
   ev.preventDefault();
   const cvId = ev.dataTransfer.getData("cvId");
   
-  // Remove from all stages
   Object.keys(candidatePipeline).forEach(stage => {
     candidatePipeline[stage] = candidatePipeline[stage].filter(id => id !== cvId);
   });
   
-  // Add to new stage
   candidatePipeline[newStage].push(cvId);
   
   renderPipeline();
   document.querySelectorAll('.pipeline-card').forEach(el => el.classList.remove('dragging'));
 }
 
-function addCandidateNote(cvId) {
+window.addCandidateNote = function(cvId) {
   const note = prompt('Add a note for this candidate:');
   if (note && note.trim()) {
     if (!candidateNotes[cvId]) {
@@ -2519,11 +2433,6 @@ function addCandidateNote(cvId) {
   }
 }
 
-// MODIFY YOUR EXISTING loadCVs function to store data
-// Find this line in your loadCVs function:
-// cvDocs.forEach((cvDoc, index) => {
-
-// REPLACE the entire loadCVs function display logic with:
 </script>
 
 </body>
