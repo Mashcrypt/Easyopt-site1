@@ -248,6 +248,15 @@ function renderBursaries(filter='All') {
 }
 
 function showPreview(b){
+  let safeUrl = null;
+
+  if (b.link) {
+    safeUrl = b.link.trim();
+    if (!safeUrl.startsWith('http')) {
+      safeUrl = 'https://' + safeUrl;
+    }
+  }
+
   bursaryPreview.innerHTML = `
     <div class="fade-in">
       <h2>${b.name}</h2>
@@ -255,10 +264,16 @@ function showPreview(b){
       <p><strong>Provider:</strong> ${b.provider}</p>
       <p><strong>Deadline:</strong> ${b.deadline}</p>
       <div style="white-space:pre-line;margin-top:12px;">${b.description}</div>
-      <a href="${b.link}" target="_blank">Apply Now</a>
+
+      ${
+        safeUrl
+          ? `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">Apply Now</a>`
+          : `<p style="color:red;font-weight:600;">No application link provided</p>`
+      }
     </div>
   `;
 }
+
 
 function toggleDesc(index){
   const descEl=document.getElementById(`desc-${index}`);
@@ -278,6 +293,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 </script>
 </body>
 </html>
+
 
 
 
