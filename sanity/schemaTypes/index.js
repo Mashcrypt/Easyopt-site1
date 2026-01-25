@@ -11,6 +11,6 @@ export const schemaTypes = [
   bursary,
   cvTip,
   recruiter,
-  company,
+  company
 ]
 
