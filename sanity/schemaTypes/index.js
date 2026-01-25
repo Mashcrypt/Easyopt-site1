@@ -4,7 +4,6 @@ import bursary from './bursary'
 import cvTip from './cvTip'
 import recruiter from './recruiter'
 import company from './company'
-import cvViewLog from './cvViewlog'
 
 export const schemaTypes = [
   job,
@@ -13,6 +12,5 @@ export const schemaTypes = [
   cvTip,
   recruiter,
   company,
-  cvViewlog
 ]
 
