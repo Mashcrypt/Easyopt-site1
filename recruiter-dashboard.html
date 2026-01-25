@@ -3238,11 +3238,16 @@ window.exportAnalytics = function(format) {
   }
 }
 
-// Initialize analytics when section is opened
-document.querySelector('.nav a:nth-child(7)').addEventListener('click', function() {
-  setTimeout(() => {
-    updateCharts();
-  }, 100);
+// Initialize analytics when section is opened (wait for DOM to load)
+window.addEventListener('DOMContentLoaded', function() {
+  const analyticsLink = document.querySelector('.nav a:nth-child(7)');
+  if (analyticsLink) {
+    analyticsLink.addEventListener('click', function() {
+      setTimeout(() => {
+        updateCharts();
+      }, 100);
+    });
+  }
 });
 </script>
 
