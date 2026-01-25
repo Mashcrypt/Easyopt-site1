@@ -17,6 +17,143 @@
 
 <style>
      
+  /* Search & Filter Styles */
+.filter-panel {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.search-box {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+}
+
+/* Comparison Tool Styles */
+.comparison-container {
+  background: white;
+  border: 2px solid #2563eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.comparison-card {
+  background: #eff6ff;
+  border: 2px solid #dbeafe;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+.comparison-card .remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+/* Pipeline/Kanban Styles */
+.pipeline-board {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.pipeline-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  overflow-x: auto;
+}
+
+.pipeline-column {
+  background: #f3f4f6;
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 400px;
+}
+
+.pipeline-column.new { background: #dbeafe; border-color: #93c5fd; }
+.pipeline-column.contacted { background: #fef3c7; border-color: #fcd34d; }
+.pipeline-column.interview { background: #e9d5ff; border-color: #c084fc; }
+.pipeline-column.offer { background: #d1fae5; border-color: #6ee7b7; }
+.pipeline-column.hired { background: #d1fae5; border-color: #34d399; }
+.pipeline-column.rejected { background: #fee2e2; border-color: #fca5a5; }
+
+.pipeline-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: move;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.pipeline-card:hover {
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.pipeline-card.dragging {
+  opacity: 0.5;
+}
+
+.candidate-note {
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 11px;
+  margin-top: 8px;
+}
+
+.favorite-star {
+  color: #fbbf24;
+  cursor: pointer;
+}
+
+.favorite-star.active {
+  fill: #fbbf24;
+}   
  
      
 /* ======================================================
@@ -1344,22 +1481,168 @@ body {
   </div>
 </div>
 
-  <!-- CV LIBRARY -->
-  <div id="cvs" class="section">
-    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-      <div>
-        <h2>CV Library</h2>
-        <p style="color:#6b7280;" id="cvLibrarySubtext">Browse and unlock candidate CVs</p>
-      </div>
-      <div id="currentPlanBadge" style="padding: 8px 16px; background: #eef2ff; color: #1e3a8a; border-radius: 8px; font-weight: 600; font-size: 14px;">
-        Free Plan
-      </div>
+   <!-- CV LIBRARY -->
+<div id="cvs" class="section">
+  <!-- EXISTING HEADER -->
+  <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <h2>CV Library</h2>
+      <p style="color:#6b7280;" id="cvLibrarySubtext">Browse and unlock candidate CVs</p>
     </div>
-    
-    <div id="cvGrid" class="cv-grid">
-      <p style="text-align: center; color: #6b7280;">Loading CVs...</p>
+    <div id="currentPlanBadge" style="padding: 8px 16px; background: #eef2ff; color: #1e3a8a; border-radius: 8px; font-weight: 600; font-size: 14px;">
+      Free Plan
     </div>
   </div>
+
+  <!-- ADD THIS: Action Buttons -->
+  <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+    <button onclick="togglePipeline()" class="primary-btn" style="background: #7c3aed;">
+      <i class='bx bx-grid-alt'></i> <span id="pipelineToggleText">Show Pipeline</span>
+    </button>
+    <button onclick="toggleComparison()" id="compareBtn" class="primary-btn" style="background: #2563eb; display: none;">
+      <i class='bx bx-git-compare'></i> Compare (<span id="compareCount">0</span>)
+    </button>
+  </div>
+
+  <!-- ADD THIS: Search & Filters -->
+  <div class="filter-panel">
+    <div class="search-box">
+      <i class='bx bx-search'></i>
+      <input type="text" id="cvSearch" placeholder="Search by name, job title, skills, or location..." onkeyup="applyFilters()">
+    </div>
+
+    <button onclick="toggleFilters()" style="background: none; border: none; color: #2563eb; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+      <i class='bx bx-filter'></i>
+      <span id="filterToggleText">Show Filters</span>
+      <i class='bx bx-chevron-down' id="filterChevron"></i>
+    </button>
+
+    <div id="filterPanel" style="display: none;">
+      <div class="filter-grid">
+        <div class="form-group">
+          <label>Experience Level</label>
+          <select id="filterExperience" onchange="applyFilters()">
+            <option value="">All Levels</option>
+            <option value="0-1">0-1 years</option>
+            <option value="1-3">1-3 years</option>
+            <option value="3-5">3-5 years</option>
+            <option value="5-10">5-10 years</option>
+            <option value="10+">10+ years</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="filterLocation" placeholder="e.g., London" onkeyup="applyFilters()">
+        </div>
+
+        <div class="form-group">
+          <label>Skills</label>
+          <input type="text" id="filterSkills" placeholder="e.g., React" onkeyup="applyFilters()">
+        </div>
+
+        <div class="form-group">
+          <label>Availability</label>
+          <select id="filterAvailability" onchange="applyFilters()">
+            <option value="">All</option>
+            <option value="immediate">Immediate</option>
+            <option value="2 weeks">2 Weeks</option>
+            <option value="1 month">1 Month</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Sort By</label>
+          <select id="sortBy" onchange="applyFilters()">
+            <option value="newest">Newest First</option>
+            <option value="experienced">Most Experienced</option>
+            <option value="favorites">Favorites First</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: flex-end;">
+          <button onclick="clearAllFilters()" class="primary-btn" style="background: #6b7280; width: 100%;">
+            <i class='bx bx-x'></i> Clear Filters
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-top: 12px; color: #6b7280; font-size: 14px;">
+        Showing <span id="cvCount">0</span> of <span id="totalCvCount">0</span> candidates
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD THIS: Comparison Tool -->
+  <div id="comparisonContainer" style="display: none;" class="comparison-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h3 style="margin: 0;">CV Comparison</h3>
+      <button onclick="toggleComparison()" style="background: none; border: none; cursor: pointer; color: #6b7280;">
+        <i class='bx bx-x' style="font-size: 24px;"></i>
+      </button>
+    </div>
+    <div id="comparisonGrid" class="comparison-grid"></div>
+  </div>
+
+  <!-- ADD THIS: Pipeline Board -->
+  <div id="pipelineBoard" style="display: none;" class="pipeline-board">
+    <h3 style="margin-bottom: 20px;">Candidate Pipeline</h3>
+    <div class="pipeline-columns">
+      <div class="pipeline-column new" ondrop="drop(event, 'new')" ondragover="allowDrop(event)">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <strong style="font-size: 14px;">New</strong>
+          <span style="background: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;" id="newCount">0</span>
+        </div>
+        <div id="newColumn"></div>
+      </div>
+
+      <div class="pipeline-column contacted" ondrop="drop(event, 'contacted')" ondragover="allowDrop(event)">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <strong style="font-size: 14px;">Contacted</strong>
+          <span style="background: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;" id="contactedCount">0</span>
+        </div>
+        <div id="contactedColumn"></div>
+      </div>
+
+      <div class="pipeline-column interview" ondrop="drop(event, 'interview')" ondragover="allowDrop(event)">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <strong style="font-size: 14px;">Interview</strong>
+          <span style="background: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;" id="interviewCount">0</span>
+        </div>
+        <div id="interviewColumn"></div>
+      </div>
+
+      <div class="pipeline-column offer" ondrop="drop(event, 'offer')" ondragover="allowDrop(event)">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <strong style="font-size: 14px;">Offer Sent</strong>
+          <span style="background: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;" id="offerCount">0</span>
+        </div>
+        <div id="offerColumn"></div>
+      </div>
+
+      <div class="pipeline-column hired" ondrop="drop(event, 'hired')" ondragover="allowDrop(event)">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <strong style="font-size: 14px;">Hired</strong>
+          <span style="background: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;" id="hiredCount">0</span>
+        </div>
+        <div id="hiredColumn"></div>
+      </div>
+
+      <div class="pipeline-column rejected" ondrop="drop(event, 'rejected')" ondragover="allowDrop(event)">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <strong style="font-size: 14px;">Rejected</strong>
+          <span style="background: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;" id="rejectedCount">0</span>
+        </div>
+        <div id="rejectedColumn"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXISTING CV GRID (keep as is) -->
+  <div id="cvGrid" class="cv-grid">
+    <p style="text-align: center; color: #6b7280;">Loading CVs...</p>
+  </div>
+</div>
 
   <!-- BILLING -->
   <div id="billing" class="section">
@@ -1649,12 +1932,19 @@ async function loadCVs() {
       return dateB - dateA;
     });
 
-    cvDocs.forEach((cvDoc, index) => {
-      const data = cvDoc.data;
-      const cvId = cvDoc.id;
-      
-      const isUnlocked = recruiterData.unlockedCVs?.includes(cvId) || false;
-      const isFree = recruiterData.plan === 'free';
+allCVsData = cvDocs.map(doc => ({
+  id: doc.id,
+  ...doc.data,
+  experience: doc.data.experience || '1-3 years', // Add default
+  availability: doc.data.availability || 'immediate', // Add default
+  yearsExp: parseInt(doc.data.experience?.split('-')[0] || '1') // Extract years
+}));
+
+// Initialize pipeline with all new CVs
+candidatePipeline.new = allCVsData.map(cv => cv.id);
+
+document.getElementById('totalCvCount').textContent = allCVsData.length;
+applyFilters(); // This will display the CVs with filters applied
       
       // Free plan: First 10 CVs are clear, 11+ are blurred
       const isInFreeLimit = index < 10;
@@ -1879,7 +2169,361 @@ function updatePlanBadges() {
     currentBtn.textContent = 'Current Plan';
   }
 }
+// ADD THESE GLOBAL VARIABLES at the top of your Firebase script
+let allCVsData = [];
+let selectedForComparison = [];
+let favorites = [];
+let candidatePipeline = {
+  new: [],
+  contacted: [],
+  interview: [],
+  offer: [],
+  hired: [],
+  rejected: []
+};
+let candidateNotes = {};
 
+// FEATURE 1: SEARCH & FILTERS
+function toggleFilters() {
+  const panel = document.getElementById('filterPanel');
+  const text = document.getElementById('filterToggleText');
+  const chevron = document.getElementById('filterChevron');
+  
+  if (panel.style.display === 'none') {
+    panel.style.display = 'block';
+    text.textContent = 'Hide Filters';
+    chevron.className = 'bx bx-chevron-up';
+  } else {
+    panel.style.display = 'none';
+    text.textContent = 'Show Filters';
+    chevron.className = 'bx bx-chevron-down';
+  }
+}
+
+function applyFilters() {
+  const searchTerm = document.getElementById('cvSearch').value.toLowerCase();
+  const expFilter = document.getElementById('filterExperience').value;
+  const locationFilter = document.getElementById('filterLocation').value.toLowerCase();
+  const skillsFilter = document.getElementById('filterSkills').value.toLowerCase();
+  const availFilter = document.getElementById('filterAvailability').value;
+  const sortBy = document.getElementById('sortBy').value;
+
+  let filtered = allCVsData.filter(cv => {
+    const matchesSearch = !searchTerm || 
+      cv.fullName.toLowerCase().includes(searchTerm) ||
+      cv.jobTitle.toLowerCase().includes(searchTerm) ||
+      cv.skills.toLowerCase().includes(searchTerm) ||
+      cv.location.toLowerCase().includes(searchTerm);
+
+    const matchesExp = !expFilter || cv.experience === expFilter;
+    const matchesLocation = !locationFilter || cv.location.toLowerCase().includes(locationFilter);
+    const matchesSkills = !skillsFilter || cv.skills.toLowerCase().includes(skillsFilter);
+    const matchesAvail = !availFilter || cv.availability === availFilter;
+
+    return matchesSearch && matchesExp && matchesLocation && matchesSkills && matchesAvail;
+  });
+
+  // Sort
+  if (sortBy === 'newest') {
+    filtered.sort((a, b) => b.uploadedAt - a.uploadedAt);
+  } else if (sortBy === 'experienced') {
+    filtered.sort((a, b) => (b.yearsExp || 0) - (a.yearsExp || 0));
+  } else if (sortBy === 'favorites') {
+    filtered.sort((a, b) => {
+      const aFav = favorites.includes(a.id) ? 1 : 0;
+      const bFav = favorites.includes(b.id) ? 1 : 0;
+      return bFav - aFav;
+    });
+  }
+
+  document.getElementById('cvCount').textContent = filtered.length;
+  displayFilteredCVs(filtered);
+}
+
+function clearAllFilters() {
+  document.getElementById('cvSearch').value = '';
+  document.getElementById('filterExperience').value = '';
+  document.getElementById('filterLocation').value = '';
+  document.getElementById('filterSkills').value = '';
+  document.getElementById('filterAvailability').value = '';
+  document.getElementById('sortBy').value = 'newest';
+  applyFilters();
+}
+
+function displayFilteredCVs(cvs) {
+  const grid = document.getElementById("cvGrid");
+  grid.innerHTML = '';
+
+  if (cvs.length === 0) {
+    grid.innerHTML = "<p style='text-align: center; color: #6b7280;'>No CVs match your filters.</p>";
+    return;
+  }
+
+  cvs.forEach((data, index) => {
+    const cvId = data.id;
+    const isUnlocked = recruiterData.unlockedCVs?.includes(cvId) || false;
+    const isFree = recruiterData.plan === 'free';
+    const isInFreeLimit = index < 10;
+    const shouldBlur = isFree ? !isInFreeLimit : !isUnlocked;
+    const isSelected = selectedForComparison.includes(cvId);
+    const isFavorite = favorites.includes(cvId);
+
+    const card = document.createElement("div");
+    card.className = "cv-card";
+    card.style.position = "relative";
+    if (isSelected) card.style.border = "2px solid #2563eb";
+    if (isFavorite) card.style.borderColor = "#fbbf24";
+
+    const uploadDate = data.uploadedAt?.toDate() || new Date();
+    const daysAgo = Math.floor((new Date() - uploadDate) / (1000 * 60 * 60 * 24));
+
+    card.innerHTML = `
+      <div style="${shouldBlur ? 'filter: blur(5px);' : ''}">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+          <div>
+            <h3>${data.fullName || "Anonymous User"}</h3>
+            <p><strong>${data.jobTitle || "Job Seeker"}</strong></p>
+          </div>
+          <i class='bx bxs-star favorite-star ${isFavorite ? 'active' : ''}" 
+             onclick="toggleFavorite('${cvId}')" 
+             style="font-size: 20px; cursor: pointer; color: ${isFavorite ? '#fbbf24' : '#d1d5db'};">
+          </i>
+        </div>
+        <p style="font-size: 13px; color: #6b7280;">
+          <i class='bx bx-map'></i> ${data.location || "Location not specified"}
+        </p>
+        <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+          <i class='bx bx-briefcase'></i> ${data.experience || "Not specified"}
+        </p>
+        <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+          <i class='bx bx-code-alt'></i> ${data.skills || "Not specified"}
+        </p>
+        ${data.availability ? `
+          <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+            <i class='bx bx-time'></i> Available: ${data.availability}
+          </p>
+        ` : ''}
+        <p style="font-size: 12px; color: #9ca3af; margin-top: 8px;">
+          <i class='bx bx-time'></i> Uploaded ${daysAgo === 0 ? 'today' : daysAgo + ' days ago'}
+        </p>
+      </div>
+      
+      <div style="display: flex; gap: 8px; margin-top: 12px;">
+        ${!shouldBlur ? `
+          <button onclick="toggleCompareSelection('${cvId}')" 
+                  class="primary-btn" 
+                  style="flex: 1; background: ${isSelected ? '#2563eb' : '#6b7280'};">
+            ${isSelected ? '✓ Selected' : 'Compare'}
+          </button>
+        ` : ''}
+        
+        ${isUnlocked ? `
+          <button class="primary-btn" onclick="window.open('${data.cvURL}', '_blank')" style="background: #10b981;">
+            <i class='bx bx-download'></i>
+          </button>
+        ` : isFree && isInFreeLimit ? `
+          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')" 
+                  style="background: #f59e0b;">
+            <i class='bx bx-lock'></i> Upgrade
+          </button>
+        ` : isFree ? `
+          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')" 
+                  style="background: #ef4444;">
+            <i class='bx bx-lock'></i> Upgrade
+          </button>
+        ` : `
+          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName || 'CV'}')">
+            <i class='bx bx-lock-open'></i> Unlock
+          </button>
+        `}
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+// FEATURE 2: COMPARISON TOOL
+function toggleCompareSelection(cvId) {
+  if (selectedForComparison.includes(cvId)) {
+    selectedForComparison = selectedForComparison.filter(id => id !== cvId);
+  } else {
+    if (selectedForComparison.length >= 3) {
+      alert('You can compare up to 3 CVs at a time');
+      return;
+    }
+    selectedForComparison.push(cvId);
+  }
+
+  document.getElementById('compareCount').textContent = selectedForComparison.length;
+  const compareBtn = document.getElementById('compareBtn');
+  compareBtn.style.display = selectedForComparison.length >= 2 ? 'block' : 'none';
+
+  applyFilters(); // Refresh display
+}
+
+function toggleComparison() {
+  const container = document.getElementById('comparisonContainer');
+  if (container.style.display === 'none') {
+    container.style.display = 'block';
+    renderComparison();
+  } else {
+    container.style.display = 'none';
+  }
+}
+
+function renderComparison() {
+  const grid = document.getElementById('comparisonGrid');
+  grid.innerHTML = '';
+
+  selectedForComparison.forEach(cvId => {
+    const cv = allCVsData.find(c => c.id === cvId);
+    if (!cv) return;
+
+    const card = document.createElement('div');
+    card.className = 'comparison-card';
+    card.innerHTML = `
+      <button onclick="toggleCompareSelection('${cvId}')" class="remove-btn">
+        <i class='bx bx-x'></i>
+      </button>
+      
+      <h3 style="margin-bottom: 12px; padding-right: 30px;">${cv.fullName}</h3>
+      
+      <div style="font-size: 13px; space-y: 8px;">
+        <div><strong>Title:</strong> ${cv.jobTitle}</div>
+        <div><strong>Location:</strong> ${cv.location}</div>
+        <div><strong>Experience:</strong> ${cv.experience}</div>
+        <div><strong>Skills:</strong> ${cv.skills}</div>
+        ${cv.availability ? `<div><strong>Availability:</strong> ${cv.availability}</div>` : ''}
+      </div>
+      
+      <button onclick="toggleFavorite('${cvId}')" 
+              style="margin-top: 12px; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; color: ${favorites.includes(cvId) ? '#fbbf24' : '#6b7280'};">
+        <i class='bx bxs-star' style="font-size: 16px;"></i>
+        ${favorites.includes(cvId) ? 'Favorited' : 'Mark Favorite'}
+      </button>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function toggleFavorite(cvId) {
+  if (favorites.includes(cvId)) {
+    favorites = favorites.filter(id => id !== cvId);
+  } else {
+    favorites.push(cvId);
+  }
+  applyFilters(); // Refresh display
+  if (document.getElementById('comparisonContainer').style.display === 'block') {
+    renderComparison();
+  }
+}
+
+// FEATURE 3: PIPELINE/KANBAN
+function togglePipeline() {
+  const board = document.getElementById('pipelineBoard');
+  const text = document.getElementById('pipelineToggleText');
+  
+  if (board.style.display === 'none') {
+    board.style.display = 'block';
+    text.textContent = 'Hide Pipeline';
+    renderPipeline();
+  } else {
+    board.style.display = 'none';
+    text.textContent = 'Show Pipeline';
+  }
+}
+
+function renderPipeline() {
+  const stages = ['new', 'contacted', 'interview', 'offer', 'hired', 'rejected'];
+  
+  stages.forEach(stage => {
+    const column = document.getElementById(stage + 'Column');
+    const count = document.getElementById(stage + 'Count');
+    column.innerHTML = '';
+    count.textContent = candidatePipeline[stage].length;
+
+    candidatePipeline[stage].forEach(cvId => {
+      const cv = allCVsData.find(c => c.id === cvId);
+      if (!cv) return;
+
+      const card = document.createElement('div');
+      card.className = 'pipeline-card';
+      card.draggable = true;
+      card.ondragstart = (e) => drag(e, cvId);
+      
+      const notes = candidateNotes[cvId] || [];
+      const lastNote = notes.length > 0 ? notes[notes.length - 1] : null;
+
+      card.innerHTML = `
+        <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">${cv.fullName}</div>
+        <div style="font-size: 11px; color: #6b7280; margin-bottom: 8px;">${cv.jobTitle}</div>
+        
+        ${lastNote ? `
+          <div class="candidate-note">${lastNote.text}</div>
+        ` : ''}
+        
+        <div style="display: flex; gap: 4px; margin-top: 8px;">
+          <button onclick="addCandidateNote('${cvId}')" 
+                  style="background: #f3f4f6; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">
+            <i class='bx bx-plus'></i>
+          </button>
+          <button onclick="toggleFavorite('${cvId}')" 
+                  style="background: ${favorites.includes(cvId) ? '#fef3c7' : '#f3f4f6'}; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
+            <i class='bx bxs-star' style="font-size: 12px; color: ${favorites.includes(cvId) ? '#fbbf24' : '#6b7280'};"></i>
+          </button>
+        </div>
+      `;
+      
+      column.appendChild(card);
+    });
+  });
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev, cvId) {
+  ev.dataTransfer.setData("cvId", cvId);
+  ev.target.classList.add('dragging');
+}
+
+function drop(ev, newStage) {
+  ev.preventDefault();
+  const cvId = ev.dataTransfer.getData("cvId");
+  
+  // Remove from all stages
+  Object.keys(candidatePipeline).forEach(stage => {
+    candidatePipeline[stage] = candidatePipeline[stage].filter(id => id !== cvId);
+  });
+  
+  // Add to new stage
+  candidatePipeline[newStage].push(cvId);
+  
+  renderPipeline();
+  document.querySelectorAll('.pipeline-card').forEach(el => el.classList.remove('dragging'));
+}
+
+function addCandidateNote(cvId) {
+  const note = prompt('Add a note for this candidate:');
+  if (note && note.trim()) {
+    if (!candidateNotes[cvId]) {
+      candidateNotes[cvId] = [];
+    }
+    candidateNotes[cvId].push({
+      text: note.trim(),
+      date: new Date()
+    });
+    renderPipeline();
+  }
+}
+
+// MODIFY YOUR EXISTING loadCVs function to store data
+// Find this line in your loadCVs function:
+// cvDocs.forEach((cvDoc, index) => {
+
+// REPLACE the entire loadCVs function display logic with:
 </script>
 
 </body>
