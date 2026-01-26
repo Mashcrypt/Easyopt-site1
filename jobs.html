@@ -170,26 +170,6 @@ header p {
 </nav>
 
 <header>
-  <section class="seo-content">
-  <h2>Latest Jobs in South Africa</h2>
-  <p>
-    Career Unified helps South Africans find verified job opportunities across
-    all industries including IT, retail, finance, engineering, hospitality, and
-    government roles. Our platform updates daily to ensure you never miss a
-    chance to apply.
-  </p>
-  <p>
-    Whether you are a graduate, skilled worker, or career changer, our job board
-    connects you to employers hiring in South Africa. Use the filters to find
-    full-time, part-time, internships, and remote positions that match your
-    goals.
-  </p>
-  <p>
-    Start your job search today and take the next step in your career with
-    Career Unified.
-  </p>
-</section>
-
   <h1>Available Jobs</h1>
   <p>Find your next opportunity</p>
 </header>
@@ -212,6 +192,24 @@ header p {
   <div class="jobs-preview" id="jobPreview">
     <p>Select a job to view details</p>
   </div>
+  
+  <!-- SEO FALLBACK CONTENT (invisible to users, readable by Google) -->
+<section aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+  <h2>Latest Jobs in South Africa</h2>
+  <p>
+    Career Unified lists verified job opportunities across South Africa including
+    IT, finance, retail, engineering, hospitality, government, and graduate roles.
+  </p>
+  <p>
+    Our platform updates daily to help job seekers find full-time, part-time,
+    remote, and internship positions from trusted employers.
+  </p>
+  <p>
+    Use Career Unified to search, filter, and apply for jobs across all provinces
+    in South Africa.
+  </p>
+</section>
+
 </main>
 
 <!-- FOOTER -->
@@ -385,6 +383,7 @@ fetchJobs();
 
 </body>
 </html>
+
 
 
 
