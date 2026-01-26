@@ -2,6 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="description" content="View all South African universities, application deadlines, and entry requirements. Apply early to secure your spot in 2026.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content="South African Universities – Career Unified">
+<meta property="og:description" content="Check application deadlines, entry requirements, and university opportunities in South Africa. Apply early and secure your spot.">
+<meta property="og:url" content="https://careerunified.com/varsity.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://careerunified.com/images/social-share-varsity.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="South African Universities – Career Unified">
+<meta name="twitter:description" content="View all South African universities, application deadlines, and entry requirements. Apply early for 2026.">
+<meta name="twitter:image" content="https://careerunified.com/images/social-share-varsity.png">
+
+<!-- Structured Data placeholder -->
+<script type="application/ld+json" id="varsity-schema">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "South African Universities",
+  "itemListElement": []
+}
+</script>
+
 <title>Varsity – Career Unified</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/varsity.css">
@@ -213,7 +239,7 @@ const varsityList = document.getElementById('varsityList');
 const searchInput = document.getElementById('searchInput');
 const sortBtn = document.getElementById('sortDeadlineBtn');
 let universities = [];
-
+  
 async function fetchUniversities() {
   universities = await window.sanityClient.fetch(`
     *[_type=="university"] | order(deadline asc){
@@ -224,8 +250,38 @@ async function fetchUniversities() {
       notes
     }
   `);
+
+  injectUniversitySchema();
   renderList();
 }
+
+function injectUniversitySchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "South African Universities",
+    "itemListElement": universities.map((u, index) => ({
+      "@type": "CollegeOrUniversity",
+      "position": index + 1,
+      "name": u.name,
+      "url": u.applicationLink || "https://careerunified.com/varsity.html",
+      "applicationDeadline": u.deadline || undefined
+    }))
+  };
+
+  const old = document.getElementById("varsity-schema");
+  if (old) old.remove();
+
+  const script = document.createElement("script");
+  script.id = "varsity-schema";
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+// Fetch on page load
+fetchUniversities();
+
 
 function renderList() {
   const query = searchInput.value.toLowerCase();
@@ -277,7 +333,7 @@ sortBtn.addEventListener('click', () => {
   renderList();
 });
 
-fetchUniversities();
+
 
 // SCROLL BUTTONS
 const up = document.getElementById('scrollUp');
@@ -291,6 +347,7 @@ down.onclick = () => window.scrollTo({top:document.body.scrollHeight, behavior:'
 
 </body>
 </html>
+
 
 
 
