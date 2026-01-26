@@ -3,6 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <title>Bursaries – Career Unified</title>
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="description" content="Find bursaries, scholarships, and funding opportunities for South African students. Apply early and secure your financial aid for 2026.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content="Bursaries & Scholarships South Africa – Career Unified">
+<meta property="og:description" content="Discover bursaries, scholarships, and funding opportunities for students in South Africa. Apply early and secure your financial aid.">
+<meta property="og:url" content="https://careerunified.com/bursaries.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://careerunified.com/images/social-share-bursaries.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bursaries & Scholarships South Africa – Career Unified">
+<meta name="twitter:description" content="Find bursaries and scholarships for South African students. Apply early to secure funding for 2026.">
+<meta name="twitter:image" content="https://careerunified.com/images/social-share-bursaries.png">
+
+<!-- Structured Data for Bursaries -->
+<script type="application/ld+json" id="bursary-schema">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Bursaries in South Africa",
+  "itemListElement": []
+}
+</script>
+
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/bursaries.css">
 <style>
@@ -200,6 +227,35 @@ async function fetchBursaries() {
   applicationLink
 }`);
 
+  // after fetching bursaries
+function injectBursarySchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Bursaries in South Africa",
+    "itemListElement": bursaries.map((b, index) => ({
+      "@type": "Scholarship",
+      "position": index + 1,
+      "name": b.name,
+      "provider": { "@type": "CollegeOrUniversity", "name": b.provider },
+      "applicationDeadline": b.deadline,
+      "url": b.applicationLink || "https://careerunified.com/bursaries.html"
+    }))
+  };
+
+  const old = document.getElementById("bursary-schema");
+  if (old) old.remove();
+
+  const script = document.createElement("script");
+  script.id = "bursary-schema";
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+// Call this after fetching bursaries
+injectBursarySchema();
+
 
   // populate faculties
   const faculties = Array.from(new Set(bursaries.map(b=>b.faculty))).sort();
@@ -304,6 +360,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 </script>
 </body>
 </html>
+
 
 
 
