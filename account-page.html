@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .account-wrapper {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .account-wrapper {
+                flex-direction: row;
+            }
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 100%;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 320px;
+            }
+        }
+
+        .user-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .user-info h3 {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+
+        .user-info p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .nav-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .nav-item.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            font-weight: 500;
+        }
+
+        .nav-item-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .sign-out-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #dc2626;
+            font-size: 0.95rem;
+        }
+
+        .sign-out-btn:hover {
+            background-color: #fef2f2;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .content-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .content-subtitle {
+            color: #6b7280;
+            margin-top: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-success {
+            background-color: #16a34a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #15803d;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Grid and Card Styles */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-cols-2 {
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        @media (min-width: 768px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .card {
+            background-color: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .card h3 {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .card p {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin: 0.5rem 0;
+        }
+
+        .card span {
+            color: #6b7280;
+        }
+
+        /* Status-specific Cards */
+        .info-section {
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-section-blue {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+
+        .info-section-blue h3 {
+            color: #1e3a8a;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .info-section-green {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .info-section-green h3 {
+            color: #14532d;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .info-section-purple {
+            background-color: #faf5ff;
+            border: 1px solid #e9d5ff;
+        }
+
+        .info-section-purple h3 {
+            color: #581c87;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.25rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        /* Employment Status Buttons */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .status-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .status-btn {
+            padding: 0.75rem 1rem;
+            border: 2px solid #d1d5db;
+            background: white;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: #374151;
+        }
+
+        .status-btn:hover {
+            border-color: #9ca3af;
+        }
+
+        .status-btn.active {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            font-weight: 500;
+        }
+
+        /* Bio Section */
+        .bio-section {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .bio-section h3 {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .bio-section p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        /* Other Tabs Styles */
+        .placeholder-content {
+            padding: 1.5rem;
+            text-align: center;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .placeholder-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            color: #9ca3af;
+        }
+
+        .info-box {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            color: #1e40af;
+        }
+
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .upload-area:hover {
+            border-color: #3b82f6;
+        }
+
+        .settings-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .settings-card h3 {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+        }
+
+        .setting-item:not(:last-child) {
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .help-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .help-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .help-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .help-card h3 {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .help-card p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Icons using SVG */
+        .icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="account-wrapper">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="user-header">
+                    <div class="user-avatar" id="userAvatarInitial">JD</div>
+                    <div class="user-info">
+                        <h3 id="sidebarUserName">John Doe</h3>
+                        <p>Account</p>
+                    </div>
+                </div>
+
+                <nav class="nav-menu">
+                    <button class="nav-item active" data-tab="profile">
+                        <div class="nav-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span>Profile</span>
+                        </div>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" data-tab="job-preferences">
+                        <div class="nav-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                            <span>Job preferences</span>
+                        </div>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" data-tab="job-activity">
+                        <div class="nav-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                            <span>Job activity</span>
+                        </div>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" data-tab="resume">
+                        <div class="nav-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span>Resume & Documents</span>
+                        </div>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" data-tab="connections">
+                        <div class="nav-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <span>Connections</span>
+                        </div>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" data-tab="account-settings">
+                        <div class="nav-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m5.196-15.196l-4.242 4.242m0 5.656l-4.242 4.242M23 12h-6m-6 0H1m15.196 5.196l-4.242-4.242m0-5.656L7.804 2.804"></path>
+                            </svg>
+                            <span>Account settings</span>
+                        </div>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" data-tab="notifications">
+                        <div class="nav-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span>Notification settings</span>
+                        </div>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+
+                    <button class="nav-item" data-tab="help">
+                        <div class="nav-item-content">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <span>Help center</span>
+                        </div>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </nav>
+
+                <button class="sign-out-btn" onclick="alert('Sign out functionality')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span>Sign out</span>
+                </button>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Profile Tab (View Mode) -->
+                <div id="profile-view" class="tab-content">
+                    <div class="content-header">
+                        <div>
+                            <h2 class="content-title" id="profileName">John Doe</h2>
+                            <p class="content-subtitle" id="profileEmail">john.doe@example.com</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="toggleEditMode(true)">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit Profile
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2">
+                        <div class="card">
+                            <h3>Contact Information</h3>
+                            <p><span>Phone:</span> <span id="viewPhone">+1 234 567 8900</span></p>
+                            <p><span>Location:</span> <span id="viewLocation">New York, USA</span></p>
+                        </div>
+
+                        <div class="card">
+                            <h3>Employment Status</h3>
+                            <p id="viewEmploymentStatus">Currently Employed</p>
+                        </div>
+                    </div>
+
+                    <div id="studentInfo" class="info-section info-section-blue hidden">
+                        <h3>Education Details</h3>
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Institution</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewInstitution">Not specified</p>
+                            </div>
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Degree Type</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewDegree">Not specified</p>
+                            </div>
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Field of Study</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewField">Not specified</p>
+                            </div>
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Expected Graduation</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewGraduation">Not specified</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="professionalInfo" class="info-section info-section-green hidden">
+                        <h3>Professional Details</h3>
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Current Position</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewJobTitle">Not specified</p>
+                            </div>
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Company</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewCompany">Not specified</p>
+                            </div>
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Years of Experience</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewExperience">Not specified</p>
+                            </div>
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Industry</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewIndustry">Not specified</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="careerPreferences" class="info-section info-section-purple hidden">
+                        <h3>Career Preferences</h3>
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Desired Job Title</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewDesiredJob">Not specified</p>
+                            </div>
+                            <div>
+                                <p style="color: #6b7280; font-size: 0.875rem;">Preferred Location</p>
+                                <p style="font-weight: 500; color: #111827;" id="viewDesiredLocation">Not specified</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="bioSection" class="bio-section hidden">
+                        <h3>Bio</h3>
+                        <p id="viewBio"></p>
+                    </div>
+                </div>
+
+                <!-- Profile Tab (Edit Mode) -->
+                <div id="profile-edit" class="tab-content hidden">
+                    <div class="content-header">
+                        <h2 class="content-title">Edit Profile</h2>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" onclick="toggleEditMode(false)">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                Cancel
+                            </button>
+                            <button class="btn btn-success" onclick="saveProfile()">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                    <polyline points="7 3 7 8 15 8"></polyline>
+                                </svg>
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="profileForm">
+                        <div class="grid grid-cols-2">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="inputName" class="form-input" value="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" id="inputEmail" class="form-input" value="john.doe@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" id="inputPhone" class="form-input" value="+1 234 567 8900">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" id="inputLocation" class="form-input" value="New York, USA">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Employment Status</label>
+                            <div class="status-grid">
+                                <button type="button" class="status-btn active" data-status="employed" onclick="setEmploymentStatus('employed')">Employed</button>
+                                <button type="button" class="status-btn" data-status="open-for-job" onclick="setEmploymentStatus('open-for-job')">Open for Job</button>
+                                <button type="button" class="status-btn" data-status="unemployed" onclick="setEmploymentStatus('unemployed')">Unemployed</button>
+                                <button type="button" class="status-btn" data-status="student" onclick="setEmploymentStatus('student')">Student</button>
+                            </div>
+                        </div>
+
+                        <!-- Student Section -->
+                        <div id="editStudentSection" class="info-section info-section-blue hidden">
+                            <h3>Education Information</h3>
+                            <div class="grid grid-cols-2">
+                                <div class="form-group">
+                                    <label class="form-label">Institution Name</label>
+                                    <input type="text" id="inputInstitution" class="form-input" placeholder="e.g., Harvard University">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Degree Type</label>
+                                    <select id="inputDegree" class="form-select">
+                                        <option value="">Select degree</option>
+                                        <option value="Associate">Associate's Degree</option>
+                                        <option value="Bachelor">Bachelor's Degree</option>
+                                        <option value="Master">Master's Degree</option>
+                                        <option value="PhD">PhD</option>
+                                        <option value="Diploma">Diploma</option>
+                                        <option value="Certificate">Certificate</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Field of Study</label>
+                                    <input type="text" id="inputField" class="form-input" placeholder="e.g., Computer Science">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Expected Graduation Year</label>
+                                    <input type="text" id="inputGraduation" class="form-input" placeholder="e.g., 2026">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Professional Section -->
+                        <div id="editProfessionalSection" class="info-section info-section-green hidden">
+                            <h3>Professional Information</h3>
+                            <div class="grid grid-cols-2">
+                                <div class="form-group">
+                                    <label class="form-label">Current Job Title</label>
+                                    <input type="text" id="inputJobTitle" class="form-input" placeholder="e.g., Senior Software Engineer">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Current Company</label>
+                                    <input type="text" id="inputCompany" class="form-input" placeholder="e.g., Tech Corp">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Years of Experience</label>
+                                    <input type="text" id="inputExperience" class="form-input" placeholder="e.g., 5 years">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Industry</label>
+                                    <input type="text" id="inputIndustry" class="form-input" placeholder="e.g., Technology">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Career Preferences Section -->
+                        <div id="editCareerSection" class="info-section info-section-purple hidden">
+                            <h3>Career Preferences</h3>
+                            <div class="grid grid-cols-2">
+                                <div class="form-group">
+                                    <label class="form-label">Desired Job Title</label>
+                                    <input type="text" id="inputDesiredJob" class="form-input" placeholder="e.g., Product Manager">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Preferred Location</label>
+                                    <input type="text" id="inputDesiredLocation" class="form-input" placeholder="e.g., San Francisco, CA">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Bio</label>
+                            <textarea id="inputBio" class="form-textarea" rows="4" placeholder="Tell us about yourself..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Job Preferences Tab -->
+                <div id="job-preferences-content" class="tab-content hidden">
+                    <h2 class="content-title">Job Preferences</h2>
+                    <p class="content-subtitle">Set your job search preferences and criteria.</p>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <p>Configure your job alerts, salary expectations, work arrangements, and more.</p>
+                    </div>
+                </div>
+
+                <!-- Job Activity Tab -->
+                <div id="job-activity-content" class="tab-content hidden">
+                    <h2 class="content-title">Job Activity</h2>
+                    <p class="content-subtitle">Track your applications, saved jobs, and interview schedules.</p>
+                    <div class="placeholder-content">
+                        <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                        <p style="color: #6b7280;">No activity yet. Start applying to jobs!</p>
+                    </div>
+                </div>
+
+                <!-- Resume Tab -->
+                <div id="resume-content" class="tab-content hidden">
+                    <h2 class="content-title">Resume & Documents</h2>
+                    <p class="content-subtitle">Upload and manage your resume, cover letters, and other documents.</p>
+                    <div class="upload-area">
+                        <svg style="width: 48px; height: 48px; margin: 0 auto 1rem; color: #9ca3af;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <p style="color: #6b7280; margin-bottom: 0.5rem;">Drop your files here or click to upload</p>
+                        <p style="font-size: 0.875rem; color: #9ca3af;">PDF, DOC, DOCX up to 10MB</p>
+                    </div>
+                </div>
+
+                <!-- Connections Tab -->
+                <div id="connections-content" class="tab-content hidden">
+                    <h2 class="content-title">Connections</h2>
+                    <p class="content-subtitle">Manage your professional network and connections.</p>
+                    <div class="placeholder-content">
+                        <p style="color: #6b7280;">Build your network to unlock more opportunities.</p>
+                    </div>
+                </div>
+
+                <!-- Account Settings Tab -->
+                <div id="account-settings-content" class="tab-content hidden">
+                    <h2 class="content-title">Account Settings</h2>
+                    <div style="margin-top: 1.5rem;">
+                        <div class="settings-card">
+                            <h3>Privacy</h3>
+                            <div class="setting-item">
+                                <span>Make profile public</span>
+                                <input type="checkbox" class="checkbox">
+                            </div>
+                            <div class="setting-item">
+                                <span>Show activity status</span>
+                                <input type="checkbox" class="checkbox" checked>
+                            </div>
+                        </div>
+                        <div class="settings-card">
+                            <h3>Security</h3>
+                            <button class="btn btn-primary">Change password</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Tab -->
+                <div id="notifications-content" class="tab-content hidden">
+                    <h2 class="content-title">Notification Settings</h2>
+                    <div class="settings-card" style="margin-top: 1.5rem;">
+                        <div class="setting-item">
+                            <div>
+                                <p style="font-weight: 500; color: #111827;">Email notifications</p>
+                                <p style="font-size: 0.875rem; color: #6b7280;">Receive job alerts and updates</p>
+                            </div>
+                            <input type="checkbox" class="checkbox" checked>
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <p style="font-weight: 500; color: #111827;">SMS notifications</p>
+                                <p style="font-size: 0.875rem; color: #6b7280;">Get text messages for urgent updates</p>
+                            </div>
+                            <input type="checkbox" class="checkbox">
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <p style="font-weight: 500; color: #111827;">Push notifications</p>
+                                <p style="font-size: 0.875rem; color: #6b7280;">Browser and mobile push notifications</p>
+                            </div>
+                            <input type="checkbox" class="checkbox" checked>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help Tab -->
+                <div id="help-content" class="tab-content hidden">
+                    <h2 class="content-title">Help Center</h2>
+                    <div class="help-grid">
+                        <div class="help-card">
+                            <h3>Getting Started</h3>
+                            <p>Learn how to use the platform</p>
+                        </div>
+                        <div class="help-card">
+                            <h3>FAQs</h3>
+                            <p>Common questions answered</p>
+                        </div>
+                        <div class="help-card">
+                            <h3>Contact Support</h3>
+                            <p>Get help from our team</p>
+                        </div>
+                        <div class="help-card">
+                            <h3>Report an Issue</h3>
+                            <p>Let us know about problems</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Profile data storage
+        let profileData = {
+            name: 'John Doe',
+            email: 'john.doe@example.com',
+            phone: '+1 234 567 8900',
+            location: 'New York, USA',
+            employmentStatus: 'employed',
+            institutionName: '',
+            degreeType: '',
+            graduationYear: '',
+            fieldOfStudy: '',
+            currentJobTitle: '',
+            currentCompany: '',
+            yearsOfExperience: '',
+            desiredJobTitle: '',
+            desiredLocation: '',
+            industry: '',
+            bio: ''
+        };
+
+        // Tab switching functionality
+        document.querySelectorAll('.nav-item').forEach(button => {
+            button.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                switchTab(tabName);
+            });
+        });
+
+        function switchTab(tabName) {
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Show selected content
+            if (tabName === 'profile') {
+                document.getElementById('profile-view').classList.remove('hidden');
+            } else {
+                document.getElementById(tabName + '-content').classList.remove('hidden');
+            }
+        }
+
+        // Toggle edit mode
+        function toggleEditMode(isEditing) {
+            if (isEditing) {
+                document.getElementById('profile-view').classList.add('hidden');
+                document.getElementById('profile-edit').classList.remove('hidden');
+                loadFormData();
+            } else {
+                document.getElementById('profile-view').classList.remove('hidden');
+                document.getElementById('profile-edit').classList.add('hidden');
+            }
+        }
+
+        // Load form data from profileData
+        function loadFormData() {
+            document.getElementById('inputName').value = profileData.name;
+            document.getElementById('inputEmail').value = profileData.email;
+            document.getElementById('inputPhone').value = profileData.phone;
+            document.getElementById('inputLocation').value = profileData.location;
+            document.getElementById('inputInstitution').value = profileData.institutionName;
+            document.getElementById('inputDegree').value = profileData.degreeType;
+            document.getElementById('inputField').value = profileData.fieldOfStudy;
+            document.getElementById('inputGraduation').value = profileData.graduationYear;
+            document.getElementById('inputJobTitle').value = profileData.currentJobTitle;
+            document.getElementById('inputCompany').value = profileData.currentCompany;
+            document.getElementById('inputExperience').value = profileData.yearsOfExperience;
+            document.getElementById('inputIndustry').value = profileData.industry;
+            document.getElementById('inputDesiredJob').value = profileData.desiredJobTitle;
+            document.getElementById('inputDesiredLocation').value = profileData.desiredLocation;
+            document.getElementById('inputBio').value = profileData.bio;
+            
+            setEmploymentStatus(profileData.employmentStatus);
+        }
+
+        // Set employment status
+        function setEmploymentStatus(status) {
+            profileData.employmentStatus = status;
+            
+            // Update button states
+            document.querySelectorAll('.status-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-status="${status}"]`).classList.add('active');
+
+            // Show/hide relevant sections
+            const studentSection = document.getElementById('editStudentSection');
+            const professionalSection = document.getElementById('editProfessionalSection');
+            const careerSection = document.getElementById('editCareerSection');
+
+            studentSection.classList.add('hidden');
+            professionalSection.classList.add('hidden');
+            careerSection.classList.add('hidden');
+
+            if (status === 'student') {
+                studentSection.classList.remove('hidden');
+                careerSection.classList.remove('hidden');
+            } else if (status === 'employed' || status === 'unemployed') {
+                professionalSection.classList.remove('hidden');
+            } else if (status === 'open-for-job') {
+                careerSection.classList.remove('hidden');
+            }
+        }
+
+        // Save profile
+        function saveProfile() {
+            profileData.name = document.getElementById('inputName').value;
+            profileData.email = document.getElementById('inputEmail').value;
+            profileData.phone = document.getElementById('inputPhone').value;
+            profileData.location = document.getElementById('inputLocation').value;
+            profileData.institutionName = document.getElementById('inputInstitution').value;
+            profileData.degreeType = document.getElementById('inputDegree').value;
+            profileData.fieldOfStudy = document.getElementById('inputField').value;
+            profileData.graduationYear = document.getElementById('inputGraduation').value;
+            profileData.currentJobTitle = document.getElementById('inputJobTitle').value;
+            profileData.currentCompany = document.getElementById('inputCompany').value;
+            profileData.yearsOfExperience = document.getElementById('inputExperience').value;
+            profileData.industry = document.getElementById('inputIndustry').value;
+            profileData.desiredJobTitle = document.getElementById('inputDesiredJob').value;
+            profileData.desiredLocation = document.getElementById('inputDesiredLocation').value;
+            profileData.bio = document.getElementById('inputBio').value;
+
+            updateProfileView();
+            toggleEditMode(false);
+            alert('Profile saved successfully!');
+        }
+
+        // Update profile view
+        function updateProfileView() {
+            // Update basic info
+            document.getElementById('profileName').textContent = profileData.name;
+            document.getElementById('profileEmail').textContent = profileData.email;
+            document.getElementById('sidebarUserName').textContent = profileData.name;
+            document.getElementById('viewPhone').textContent = profileData.phone;
+            document.getElementById('viewLocation').textContent = profileData.location;
+
+            // Update avatar initial
+            const initial = profileData.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            document.getElementById('userAvatarInitial').textContent = initial;
+
+            // Update employment status text
+            const statusText = {
+                'employed': 'Currently Employed',
+                'unemployed': 'Open for Opportunities',
+                'student': 'Student',
+                'open-for-job': 'Actively Job Seeking'
+            };
+            document.getElementById('viewEmploymentStatus').textContent = statusText[profileData.employmentStatus];
+
+            // Show/hide sections based on employment status
+            const studentInfo = document.getElementById('studentInfo');
+            const professionalInfo = document.getElementById('professionalInfo');
+            const careerPreferences = document.getElementById('careerPreferences');
+            const bioSection = document.getElementById('bioSection');
+
+            studentInfo.classList.add('hidden');
+            professionalInfo.classList.add('hidden');
+            careerPreferences.classList.add('hidden');
+
+            if (profileData.employmentStatus === 'student') {
+                studentInfo.classList.remove('hidden');
+                careerPreferences.classList.remove('hidden');
+                
+                document.getElementById('viewInstitution').textContent = profileData.institutionName || 'Not specified';
+                document.getElementById('viewDegree').textContent = profileData.degreeType || 'Not specified';
+                document.getElementById('viewField').textContent = profileData.fieldOfStudy || 'Not specified';
+                document.getElementById('viewGraduation').textContent = profileData.graduationYear || 'Not specified';
+            }
+
+            if (profileData.employmentStatus === 'employed' || profileData.employmentStatus === 'unemployed') {
+                professionalInfo.classList.remove('hidden');
+                
+                document.getElementById('viewJobTitle').textContent = profileData.currentJobTitle || 'Not specified';
+                document.getElementById('viewCompany').textContent = profileData.currentCompany || 'Not specified';
+                document.getElementById('viewExperience').textContent = profileData.yearsOfExperience || 'Not specified';
+                document.getElementById('viewIndustry').textContent = profileData.industry || 'Not specified';
+            }
+
+            if (profileData.employmentStatus === 'open-for-job' || profileData.employmentStatus === 'student') {
+                careerPreferences.classList.remove('hidden');
+                
+                document.getElementById('viewDesiredJob').textContent = profileData.desiredJobTitle || 'Not specified';
+                document.getElementById('viewDesiredLocation').textContent = profileData.desiredLocation || 'Not specified';
+            }
+
+            // Show/hide bio
+            if (profileData.bio) {
+                bioSection.classList.remove('hidden');
+                document.getElementById('viewBio').textContent = profileData.bio;
+            } else {
+                bioSection.classList.add('hidden');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProfileView();
+        });
+    </script>
+</body>
+</html>
