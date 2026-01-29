@@ -228,12 +228,27 @@ header p {
 <script>
 const jobList = document.getElementById('jobList');
 const jobPreview = document.getElementById('jobPreview');
+const globalSearch = localStorage.getItem("homeSearchTerm");
+
 
 let jobs = [];
 let selectedIndex = null;
-
 async function fetchJobs() {
-  jobs = await window.sanityClient.fetch(`*[_type == "job"]{
+
+  let query = `*[_type == "job"]`;
+
+ // If coming from homepage search
+ if (globalSearch) {
+    query = `*[_type=="job" && (
+      title match "*${globalSearch}*" ||
+      company match "*${globalSearch}*" ||
+      category match "*${globalSearch}*" ||
+      location match "*${globalSearch}*" ||
+      description match "*${globalSearch}*"
+    )]`;
+  }
+
+  jobs = await window.sanityClient.fetch(`${query}{
     _id,
     title,
     company,
@@ -249,8 +264,15 @@ async function fetchJobs() {
     sponsoredUntil,
     badge
   }`);
+
+  // Put the search term into the Jobs search box
+  if (globalSearch) {
+    document.getElementById("jobSearch").value = globalSearch;
+  }
+
   renderJobs();
 }
+
 
   function injectJobSchema(job) {
   const schema = {
@@ -383,6 +405,7 @@ fetchJobs();
 
 </body>
 </html>
+
 
 
 
