@@ -638,7 +638,7 @@
                     </button>
                 </nav>
 
-                <button class="sign-out-btn" onclick="alert('Sign out functionality')">
+                <button class="sign-out-btn" onclick="handleSignOut()">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
@@ -992,211 +992,352 @@
         </div>
     </div>
 
-    <script>
-        // Profile data storage
-        let profileData = {
-            name: 'John Doe',
-            email: 'john.doe@example.com',
-            phone: '+1 234 567 8900',
-            location: 'New York, USA',
-            employmentStatus: 'employed',
-            institutionName: '',
-            degreeType: '',
-            graduationYear: '',
-            fieldOfStudy: '',
-            currentJobTitle: '',
-            currentCompany: '',
-            yearsOfExperience: '',
-            desiredJobTitle: '',
-            desiredLocation: '',
-            industry: '',
-            bio: ''
-        };
+   <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-        // Tab switching functionality
-        document.querySelectorAll('.nav-item').forEach(button => {
-            button.addEventListener('click', function() {
-                const tabName = this.getAttribute('data-tab');
-                switchTab(tabName);
-            });
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAEBbnXPlYYf9jbfgLSzfod3r0i5MOAo9M",
+        authDomain: "career-unified.firebaseapp.com",
+        projectId: "career-unified",
+        storageBucket: "career-unified.firebasestorage.app",
+        messagingSenderId: "101656817742",
+        appId: "1:101656817742:web:22c9a58a822a714e54931f",
+        measurementId: "G-2Z934XRVXT"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Profile data storage
+    let profileData = {
+        name: '',
+        email: '',
+        phone: '',
+        location: '',
+        employmentStatus: 'employed',
+        institutionName: '',
+        degreeType: '',
+        graduationYear: '',
+        fieldOfStudy: '',
+        currentJobTitle: '',
+        currentCompany: '',
+        yearsOfExperience: '',
+        desiredJobTitle: '',
+        desiredLocation: '',
+        industry: '',
+        bio: ''
+    };
+
+    let currentUser = null;
+
+    // Check authentication status on page load
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // User is signed in
+            currentUser = user;
+            console.log('User logged in:', user.email);
+            
+            // Load user profile data from Firestore
+            await loadUserProfile(user.uid);
+        } else {
+            // No user is signed in, redirect to login page
+            console.log('No user logged in, redirecting to login...');
+            window.location.href = 'login.html';
+        }
+    });
+
+    // Load user profile from Firestore
+    async function loadUserProfile(userId) {
+        try {
+            const userDoc = await getDoc(doc(db, 'users', userId));
+            
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                
+                // Populate profileData with user data
+                profileData = {
+                    name: userData.name || '',
+                    email: userData.email || currentUser.email,
+                    phone: userData.phone || '',
+                    location: userData.location || '',
+                    employmentStatus: userData.employmentStatus || 'employed',
+                    institutionName: userData.institutionName || '',
+                    degreeType: userData.degreeType || '',
+                    graduationYear: userData.graduationYear || '',
+                    fieldOfStudy: userData.fieldOfStudy || '',
+                    currentJobTitle: userData.currentJobTitle || '',
+                    currentCompany: userData.currentCompany || '',
+                    yearsOfExperience: userData.yearsOfExperience || '',
+                    desiredJobTitle: userData.desiredJobTitle || '',
+                    desiredLocation: userData.desiredLocation || '',
+                    industry: userData.industry || '',
+                    bio: userData.bio || ''
+                };
+                
+                console.log('Profile data loaded:', profileData);
+                updateProfileView();
+            } else {
+                // No profile exists yet, use email from auth
+                profileData.email = currentUser.email;
+                profileData.name = currentUser.displayName || 'User';
+                updateProfileView();
+            }
+        } catch (error) {
+            console.error('Error loading profile:', error);
+            // Use basic auth data as fallback
+            profileData.email = currentUser.email;
+            profileData.name = currentUser.displayName || 'User';
+            updateProfileView();
+        }
+    }
+
+    // Sign out function
+    window.handleSignOut = async function() {
+        if (confirm('Are you sure you want to sign out?')) {
+            try {
+                await signOut(auth);
+                console.log('User signed out successfully');
+                // Redirect to home page
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Error signing out:', error);
+                alert('Error signing out. Please try again.');
+            }
+        }
+    };
+
+    // Tab switching functionality
+    document.querySelectorAll('.nav-item').forEach(button => {
+        button.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+
+    function switchTab(tabName) {
+        // Update nav items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+        // Hide all content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
         });
 
-        function switchTab(tabName) {
-            // Update nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        // Show selected content
+        if (tabName === 'profile') {
+            document.getElementById('profile-view').classList.remove('hidden');
+        } else {
+            document.getElementById(tabName + '-content').classList.remove('hidden');
+        }
+    }
 
-            // Hide all content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
+    // Toggle edit mode
+    window.toggleEditMode = function(isEditing) {
+        if (isEditing) {
+            document.getElementById('profile-view').classList.add('hidden');
+            document.getElementById('profile-edit').classList.remove('hidden');
+            loadFormData();
+        } else {
+            document.getElementById('profile-view').classList.remove('hidden');
+            document.getElementById('profile-edit').classList.add('hidden');
+        }
+    };
 
-            // Show selected content
-            if (tabName === 'profile') {
-                document.getElementById('profile-view').classList.remove('hidden');
-            } else {
-                document.getElementById(tabName + '-content').classList.remove('hidden');
-            }
+    // Load form data from profileData
+    function loadFormData() {
+        document.getElementById('inputName').value = profileData.name;
+        document.getElementById('inputEmail').value = profileData.email;
+        document.getElementById('inputPhone').value = profileData.phone;
+        document.getElementById('inputLocation').value = profileData.location;
+        document.getElementById('inputInstitution').value = profileData.institutionName;
+        document.getElementById('inputDegree').value = profileData.degreeType;
+        document.getElementById('inputField').value = profileData.fieldOfStudy;
+        document.getElementById('inputGraduation').value = profileData.graduationYear;
+        document.getElementById('inputJobTitle').value = profileData.currentJobTitle;
+        document.getElementById('inputCompany').value = profileData.currentCompany;
+        document.getElementById('inputExperience').value = profileData.yearsOfExperience;
+        document.getElementById('inputIndustry').value = profileData.industry;
+        document.getElementById('inputDesiredJob').value = profileData.desiredJobTitle;
+        document.getElementById('inputDesiredLocation').value = profileData.desiredLocation;
+        document.getElementById('inputBio').value = profileData.bio;
+        
+        setEmploymentStatus(profileData.employmentStatus);
+    }
+
+    // Set employment status
+    window.setEmploymentStatus = function(status) {
+        profileData.employmentStatus = status;
+        
+        // Update button states
+        document.querySelectorAll('.status-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        const statusBtn = document.querySelector(`[data-status="${status}"]`);
+        if (statusBtn) {
+            statusBtn.classList.add('active');
         }
 
-        // Toggle edit mode
-        function toggleEditMode(isEditing) {
-            if (isEditing) {
-                document.getElementById('profile-view').classList.add('hidden');
-                document.getElementById('profile-edit').classList.remove('hidden');
-                loadFormData();
-            } else {
-                document.getElementById('profile-view').classList.remove('hidden');
-                document.getElementById('profile-edit').classList.add('hidden');
-            }
+        // Show/hide relevant sections
+        const studentSection = document.getElementById('editStudentSection');
+        const professionalSection = document.getElementById('editProfessionalSection');
+        const careerSection = document.getElementById('editCareerSection');
+
+        if (studentSection) studentSection.classList.add('hidden');
+        if (professionalSection) professionalSection.classList.add('hidden');
+        if (careerSection) careerSection.classList.add('hidden');
+
+        if (status === 'student') {
+            if (studentSection) studentSection.classList.remove('hidden');
+            if (careerSection) careerSection.classList.remove('hidden');
+        } else if (status === 'employed' || status === 'unemployed') {
+            if (professionalSection) professionalSection.classList.remove('hidden');
+        } else if (status === 'open-for-job') {
+            if (careerSection) careerSection.classList.remove('hidden');
+        }
+    };
+
+    // Save profile
+    window.saveProfile = async function() {
+        if (!currentUser) {
+            alert('You must be logged in to save your profile.');
+            return;
         }
 
-        // Load form data from profileData
-        function loadFormData() {
-            document.getElementById('inputName').value = profileData.name;
-            document.getElementById('inputEmail').value = profileData.email;
-            document.getElementById('inputPhone').value = profileData.phone;
-            document.getElementById('inputLocation').value = profileData.location;
-            document.getElementById('inputInstitution').value = profileData.institutionName;
-            document.getElementById('inputDegree').value = profileData.degreeType;
-            document.getElementById('inputField').value = profileData.fieldOfStudy;
-            document.getElementById('inputGraduation').value = profileData.graduationYear;
-            document.getElementById('inputJobTitle').value = profileData.currentJobTitle;
-            document.getElementById('inputCompany').value = profileData.currentCompany;
-            document.getElementById('inputExperience').value = profileData.yearsOfExperience;
-            document.getElementById('inputIndustry').value = profileData.industry;
-            document.getElementById('inputDesiredJob').value = profileData.desiredJobTitle;
-            document.getElementById('inputDesiredLocation').value = profileData.desiredLocation;
-            document.getElementById('inputBio').value = profileData.bio;
-            
-            setEmploymentStatus(profileData.employmentStatus);
-        }
+        // Update profileData with form values
+        profileData.name = document.getElementById('inputName').value;
+        profileData.phone = document.getElementById('inputPhone').value;
+        profileData.location = document.getElementById('inputLocation').value;
+        profileData.institutionName = document.getElementById('inputInstitution').value;
+        profileData.degreeType = document.getElementById('inputDegree').value;
+        profileData.fieldOfStudy = document.getElementById('inputField').value;
+        profileData.graduationYear = document.getElementById('inputGraduation').value;
+        profileData.currentJobTitle = document.getElementById('inputJobTitle').value;
+        profileData.currentCompany = document.getElementById('inputCompany').value;
+        profileData.yearsOfExperience = document.getElementById('inputExperience').value;
+        profileData.industry = document.getElementById('inputIndustry').value;
+        profileData.desiredJobTitle = document.getElementById('inputDesiredJob').value;
+        profileData.desiredLocation = document.getElementById('inputDesiredLocation').value;
+        profileData.bio = document.getElementById('inputBio').value;
 
-        // Set employment status
-        function setEmploymentStatus(status) {
-            profileData.employmentStatus = status;
-            
-            // Update button states
-            document.querySelectorAll('.status-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-status="${status}"]`).classList.add('active');
+        try {
+            // Save to Firestore
+            await setDoc(doc(db, 'users', currentUser.uid), {
+                ...profileData,
+                email: currentUser.email,
+                updatedAt: new Date().toISOString()
+            }, { merge: true });
 
-            // Show/hide relevant sections
-            const studentSection = document.getElementById('editStudentSection');
-            const professionalSection = document.getElementById('editProfessionalSection');
-            const careerSection = document.getElementById('editCareerSection');
-
-            studentSection.classList.add('hidden');
-            professionalSection.classList.add('hidden');
-            careerSection.classList.add('hidden');
-
-            if (status === 'student') {
-                studentSection.classList.remove('hidden');
-                careerSection.classList.remove('hidden');
-            } else if (status === 'employed' || status === 'unemployed') {
-                professionalSection.classList.remove('hidden');
-            } else if (status === 'open-for-job') {
-                careerSection.classList.remove('hidden');
-            }
-        }
-
-        // Save profile
-        function saveProfile() {
-            profileData.name = document.getElementById('inputName').value;
-            profileData.email = document.getElementById('inputEmail').value;
-            profileData.phone = document.getElementById('inputPhone').value;
-            profileData.location = document.getElementById('inputLocation').value;
-            profileData.institutionName = document.getElementById('inputInstitution').value;
-            profileData.degreeType = document.getElementById('inputDegree').value;
-            profileData.fieldOfStudy = document.getElementById('inputField').value;
-            profileData.graduationYear = document.getElementById('inputGraduation').value;
-            profileData.currentJobTitle = document.getElementById('inputJobTitle').value;
-            profileData.currentCompany = document.getElementById('inputCompany').value;
-            profileData.yearsOfExperience = document.getElementById('inputExperience').value;
-            profileData.industry = document.getElementById('inputIndustry').value;
-            profileData.desiredJobTitle = document.getElementById('inputDesiredJob').value;
-            profileData.desiredLocation = document.getElementById('inputDesiredLocation').value;
-            profileData.bio = document.getElementById('inputBio').value;
-
+            console.log('Profile saved successfully');
             updateProfileView();
             toggleEditMode(false);
             alert('Profile saved successfully!');
+        } catch (error) {
+            console.error('Error saving profile:', error);
+            alert('Error saving profile. Please try again.');
         }
+    };
 
-        // Update profile view
-        function updateProfileView() {
-            // Update basic info
-            document.getElementById('profileName').textContent = profileData.name;
-            document.getElementById('profileEmail').textContent = profileData.email;
-            document.getElementById('sidebarUserName').textContent = profileData.name;
-            document.getElementById('viewPhone').textContent = profileData.phone;
-            document.getElementById('viewLocation').textContent = profileData.location;
+    // Update profile view
+    function updateProfileView() {
+        // Update basic info
+        const profileNameEl = document.getElementById('profileName');
+        const profileEmailEl = document.getElementById('profileEmail');
+        const sidebarUserNameEl = document.getElementById('sidebarUserName');
+        const viewPhoneEl = document.getElementById('viewPhone');
+        const viewLocationEl = document.getElementById('viewLocation');
+        const userAvatarInitialEl = document.getElementById('userAvatarInitial');
 
-            // Update avatar initial
+        if (profileNameEl) profileNameEl.textContent = profileData.name || 'User';
+        if (profileEmailEl) profileEmailEl.textContent = profileData.email;
+        if (sidebarUserNameEl) sidebarUserNameEl.textContent = profileData.name || 'User';
+        if (viewPhoneEl) viewPhoneEl.textContent = profileData.phone || 'Not specified';
+        if (viewLocationEl) viewLocationEl.textContent = profileData.location || 'Not specified';
+
+        // Update avatar initial
+        if (userAvatarInitialEl && profileData.name) {
             const initial = profileData.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-            document.getElementById('userAvatarInitial').textContent = initial;
-
-            // Update employment status text
-            const statusText = {
-                'employed': 'Currently Employed',
-                'unemployed': 'Open for Opportunities',
-                'student': 'Student',
-                'open-for-job': 'Actively Job Seeking'
-            };
-            document.getElementById('viewEmploymentStatus').textContent = statusText[profileData.employmentStatus];
-
-            // Show/hide sections based on employment status
-            const studentInfo = document.getElementById('studentInfo');
-            const professionalInfo = document.getElementById('professionalInfo');
-            const careerPreferences = document.getElementById('careerPreferences');
-            const bioSection = document.getElementById('bioSection');
-
-            studentInfo.classList.add('hidden');
-            professionalInfo.classList.add('hidden');
-            careerPreferences.classList.add('hidden');
-
-            if (profileData.employmentStatus === 'student') {
-                studentInfo.classList.remove('hidden');
-                careerPreferences.classList.remove('hidden');
-                
-                document.getElementById('viewInstitution').textContent = profileData.institutionName || 'Not specified';
-                document.getElementById('viewDegree').textContent = profileData.degreeType || 'Not specified';
-                document.getElementById('viewField').textContent = profileData.fieldOfStudy || 'Not specified';
-                document.getElementById('viewGraduation').textContent = profileData.graduationYear || 'Not specified';
-            }
-
-            if (profileData.employmentStatus === 'employed' || profileData.employmentStatus === 'unemployed') {
-                professionalInfo.classList.remove('hidden');
-                
-                document.getElementById('viewJobTitle').textContent = profileData.currentJobTitle || 'Not specified';
-                document.getElementById('viewCompany').textContent = profileData.currentCompany || 'Not specified';
-                document.getElementById('viewExperience').textContent = profileData.yearsOfExperience || 'Not specified';
-                document.getElementById('viewIndustry').textContent = profileData.industry || 'Not specified';
-            }
-
-            if (profileData.employmentStatus === 'open-for-job' || profileData.employmentStatus === 'student') {
-                careerPreferences.classList.remove('hidden');
-                
-                document.getElementById('viewDesiredJob').textContent = profileData.desiredJobTitle || 'Not specified';
-                document.getElementById('viewDesiredLocation').textContent = profileData.desiredLocation || 'Not specified';
-            }
-
-            // Show/hide bio
-            if (profileData.bio) {
-                bioSection.classList.remove('hidden');
-                document.getElementById('viewBio').textContent = profileData.bio;
-            } else {
-                bioSection.classList.add('hidden');
-            }
+            userAvatarInitialEl.textContent = initial || 'U';
         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateProfileView();
-        });
-    </script>
+        // Update employment status text
+        const statusText = {
+            'employed': 'Currently Employed',
+            'unemployed': 'Open for Opportunities',
+            'student': 'Student',
+            'open-for-job': 'Actively Job Seeking'
+        };
+        const viewEmploymentStatusEl = document.getElementById('viewEmploymentStatus');
+        if (viewEmploymentStatusEl) {
+            viewEmploymentStatusEl.textContent = statusText[profileData.employmentStatus] || 'Not specified';
+        }
+
+        // Show/hide sections based on employment status
+        const studentInfo = document.getElementById('studentInfo');
+        const professionalInfo = document.getElementById('professionalInfo');
+        const careerPreferences = document.getElementById('careerPreferences');
+        const bioSection = document.getElementById('bioSection');
+
+        if (studentInfo) studentInfo.classList.add('hidden');
+        if (professionalInfo) professionalInfo.classList.add('hidden');
+        if (careerPreferences) careerPreferences.classList.add('hidden');
+
+        if (profileData.employmentStatus === 'student') {
+            if (studentInfo) studentInfo.classList.remove('hidden');
+            if (careerPreferences) careerPreferences.classList.remove('hidden');
+            
+            const viewInstitution = document.getElementById('viewInstitution');
+            const viewDegree = document.getElementById('viewDegree');
+            const viewField = document.getElementById('viewField');
+            const viewGraduation = document.getElementById('viewGraduation');
+
+            if (viewInstitution) viewInstitution.textContent = profileData.institutionName || 'Not specified';
+            if (viewDegree) viewDegree.textContent = profileData.degreeType || 'Not specified';
+            if (viewField) viewField.textContent = profileData.fieldOfStudy || 'Not specified';
+            if (viewGraduation) viewGraduation.textContent = profileData.graduationYear || 'Not specified';
+        }
+
+        if (profileData.employmentStatus === 'employed' || profileData.employmentStatus === 'unemployed') {
+            if (professionalInfo) professionalInfo.classList.remove('hidden');
+            
+            const viewJobTitle = document.getElementById('viewJobTitle');
+            const viewCompany = document.getElementById('viewCompany');
+            const viewExperience = document.getElementById('viewExperience');
+            const viewIndustry = document.getElementById('viewIndustry');
+
+            if (viewJobTitle) viewJobTitle.textContent = profileData.currentJobTitle || 'Not specified';
+            if (viewCompany) viewCompany.textContent = profileData.currentCompany || 'Not specified';
+            if (viewExperience) viewExperience.textContent = profileData.yearsOfExperience || 'Not specified';
+            if (viewIndustry) viewIndustry.textContent = profileData.industry || 'Not specified';
+        }
+
+        if (profileData.employmentStatus === 'open-for-job' || profileData.employmentStatus === 'student') {
+            if (careerPreferences) careerPreferences.classList.remove('hidden');
+            
+            const viewDesiredJob = document.getElementById('viewDesiredJob');
+            const viewDesiredLocation = document.getElementById('viewDesiredLocation');
+
+            if (viewDesiredJob) viewDesiredJob.textContent = profileData.desiredJobTitle || 'Not specified';
+            if (viewDesiredLocation) viewDesiredLocation.textContent = profileData.desiredLocation || 'Not specified';
+        }
+
+        // Show/hide bio
+        if (profileData.bio && bioSection) {
+            bioSection.classList.remove('hidden');
+            const viewBioEl = document.getElementById('viewBio');
+            if (viewBioEl) viewBioEl.textContent = profileData.bio;
+        } else if (bioSection) {
+            bioSection.classList.add('hidden');
+        }
+    }
+</script>
 </body>
 </html>
