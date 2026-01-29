@@ -11,27 +11,29 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
-            line-height: 1.6;
-        }
+ body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: white;
+    color: #1f2937;
+    line-height: 1.6;
+}
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 1.5rem;
-        }
+.container {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
 
-        .account-wrapper {
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+.account-wrapper {
+    background: white;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
         @media (min-width: 768px) {
             .account-wrapper {
@@ -1347,8 +1349,8 @@ async function loadUserCVs() {
                             ${cvData.cvFileName || 'CV Document'}
                         </div>
                         <div class="cv-meta">
-                            <span>📅 Uploaded: ${uploadDate}</span>
-                            <span>👁️ Views: ${cvData.viewCount || 0}</span>
+                            <span> Uploaded: ${uploadDate}</span>
+                            <span> Views: ${cvData.viewCount || 0}</span>
                             <span style="color: ${cvData.status === 'active' ? '#16a34a' : '#6b7280'};">
                                 ● ${cvData.status === 'active' ? 'Active' : 'Inactive'}
                             </span>
