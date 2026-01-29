@@ -111,11 +111,11 @@
     <p>Jobs Available</p>
   </div>
   <div class="stat">
-    <h3>150+</h3>
-    <p>Bursaries</p>
+   <h3 id="statBursaries">0+</h3>
+   <p>Bursaries</p>
   </div>
   <div class="stat">
-    <h3>26</h3>
+    <h3 id="statVarsity">0</h3>
     <p>Universities</p>
   </div>
   <div class="stat">
@@ -297,8 +297,11 @@ async function renderRecentJobs() {
     const isUrgent = (deadlineDate - today) / (1000 * 60 * 60 * 24) <= 7;
     const badge = getBadge(job);
 
-    const card = document.createElement('div');
-    card.className = `job-card ${job.listingTier === 'premier' ? 'premier' : ''}`;
+    const card = document.createElement('a');
+card.href = "jobs.html?job=" + encodeURIComponent(job.title);
+card.className = `job-card ${job.listingTier === 'premier' ? 'premier' : ''}`;
+card.style.textDecoration = "none";
+card.style.color = "inherit";
 
     card.innerHTML = `
       <h3>
@@ -320,6 +323,18 @@ async function renderRecentJobs() {
 }
 
 renderRecentJobs();
+const statBursaries = document.getElementById("statBursaries");
+const statVarsity = document.getElementById("statVarsity");
+
+async function loadStats(){
+  const bursaries = await sanityClient.fetch(`*[_type=="bursary"]{_id}`);
+  const varsities = await sanityClient.fetch(`*[_type=="university"]{_id}`);
+
+  statBursaries.innerText = bursaries.length + "+";
+  statVarsity.innerText = varsities.length;
+}
+
+loadStats();
 
 /* ================= SEARCH ================= */
 function performSearch(){
@@ -356,6 +371,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 
 </body>
 </html>
+
 
 
 
