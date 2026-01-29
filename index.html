@@ -104,46 +104,6 @@
   </form>
 </header>
 
-  <section class="why-cu">
-  <h2>Why Career Unified?</h2>
-  <p class="why-subtitle">
-    One platform built for South African students, graduates, and job seekers.
-  </p>
-
-  <div class="why-grid">
-
-    <div class="why-card reveal">
-      <h3>What we do</h3>
-      <p>
-        We bring together verified jobs, bursaries, and university opportunities in South Africa — all in one place, updated daily.
-      </p>
-    </div>
-
-    <div class="why-card reveal">
-      <h3>Who it’s for</h3>
-      <p>
-        Career Unified is for students, graduates, and job seekers who want real opportunities without scams, paywalls, or outdated listings.
-      </p>
-    </div>
-
-    <div class="why-card reveal">
-      <h3>Why you should stay</h3>
-      <p>
-        We track deadlines, remove expired posts, and give you free tools like CV generation — so you never miss a chance.
-      </p>
-    </div>
-
-    <div class="why-card reveal highlight">
-      <h3>Why Career Unified?</h3>
-      <p>
-        Unlike other platforms that charge, hide jobs, or show outdated listings, Career Unified is built to be free, transparent, and focused only on real opportunities that help you move forward.
-      </p>
-    </div>
-
-  </div>
-</section>
-
-
 <!-- QUICK STATS -->
 <section class="quick-stats">
   <div class="stat">
@@ -169,6 +129,71 @@
   <h2 class="section-title">Recent Job Openings</h2>
   <div class="job-cards" id="homeJobList"></div>
 </main>
+<!-- HOW IT WORKS -->
+<section class="how-it-works">
+  <h2>How Career Unified Works</h2>
+
+  <div class="steps">
+    <div class="step reveal">
+      <span>1</span>
+      <h3>Search & Explore</h3>
+      <p>Find jobs, bursaries, and university opportunities using our smart search.</p>
+    </div>
+
+    <div class="step reveal">
+      <span>2</span>
+      <h3>Apply with Confidence</h3>
+      <p>View verified listings, deadlines, and use free tools like CV generation.</p>
+    </div>
+
+    <div class="step reveal">
+      <span>3</span>
+      <h3>Move Your Career Forward</h3>
+      <p>Track opportunities, get updates, and never miss important closing dates.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CAREER UNIFIED -->
+<section class="why-cu">
+  <h2>Why Career Unified?</h2>
+  <p class="why-subtitle">
+    Built for South African students, graduates, and job seekers.
+  </p>
+
+  <div class="why-grid">
+
+    <div class="why-card reveal">
+      <h3>What we do</h3>
+      <p>
+        We bring together verified jobs, bursaries, and university opportunities in one place — updated daily.
+      </p>
+    </div>
+
+    <div class="why-card reveal">
+      <h3>Who it’s for</h3>
+      <p>
+        For students, graduates, and job seekers who want real opportunities without scams or paywalls.
+      </p>
+    </div>
+
+    <div class="why-card reveal">
+      <h3>Why you should stay</h3>
+      <p>
+        We track deadlines, remove expired posts, and give you free tools so you never miss a chance.
+      </p>
+    </div>
+
+    <div class="why-card reveal highlight">
+      <h3>Why choose Career Unified?</h3>
+      <p>
+        Unlike other platforms that charge or show outdated listings, Career Unified is free, transparent, and focused on real South African opportunities.
+      </p>
+    </div>
+
+  </div>
+</section>
+
 
 <!-- COOKIE NOTICE -->
 <div id="cookieNotice" class="cookie-notice">
@@ -304,8 +329,8 @@ function performSearch(){
   window.location.href='jobs.html';
 }
 
- /* ================= WHY CU ANIMATION ================= */
-const revealCards = document.querySelectorAll('.reveal');
+/* ================= REVEAL ANIMATIONS ================= */
+const revealElements = document.querySelectorAll('.reveal');
 
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
@@ -315,9 +340,9 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.2 });
 
-revealCards.forEach(card => observer.observe(card));
+revealElements.forEach(el => observer.observe(el));
+
  
-  
 /* ================= SCROLL ================= */
 const up = document.getElementById('scrollUp');
 const down = document.getElementById('scrollDown');
@@ -331,6 +356,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 
 </body>
 </html>
+
 
 
 
