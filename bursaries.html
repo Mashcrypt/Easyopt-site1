@@ -213,21 +213,10 @@ header p {
 const bursaryList = document.getElementById('bursaryList');
 const facultyFilter = document.getElementById('facultyFilter');
 const bursaryPreview = document.getElementById('bursaryPreview');
+const globalSearch = localStorage.getItem("homeSearchTerm");
 let bursaries = [];
 let selectedIndex = null;
 
-async function fetchBursaries() {
-  bursaries = await window.sanityClient.fetch(`*[_type=="bursary"] | order(deadline asc){
-  _id,
-  name,
-  provider,
-  faculty,
-  description,
-  deadline,
-  applicationLink
-}`);
-
-  // after fetching bursaries
 function injectBursarySchema() {
   const schema = {
     "@context": "https://schema.org",
@@ -253,6 +242,53 @@ function injectBursarySchema() {
   document.head.appendChild(script);
 }
 
+  
+
+async function fetchBursaries() {
+
+  let query = `*[_type=="bursary"]`;
+
+  if (globalSearch) {
+    query = `*[_type=="bursary" && (
+      name match "*${globalSearch}*" ||
+      provider match "*${globalSearch}*" ||
+      faculty match "*${globalSearch}*" ||
+      description match "*${globalSearch}*"
+    )]`;
+  }
+
+  bursaries = await window.sanityClient.fetch(`${query} | order(deadline asc){
+    _id,
+    name,
+    provider,
+    faculty,
+    description,
+    deadline,
+    applicationLink
+  }`);
+
+  // Put search term into UI
+  if (globalSearch) {
+    const input = document.createElement("input");
+    input.value = globalSearch;
+    input.style.display = "none";
+    document.body.appendChild(input);
+  }
+
+  injectBursarySchema();
+
+  // populate faculties dynamically
+  facultyFilter.innerHTML = `<option value="All">All Bursaries</option>`;
+  const faculties = Array.from(new Set(bursaries.map(b => b.faculty))).sort();
+  faculties.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f;
+    opt.textContent = f;
+    facultyFilter.appendChild(opt);
+  });
+
+  renderBursaries();
+}
 // Call this after fetching bursaries
 injectBursarySchema();
 
@@ -360,6 +396,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 </script>
 </body>
 </html>
+
 
 
 
