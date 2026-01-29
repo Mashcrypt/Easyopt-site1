@@ -104,6 +104,46 @@
   </form>
 </header>
 
+  <section class="why-cu">
+  <h2>Why Career Unified?</h2>
+  <p class="why-subtitle">
+    One platform built for South African students, graduates, and job seekers.
+  </p>
+
+  <div class="why-grid">
+
+    <div class="why-card reveal">
+      <h3>What we do</h3>
+      <p>
+        We bring together verified jobs, bursaries, and university opportunities in South Africa — all in one place, updated daily.
+      </p>
+    </div>
+
+    <div class="why-card reveal">
+      <h3>Who it’s for</h3>
+      <p>
+        Career Unified is for students, graduates, and job seekers who want real opportunities without scams, paywalls, or outdated listings.
+      </p>
+    </div>
+
+    <div class="why-card reveal">
+      <h3>Why you should stay</h3>
+      <p>
+        We track deadlines, remove expired posts, and give you free tools like CV generation — so you never miss a chance.
+      </p>
+    </div>
+
+    <div class="why-card reveal highlight">
+      <h3>Why Career Unified?</h3>
+      <p>
+        Unlike other platforms that charge, hide jobs, or show outdated listings, Career Unified is built to be free, transparent, and focused only on real opportunities that help you move forward.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
 <!-- QUICK STATS -->
 <section class="quick-stats">
   <div class="stat">
@@ -264,6 +304,20 @@ function performSearch(){
   window.location.href='jobs.html';
 }
 
+ /* ================= WHY CU ANIMATION ================= */
+const revealCards = document.querySelectorAll('.reveal');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('show');
+    }
+  });
+}, { threshold: 0.2 });
+
+revealCards.forEach(card => observer.observe(card));
+ 
+  
 /* ================= SCROLL ================= */
 const up = document.getElementById('scrollUp');
 const down = document.getElementById('scrollDown');
@@ -277,6 +331,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 
 </body>
 </html>
+
 
 
 
