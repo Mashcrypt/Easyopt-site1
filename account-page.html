@@ -893,19 +893,22 @@
                     </div>
                 </div>
 
+               
                 <!-- Resume Tab -->
-                <div id="resume-content" class="tab-content hidden">
-                    <h2 class="content-title">Resume & Documents</h2>
-                    <p class="content-subtitle">Upload and manage your resume, cover letters, and other documents.</p>
-                    <div class="upload-area">
-                        <svg style="width: 48px; height: 48px; margin: 0 auto 1rem; color: #9ca3af;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                        </svg>
-                        <p style="color: #6b7280; margin-bottom: 0.5rem;">Drop your files here or click to upload</p>
-                        <p style="font-size: 0.875rem; color: #9ca3af;">PDF, DOC, DOCX up to 10MB</p>
-                    </div>
-                </div>
+<div id="resume-content" class="tab-content hidden">
+    <h2 class="content-title">Resume & Documents</h2>
+    <p class="content-subtitle">Upload and manage your resume, cover letters, and other documents.</p>
+    
+    <!-- Get Discovered by Top Employers Section -->
+    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 48px; border-radius: 16px; text-align: center; margin-top: 2rem;">
+        <h2 style="color: #111827; font-size: 2rem; margin-bottom: 16px; font-weight: 700;">Get Discovered by Top Employers</h2>
+        <p style="color: #4b5563; font-size: 1.1rem; margin-bottom: 28px;">Upload your CV to be matched with verified recruiters looking for talent like you</p>
+        <input type="file" id="cvUpload" accept=".pdf,.doc,.docx" style="display: none;">
+        <label for="cvUpload" style="display: inline-block; padding: 16px 32px; background: #2563eb; color: #fff; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; position: relative; overflow: hidden;">
+            Upload Your CV
+        </label>
+    </div>
+</div>
 
                 <!-- Connections Tab -->
                 <div id="connections-content" class="tab-content hidden">
@@ -997,6 +1000,7 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
     import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+    import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -1368,6 +1372,103 @@
             bioSection.classList.add('hidden');
         }
     }
+// CV Upload functionality (add this inside your existing script, before the closing tag)
+const cvInput = document.getElementById("cvUpload");
+
+if (cvInput) {
+    cvInput.addEventListener("change", async (e) => {
+        const cvFile = e.target.files[0];
+        if (!cvFile) return;
+
+        const user = currentUser; // Use the currentUser from your existing script
+
+        if (!user) {
+            alert("Please login first to upload your CV");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const allowedTypes = [
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ];
+
+        if (!allowedTypes.includes(cvFile.type)) {
+            alert("Only PDF, DOC, and DOCX files are allowed");
+            e.target.value = "";
+            return;
+        }
+
+        if (cvFile.size > 5 * 1024 * 1024) {
+            alert("File size must be less than 5MB");
+            e.target.value = "";
+            return;
+        }
+
+        const label = document.querySelector('label[for="cvUpload"]');
+        const originalText = label ? label.textContent : "";
+
+        if (label) {
+            label.textContent = "Uploading...";
+            label.style.pointerEvents = "none";
+            label.style.opacity = "0.6";
+        }
+
+        try {
+            // Import storage functions at the top of your script if not already imported
+            const { getStorage, ref: storageRef, uploadBytesResumable, getDownloadURL } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js');
+            const storage = getStorage(app);
+            
+            const filePath = `cvs/${user.uid}/${Date.now()}_${cvFile.name}`;
+            const fileRef = storageRef(storage, filePath);
+
+            const uploadTask = uploadBytesResumable(fileRef, cvFile);
+
+            await new Promise((resolve, reject) => {
+                uploadTask.on(
+                    "state_changed",
+                    (snap) => {
+                        if (label) {
+                            const percent = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+                            label.textContent = `Uploading... ${percent}%`;
+                        }
+                    },
+                    reject,
+                    resolve
+                );
+            });
+
+            const cvURL = await getDownloadURL(fileRef);
+
+            await setDoc(doc(db, "cvs", `${user.uid}_${Date.now()}`), {
+                userId: user.uid,
+                userEmail: user.email,
+                fullName: profileData.name || user.displayName || "Anonymous User",
+                cvURL,
+                cvFileName: cvFile.name,
+                cvFilePath: filePath,
+                uploadedAt: new Date().toISOString(),
+                status: "active",
+                viewCount: 0,
+                unlocked: false
+            });
+
+            alert("✅ CV uploaded successfully!");
+            e.target.value = "";
+
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("❌ Error uploading CV: " + error.message);
+        } finally {
+            if (label) {
+                label.textContent = originalText;
+                label.style.pointerEvents = "auto";
+                label.style.opacity = "1";
+            }
+        }
+    });
+}
 </script>
 </body>
 </html>
