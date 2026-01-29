@@ -333,3 +333,58 @@ a:hover {
     margin-top: 10px;
   }
 }
+
+/* ===============================
+   WHY CAREER UNIFIED
+================================ */
+
+.why-cu {
+  padding: 80px 20px;
+  background: #f8fafc;
+  text-align: center;
+}
+
+.why-cu h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.why-subtitle {
+  color: #555;
+  max-width: 600px;
+  margin: 0 auto 50px;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.why-card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.why-card h3 {
+  margin-bottom: 10px;
+  color: #2563eb;
+}
+
+.why-card.highlight {
+  border: 2px solid #2563eb;
+  background: linear-gradient(135deg, #eef4ff, #ffffff);
+}
+
+.why-card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
