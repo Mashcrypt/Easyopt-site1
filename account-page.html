@@ -992,11 +992,11 @@
         </div>
     </div>
 
-   <script type="module">
+  <script type="module">
     // Import Firebase modules
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-    import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+    import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -1036,6 +1036,19 @@
 
     let currentUser = null;
 
+    // INSTANT LOAD: Check for cached data first
+    const cachedProfile = localStorage.getItem('userProfile');
+    if (cachedProfile) {
+        try {
+            profileData = JSON.parse(cachedProfile);
+            // Show cached data immediately
+            updateProfileView();
+            console.log('Loaded cached profile data');
+        } catch (e) {
+            console.error('Error parsing cached profile:', e);
+        }
+    }
+
     // Check authentication status on page load
     onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -1043,12 +1056,15 @@
             currentUser = user;
             console.log('User logged in:', user.email);
             
-            // Load user profile data from Firestore
+            // Load fresh data from Firestore (will update the cached data)
             await loadUserProfile(user.uid);
         } else {
             // No user is signed in, redirect to login page
             console.log('No user logged in, redirecting to login...');
-            window.location.href = 'login.html';
+            // Small delay to prevent flash on initial load
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 100);
         }
     });
 
@@ -1080,20 +1096,28 @@
                     bio: userData.bio || ''
                 };
                 
-                console.log('Profile data loaded:', profileData);
+                // Cache the profile data for instant loading next time
+                localStorage.setItem('userProfile', JSON.stringify(profileData));
+                
+                console.log('Profile data loaded from Firestore');
                 updateProfileView();
             } else {
                 // No profile exists yet, use email from auth
                 profileData.email = currentUser.email;
                 profileData.name = currentUser.displayName || 'User';
+                
+                // Cache initial data
+                localStorage.setItem('userProfile', JSON.stringify(profileData));
                 updateProfileView();
             }
         } catch (error) {
             console.error('Error loading profile:', error);
             // Use basic auth data as fallback
-            profileData.email = currentUser.email;
-            profileData.name = currentUser.displayName || 'User';
-            updateProfileView();
+            if (currentUser) {
+                profileData.email = currentUser.email;
+                profileData.name = currentUser.displayName || 'User';
+                updateProfileView();
+            }
         }
     }
 
@@ -1101,6 +1125,9 @@
     window.handleSignOut = async function() {
         if (confirm('Are you sure you want to sign out?')) {
             try {
+                // Clear cached profile data
+                localStorage.removeItem('userProfile');
+                
                 await signOut(auth);
                 console.log('User signed out successfully');
                 // Redirect to home page
@@ -1125,7 +1152,10 @@
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.remove('active');
         });
-        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+        if (activeTab) {
+            activeTab.classList.add('active');
+        }
 
         // Hide all content
         document.querySelectorAll('.tab-content').forEach(content => {
@@ -1134,41 +1164,51 @@
 
         // Show selected content
         if (tabName === 'profile') {
-            document.getElementById('profile-view').classList.remove('hidden');
+            const profileView = document.getElementById('profile-view');
+            if (profileView) profileView.classList.remove('hidden');
         } else {
-            document.getElementById(tabName + '-content').classList.remove('hidden');
+            const tabContent = document.getElementById(tabName + '-content');
+            if (tabContent) tabContent.classList.remove('hidden');
         }
     }
 
     // Toggle edit mode
     window.toggleEditMode = function(isEditing) {
+        const profileView = document.getElementById('profile-view');
+        const profileEdit = document.getElementById('profile-edit');
+        
         if (isEditing) {
-            document.getElementById('profile-view').classList.add('hidden');
-            document.getElementById('profile-edit').classList.remove('hidden');
+            if (profileView) profileView.classList.add('hidden');
+            if (profileEdit) profileEdit.classList.remove('hidden');
             loadFormData();
         } else {
-            document.getElementById('profile-view').classList.remove('hidden');
-            document.getElementById('profile-edit').classList.add('hidden');
+            if (profileView) profileView.classList.remove('hidden');
+            if (profileEdit) profileEdit.classList.add('hidden');
         }
     };
 
     // Load form data from profileData
     function loadFormData() {
-        document.getElementById('inputName').value = profileData.name;
-        document.getElementById('inputEmail').value = profileData.email;
-        document.getElementById('inputPhone').value = profileData.phone;
-        document.getElementById('inputLocation').value = profileData.location;
-        document.getElementById('inputInstitution').value = profileData.institutionName;
-        document.getElementById('inputDegree').value = profileData.degreeType;
-        document.getElementById('inputField').value = profileData.fieldOfStudy;
-        document.getElementById('inputGraduation').value = profileData.graduationYear;
-        document.getElementById('inputJobTitle').value = profileData.currentJobTitle;
-        document.getElementById('inputCompany').value = profileData.currentCompany;
-        document.getElementById('inputExperience').value = profileData.yearsOfExperience;
-        document.getElementById('inputIndustry').value = profileData.industry;
-        document.getElementById('inputDesiredJob').value = profileData.desiredJobTitle;
-        document.getElementById('inputDesiredLocation').value = profileData.desiredLocation;
-        document.getElementById('inputBio').value = profileData.bio;
+        const setInputValue = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.value = value || '';
+        };
+
+        setInputValue('inputName', profileData.name);
+        setInputValue('inputEmail', profileData.email);
+        setInputValue('inputPhone', profileData.phone);
+        setInputValue('inputLocation', profileData.location);
+        setInputValue('inputInstitution', profileData.institutionName);
+        setInputValue('inputDegree', profileData.degreeType);
+        setInputValue('inputField', profileData.fieldOfStudy);
+        setInputValue('inputGraduation', profileData.graduationYear);
+        setInputValue('inputJobTitle', profileData.currentJobTitle);
+        setInputValue('inputCompany', profileData.currentCompany);
+        setInputValue('inputExperience', profileData.yearsOfExperience);
+        setInputValue('inputIndustry', profileData.industry);
+        setInputValue('inputDesiredJob', profileData.desiredJobTitle);
+        setInputValue('inputDesiredLocation', profileData.desiredLocation);
+        setInputValue('inputBio', profileData.bio);
         
         setEmploymentStatus(profileData.employmentStatus);
     }
@@ -1212,21 +1252,26 @@
             return;
         }
 
+        const getInputValue = (id) => {
+            const el = document.getElementById(id);
+            return el ? el.value : '';
+        };
+
         // Update profileData with form values
-        profileData.name = document.getElementById('inputName').value;
-        profileData.phone = document.getElementById('inputPhone').value;
-        profileData.location = document.getElementById('inputLocation').value;
-        profileData.institutionName = document.getElementById('inputInstitution').value;
-        profileData.degreeType = document.getElementById('inputDegree').value;
-        profileData.fieldOfStudy = document.getElementById('inputField').value;
-        profileData.graduationYear = document.getElementById('inputGraduation').value;
-        profileData.currentJobTitle = document.getElementById('inputJobTitle').value;
-        profileData.currentCompany = document.getElementById('inputCompany').value;
-        profileData.yearsOfExperience = document.getElementById('inputExperience').value;
-        profileData.industry = document.getElementById('inputIndustry').value;
-        profileData.desiredJobTitle = document.getElementById('inputDesiredJob').value;
-        profileData.desiredLocation = document.getElementById('inputDesiredLocation').value;
-        profileData.bio = document.getElementById('inputBio').value;
+        profileData.name = getInputValue('inputName');
+        profileData.phone = getInputValue('inputPhone');
+        profileData.location = getInputValue('inputLocation');
+        profileData.institutionName = getInputValue('inputInstitution');
+        profileData.degreeType = getInputValue('inputDegree');
+        profileData.fieldOfStudy = getInputValue('inputField');
+        profileData.graduationYear = getInputValue('inputGraduation');
+        profileData.currentJobTitle = getInputValue('inputJobTitle');
+        profileData.currentCompany = getInputValue('inputCompany');
+        profileData.yearsOfExperience = getInputValue('inputExperience');
+        profileData.industry = getInputValue('inputIndustry');
+        profileData.desiredJobTitle = getInputValue('inputDesiredJob');
+        profileData.desiredLocation = getInputValue('inputDesiredLocation');
+        profileData.bio = getInputValue('inputBio');
 
         try {
             // Save to Firestore
@@ -1235,6 +1280,9 @@
                 email: currentUser.email,
                 updatedAt: new Date().toISOString()
             }, { merge: true });
+
+            // Update cache immediately
+            localStorage.setItem('userProfile', JSON.stringify(profileData));
 
             console.log('Profile saved successfully');
             updateProfileView();
@@ -1248,21 +1296,20 @@
 
     // Update profile view
     function updateProfileView() {
-        // Update basic info
-        const profileNameEl = document.getElementById('profileName');
-        const profileEmailEl = document.getElementById('profileEmail');
-        const sidebarUserNameEl = document.getElementById('sidebarUserName');
-        const viewPhoneEl = document.getElementById('viewPhone');
-        const viewLocationEl = document.getElementById('viewLocation');
-        const userAvatarInitialEl = document.getElementById('userAvatarInitial');
+        const setText = (id, text) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = text || 'Not specified';
+        };
 
-        if (profileNameEl) profileNameEl.textContent = profileData.name || 'User';
-        if (profileEmailEl) profileEmailEl.textContent = profileData.email;
-        if (sidebarUserNameEl) sidebarUserNameEl.textContent = profileData.name || 'User';
-        if (viewPhoneEl) viewPhoneEl.textContent = profileData.phone || 'Not specified';
-        if (viewLocationEl) viewLocationEl.textContent = profileData.location || 'Not specified';
+        // Update basic info
+        setText('profileName', profileData.name || 'User');
+        setText('profileEmail', profileData.email);
+        setText('sidebarUserName', profileData.name || 'User');
+        setText('viewPhone', profileData.phone);
+        setText('viewLocation', profileData.location);
 
         // Update avatar initial
+        const userAvatarInitialEl = document.getElementById('userAvatarInitial');
         if (userAvatarInitialEl && profileData.name) {
             const initial = profileData.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
             userAvatarInitialEl.textContent = initial || 'U';
@@ -1275,10 +1322,7 @@
             'student': 'Student',
             'open-for-job': 'Actively Job Seeking'
         };
-        const viewEmploymentStatusEl = document.getElementById('viewEmploymentStatus');
-        if (viewEmploymentStatusEl) {
-            viewEmploymentStatusEl.textContent = statusText[profileData.employmentStatus] || 'Not specified';
-        }
+        setText('viewEmploymentStatus', statusText[profileData.employmentStatus]);
 
         // Show/hide sections based on employment status
         const studentInfo = document.getElementById('studentInfo');
@@ -1294,46 +1338,32 @@
             if (studentInfo) studentInfo.classList.remove('hidden');
             if (careerPreferences) careerPreferences.classList.remove('hidden');
             
-            const viewInstitution = document.getElementById('viewInstitution');
-            const viewDegree = document.getElementById('viewDegree');
-            const viewField = document.getElementById('viewField');
-            const viewGraduation = document.getElementById('viewGraduation');
-
-            if (viewInstitution) viewInstitution.textContent = profileData.institutionName || 'Not specified';
-            if (viewDegree) viewDegree.textContent = profileData.degreeType || 'Not specified';
-            if (viewField) viewField.textContent = profileData.fieldOfStudy || 'Not specified';
-            if (viewGraduation) viewGraduation.textContent = profileData.graduationYear || 'Not specified';
+            setText('viewInstitution', profileData.institutionName);
+            setText('viewDegree', profileData.degreeType);
+            setText('viewField', profileData.fieldOfStudy);
+            setText('viewGraduation', profileData.graduationYear);
         }
 
         if (profileData.employmentStatus === 'employed' || profileData.employmentStatus === 'unemployed') {
             if (professionalInfo) professionalInfo.classList.remove('hidden');
             
-            const viewJobTitle = document.getElementById('viewJobTitle');
-            const viewCompany = document.getElementById('viewCompany');
-            const viewExperience = document.getElementById('viewExperience');
-            const viewIndustry = document.getElementById('viewIndustry');
-
-            if (viewJobTitle) viewJobTitle.textContent = profileData.currentJobTitle || 'Not specified';
-            if (viewCompany) viewCompany.textContent = profileData.currentCompany || 'Not specified';
-            if (viewExperience) viewExperience.textContent = profileData.yearsOfExperience || 'Not specified';
-            if (viewIndustry) viewIndustry.textContent = profileData.industry || 'Not specified';
+            setText('viewJobTitle', profileData.currentJobTitle);
+            setText('viewCompany', profileData.currentCompany);
+            setText('viewExperience', profileData.yearsOfExperience);
+            setText('viewIndustry', profileData.industry);
         }
 
         if (profileData.employmentStatus === 'open-for-job' || profileData.employmentStatus === 'student') {
             if (careerPreferences) careerPreferences.classList.remove('hidden');
             
-            const viewDesiredJob = document.getElementById('viewDesiredJob');
-            const viewDesiredLocation = document.getElementById('viewDesiredLocation');
-
-            if (viewDesiredJob) viewDesiredJob.textContent = profileData.desiredJobTitle || 'Not specified';
-            if (viewDesiredLocation) viewDesiredLocation.textContent = profileData.desiredLocation || 'Not specified';
+            setText('viewDesiredJob', profileData.desiredJobTitle);
+            setText('viewDesiredLocation', profileData.desiredLocation);
         }
 
         // Show/hide bio
         if (profileData.bio && bioSection) {
             bioSection.classList.remove('hidden');
-            const viewBioEl = document.getElementById('viewBio');
-            if (viewBioEl) viewBioEl.textContent = profileData.bio;
+            setText('viewBio', profileData.bio);
         } else if (bioSection) {
             bioSection.classList.add('hidden');
         }
