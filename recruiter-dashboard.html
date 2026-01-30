@@ -2452,44 +2452,66 @@ async function loadCVs() {
   try {
     const countQuery = query(collection(db, "cvs"));
     const countSnapshot = await getDocs(countQuery);
-    allCVsCount = countSnapshot.size;
+    const totalCVsInDatabase = countSnapshot.size;
     
-    document.getElementById('totalCVs').textContent = allCVsCount;
-
-    if (allCVsCount === 0) {
+    if (totalCVsInDatabase === 0) {
       grid.innerHTML = "<p style='text-align: center; color: #6b7280;'>No CVs uploaded yet.</p>";
+      document.getElementById('totalCVs').textContent = 0;
       updateCVLibrarySubtext();
       return;
     }
 
     let cvQuery;
-    let maxCVsToShow;
     
     if (recruiterData.plan === 'free') {
-      maxCVsToShow = Math.min(allCVsCount, 20);
-      cvQuery = query(collection(db, "cvs"), limit(maxCVsToShow));
+      cvQuery = query(collection(db, "cvs"), limit(20));
     } else {
-      maxCVsToShow = allCVsCount;
       cvQuery = query(collection(db, "cvs"));
     }
     
     const snapshot = await getDocs(cvQuery);
     grid.innerHTML = '';
-    updateCVLibrarySubtext();
 
     const cvDocs = [];
     snapshot.forEach(cvDoc => {
       cvDocs.push({ id: cvDoc.id, data: cvDoc.data() });
     });
     
+    // Sort all CVs by upload date (newest first)
     cvDocs.sort((a, b) => {
       const dateA = a.data.uploadedAt?.toDate() || new Date(0);
       const dateB = b.data.uploadedAt?.toDate() || new Date(0);
       return dateB - dateA;
     });
 
-    // NEW: Store all CVs data for filtering
-    allCVsData = cvDocs.map(doc => ({
+    // Group CVs by userId and keep only the latest CV for each user
+    const latestCVsByUser = new Map();
+    
+    cvDocs.forEach(cvDoc => {
+      const userId = cvDoc.data.userId;
+      
+      if (!userId) {
+        // If no userId, treat each CV as unique (backward compatibility)
+        latestCVsByUser.set(cvDoc.id, cvDoc);
+        return;
+      }
+      
+      // Only keep the latest CV for each user
+      if (!latestCVsByUser.has(userId)) {
+        latestCVsByUser.set(userId, cvDoc);
+      }
+    });
+
+    // Convert Map back to array
+    const uniqueUserCVs = Array.from(latestCVsByUser.values());
+    
+    // Update the count to show unique users/CVs
+    allCVsCount = uniqueUserCVs.length;
+    document.getElementById('totalCVs').textContent = allCVsCount;
+    updateCVLibrarySubtext();
+
+    // Store all CVs data for filtering
+    allCVsData = uniqueUserCVs.map(doc => ({
       id: doc.id,
       ...doc.data,
       fullName: doc.data.fullName || "Anonymous User",
@@ -2500,7 +2522,8 @@ async function loadCVs() {
       availability: doc.data.availability || 'immediate',
       yearsExp: parseInt(doc.data.experience?.split('-')[0] || '1'),
       uploadedAt: doc.data.uploadedAt?.toDate() || new Date(),
-      cvURL: doc.data.cvURL || ''
+      cvURL: doc.data.cvURL || '',
+      userId: doc.data.userId || doc.id
     }));
 
     // Initialize pipeline with all CVs in "new" stage
