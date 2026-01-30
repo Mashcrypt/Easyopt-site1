@@ -2386,13 +2386,19 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  currentRecruiter = user;
+currentRecruiter = user;
   
   await loadRecruiterData();
   document.body.classList.add('authorized');
   loadCVs();
   updatePlanBadges();
-});
+  
+  // Initialize analytics data
+  setTimeout(() => {
+    if (document.getElementById('analytics').classList.contains('active')) {
+      updateCharts();
+    }
+  }, 500);
 
 /* ======================================================
    LOAD RECRUITER SUBSCRIPTION DATA
@@ -3238,18 +3244,20 @@ window.exportAnalytics = function(format) {
     }
   }
 }
-
-// Initialize analytics when section is opened (wait for DOM to load)
-window.addEventListener('DOMContentLoaded', function() {
-  const analyticsLink = document.querySelector('.nav a:nth-child(7)');
-  if (analyticsLink) {
-    analyticsLink.addEventListener('click', function() {
+// Initialize analytics when section is opened
+document.addEventListener('DOMContentLoaded', function() {
+  // Update the showSection function to also update analytics
+  const originalShowSection = window.showSection;
+  window.showSection = function(id, el) {
+    originalShowSection(id, el);
+    if (id === 'analytics') {
       setTimeout(() => {
         updateCharts();
-      }, 100);
-    });
-  }
+      }, 50);
+    }
+  };
 });
+     
 </script>
 
 </body>
