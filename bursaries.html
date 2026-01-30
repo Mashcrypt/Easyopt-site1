@@ -289,21 +289,6 @@ async function fetchBursaries() {
 
   renderBursaries();
 }
-// Call this after fetching bursaries
-injectBursarySchema();
-
-
-  // populate faculties
-  const faculties = Array.from(new Set(bursaries.map(b=>b.faculty))).sort();
-  faculties.forEach(f => {
-    const opt = document.createElement('option');
-    opt.value = f;
-    opt.textContent = f;
-    facultyFilter.appendChild(opt);
-  });
-
-  renderBursaries();
-}
 
 function renderBursaries(filter='All') {
   bursaryList.innerHTML = '';
@@ -396,6 +381,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 </script>
 </body>
 </html>
+
 
 
 
