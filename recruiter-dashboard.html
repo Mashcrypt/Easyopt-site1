@@ -3246,20 +3246,25 @@ window.exportAnalytics = function(format) {
 }
 // Initialize analytics when section is opened
 document.addEventListener('DOMContentLoaded', function() {
-  // Update the showSection function to also update analytics
-  const originalShowSection = window.showSection;
-  window.showSection = function(id, el) {
-    originalShowSection(id, el);
-    if (id === 'analytics') {
+  // Update charts when analytics section is shown
+  const analyticsNav = document.querySelector('.nav a[onclick*="analytics"]');
+  if (analyticsNav) {
+    const originalOnclick = analyticsNav.onclick;
+    analyticsNav.onclick = function() {
+      if (originalOnclick) originalOnclick.apply(this, arguments);
       setTimeout(() => {
         updateCharts();
-      }, 50);
-    }
-  };
+      }, 100);
+    };
+  }
 });
-     
+
 </script>
 
+</body>
+</html>
+
+     
 </body>
 
 </html>
