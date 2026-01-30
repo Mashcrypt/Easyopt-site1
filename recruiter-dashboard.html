@@ -2275,6 +2275,15 @@ function showSection(id, el) {
 
   document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
   if (el) el.classList.add('active');
+  
+  // Trigger analytics charts when analytics section is shown
+  if (id === 'analytics') {
+    setTimeout(() => {
+      if (typeof updateCharts === 'function') {
+        updateCharts();
+      }
+    }, 100);
+  }
 }
 
 /* ======================================================
