@@ -272,3 +272,18 @@ footer {
         margin-bottom: 10px;
     }
 }
+
+@media (max-width: 900px) {
+  .job-container {
+    flex-direction: column;
+  }
+
+  .job-card h3 {
+    font-size: 1rem;
+  }
+
+  .apply-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
