@@ -2063,7 +2063,7 @@ body {
         <ul>
           <li> Post Jobs</li>
           <li> View 10 CV Previews (Blurred)</li>
-          <li> No Unlocked CVs</li>
+          <li> 10 Unlocked CVs</li>
         </ul>
         <button class="primary-btn" id="freePlanBtn" disabled>Current Plan</button>
       </div>
@@ -2421,10 +2421,11 @@ async function loadRecruiterData() {
     if (recruiterSnap.exists()) {
       recruiterData = recruiterSnap.data();
     } else {
+      // NEW RECRUITERS GET FREE PLAN WITH 10 UNLOCKS
       recruiterData = {
         plan: 'free',
-        unlocksRemaining: 0,
-        totalUnlocks: 0,
+        unlocksRemaining: 10,  // ← Changed from 0 to 10
+        totalUnlocks: 10,       // ← Changed from 0 to 10
         unlockedCVs: [],
         createdAt: new Date().toISOString()
       };
@@ -2438,7 +2439,7 @@ async function loadRecruiterData() {
     
   } catch (error) {
     console.error('Error loading recruiter data:', error);
-    recruiterData = { plan: 'free', unlocksRemaining: 0, unlockedCVs: [] };
+    recruiterData = { plan: 'free', unlocksRemaining: 10, unlockedCVs: [] };  // ← Changed from 0 to 10
   }
 }
 
@@ -2527,33 +2528,63 @@ async function loadCVs() {
     document.getElementById('totalCVs').textContent = allCVsCount;
     updateCVLibrarySubtext();
 
-    // Store all CVs data for filtering
-    allCVsData = uniqueUserCVs.map(doc => {
-      // Handle both Timestamp and string dates
-      let uploadDate;
-      if (doc.data.uploadedAt?.toDate) {
-        uploadDate = doc.data.uploadedAt.toDate();
-      } else if (doc.data.uploadedAt) {
-        uploadDate = new Date(doc.data.uploadedAt);
-      } else {
-        uploadDate = new Date();
+// Store all CVs data for filtering - FETCH USER PROFILES
+allCVsData = await Promise.all(uniqueUserCVs.map(async (doc) => {
+  // Handle both Timestamp and string dates
+  let uploadDate;
+  if (doc.data.uploadedAt?.toDate) {
+    uploadDate = doc.data.uploadedAt.toDate();
+  } else if (doc.data.uploadedAt) {
+    uploadDate = new Date(doc.data.uploadedAt);
+  } else {
+    uploadDate = new Date();
+  }
+  
+  // Fetch the user's profile data
+  let userProfile = {};
+  if (doc.data.userId) {
+    try {
+      const userRef = doc(db, 'users', doc.data.userId);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        userProfile = userSnap.data();
       }
-      
-      return {
-        id: doc.id,
-        ...doc.data,
-        fullName: doc.data.fullName || "Anonymous User",
-        jobTitle: doc.data.jobTitle || "Job Seeker",
-        location: doc.data.location || "Location not specified",
-        skills: doc.data.skills || "Not specified",
-        experience: doc.data.experience || '1-3 years',
-        availability: doc.data.availability || 'immediate',
-        yearsExp: parseInt(doc.data.experience?.split('-')[0] || '1'),
-        uploadedAt: uploadDate,
-        cvURL: doc.data.cvURL || '',
-        userId: doc.data.userId || doc.id
-      };
-    });
+    } catch (error) {
+      console.log('Could not fetch user profile:', error);
+    }
+  }
+  
+  return {
+    id: doc.id,
+    ...doc.data,
+    // Use user profile data if available, otherwise fall back to CV data
+    fullName: userProfile.fullName || doc.data.fullName || "Anonymous User",
+    jobTitle: userProfile.desiredJobTitle || doc.data.jobTitle || "Job Seeker",
+    location: userProfile.location || doc.data.location || "Location not specified",
+    phone: userProfile.phone || "Not specified",
+    email: userProfile.email || "Not specified",
+    
+    // Education
+    institution: userProfile.institution || "Not specified",
+    degreeType: userProfile.degreeType || "Not specified",
+    fieldOfStudy: userProfile.fieldOfStudy || "Not specified",
+    expectedGraduation: userProfile.expectedGraduation || "Not specified",
+    
+    // Career preferences
+    desiredJobTitle: userProfile.desiredJobTitle || "Not specified",
+    preferredLocation: userProfile.preferredLocation || "Not specified",
+    employmentStatus: userProfile.employmentStatus || "Not specified",
+    
+    // Original CV data
+    skills: doc.data.skills || userProfile.skills || "Not specified",
+    experience: doc.data.experience || '1-3 years',
+    availability: doc.data.availability || 'immediate',
+    yearsExp: parseInt(doc.data.experience?.split('-')[0] || '1'),
+    uploadedAt: uploadDate,
+    cvURL: doc.data.cvURL || '',
+    userId: doc.data.userId || doc.id
+  };
+}));
 
     // Initialize pipeline with all CVs in "new" stage
     candidatePipeline.new = allCVsData.map(cv => cv.id);
@@ -2797,66 +2828,95 @@ function displayFilteredCVs(cvs) {
     const daysAgo = Math.floor((new Date() - uploadDate) / (1000 * 60 * 60 * 24));
 
     card.innerHTML = `
-      <div style="${shouldBlur ? 'filter: blur(5px);' : ''}">
-        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-          <div>
-            <h3>${data.fullName}</h3>
-            <p><strong>${data.jobTitle}</strong></p>
-          </div>
-          <i class='bx bxs-star favorite-star ${isFavorite ? 'active' : ''}" 
-             onclick="toggleFavorite('${cvId}')" 
-             style="font-size: 20px; cursor: pointer; color: ${isFavorite ? '#fbbf24' : '#d1d5db'};">
-          </i>
-        </div>
-        <p style="font-size: 13px; color: #6b7280;">
-          <i class='bx bx-map'></i> ${data.location}
-        </p>
-        <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
-          <i class='bx bx-briefcase'></i> ${data.experience}
-        </p>
-        <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
-          <i class='bx bx-code-alt'></i> ${data.skills}
-        </p>
-        ${data.availability ? `
-          <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
-            <i class='bx bx-time'></i> Available: ${data.availability}
-          </p>
-        ` : ''}
-        <p style="font-size: 12px; color: #9ca3af; margin-top: 8px;">
-          <i class='bx bx-time'></i> Uploaded ${daysAgo === 0 ? 'today' : daysAgo + ' days ago'}
-        </p>
+  <div style="${shouldBlur ? 'filter: blur(5px);' : ''}">
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+      <div>
+        <h3>${data.fullName}</h3>
+        <p><strong>${data.jobTitle}</strong></p>
       </div>
-      
-      <div style="display: flex; gap: 8px; margin-top: 12px;">
-        ${!shouldBlur ? `
-          <button onclick="toggleCompareSelection('${cvId}')" 
-                  class="primary-btn" 
-                  style="flex: 1; background: ${isSelected ? '#2563eb' : '#6b7280'};">
-            ${isSelected ? '✓ Selected' : 'Compare'}
-          </button>
-        ` : ''}
-        
-        ${isUnlocked ? `
-          <button class="primary-btn" onclick="window.open('${data.cvURL}', '_blank')" style="background: #10b981;">
-            <i class='bx bx-download'></i>
-          </button>
-        ` : isFree && isInFreeLimit ? `
-          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName}')" 
-                  style="background: #f59e0b;">
-            <i class='bx bx-lock'></i> Upgrade
-          </button>
-        ` : isFree ? `
-          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName}')" 
-                  style="background: #ef4444;">
-            <i class='bx bx-lock'></i> Upgrade
-          </button>
-        ` : `
-          <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName}')">
-            <i class='bx bx-lock-open'></i> Unlock
-          </button>
-        `}
-      </div>
-    `;
+      <i class='bx bxs-star favorite-star ${isFavorite ? 'active' : ''}" 
+         onclick="toggleFavorite('${cvId}')" 
+         style="font-size: 20px; cursor: pointer; color: ${isFavorite ? '#fbbf24' : '#d1d5db'};">
+      </i>
+    </div>
+    
+    <p style="font-size: 13px; color: #6b7280;">
+      <i class='bx bx-map'></i> ${data.location}
+    </p>
+    
+    ${data.phone !== "Not specified" ? `
+      <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+        <i class='bx bx-phone'></i> ${data.phone}
+      </p>
+    ` : ''}
+    
+    ${data.email !== "Not specified" ? `
+      <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+        <i class='bx bx-envelope'></i> ${data.email}
+      </p>
+    ` : ''}
+    
+    <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+      <i class='bx bx-briefcase'></i> ${data.experience}
+    </p>
+    
+    ${data.employmentStatus !== "Not specified" ? `
+      <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+        <i class='bx bx-user'></i> Status: ${data.employmentStatus}
+      </p>
+    ` : ''}
+    
+    <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+      <i class='bx bx-code-alt'></i> ${data.skills}
+    </p>
+    
+    ${data.institution !== "Not specified" ? `
+      <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+        <i class='bx bx-book'></i> ${data.institution} - ${data.degreeType}
+      </p>
+    ` : ''}
+    
+    ${data.availability ? `
+      <p style="font-size: 13px; color: #6b7280; margin-top: 4px;">
+        <i class='bx bx-time'></i> Available: ${data.availability}
+      </p>
+    ` : ''}
+    
+    <p style="font-size: 12px; color: #9ca3af; margin-top: 8px;">
+      <i class='bx bx-time'></i> Uploaded ${daysAgo === 0 ? 'today' : daysAgo + ' days ago'}
+    </p>
+  </div>
+  
+  <div style="display: flex; gap: 8px; margin-top: 12px;">
+    ${!shouldBlur ? `
+      <button onclick="toggleCompareSelection('${cvId}')" 
+              class="primary-btn" 
+              style="flex: 1; background: ${isSelected ? '#2563eb' : '#6b7280'};">
+        ${isSelected ? '✓ Selected' : 'Compare'}
+      </button>
+    ` : ''}
+    
+    ${isUnlocked ? `
+      <button class="primary-btn" onclick="window.open('${data.cvURL}', '_blank')" style="background: #10b981;">
+        <i class='bx bx-download'></i>
+      </button>
+    ` : isFree && isInFreeLimit ? `
+      <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName}')" 
+              style="background: #f59e0b;">
+        <i class='bx bx-lock'></i> Upgrade
+      </button>
+    ` : isFree ? `
+      <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName}')" 
+              style="background: #ef4444;">
+        <i class='bx bx-lock'></i> Upgrade
+      </button>
+    ` : `
+      <button class="primary-btn" onclick="unlockCV('${cvId}', '${data.cvURL}', '${data.fullName}')">
+        <i class='bx bx-lock-open'></i> Unlock
+      </button>
+    `}
+  </div>
+`;
 
     grid.appendChild(card);
   });
