@@ -202,3 +202,20 @@ footer {
         width: 100%;
     }
 }
+
+@media (max-width: 900px) {
+  #varsityList {
+    padding: 0 12px;
+  }
+
+  .varsity-card {
+    padding: 14px;
+  }
+
+  #searchInput,
+  #sortDeadlineBtn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
