@@ -241,6 +241,23 @@
 <script src="js/sanityClient.js"></script>
 
 <script>
+  
+  /* ===============================
+   CACHE HELPERS
+================================ */
+function loadCache(key) {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveCache(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
 /* ===============================
    LISTING TIER HELPERS
 ================================ */
@@ -270,6 +287,14 @@ const homeJobList = document.getElementById('homeJobList');
 const statJobs = document.getElementById('statJobs');
 
 async function renderRecentJobs() {
+
+  // 1️⃣ Show cached jobs instantly
+  const cachedJobs = loadCache("home_jobs_cache");
+  if (cachedJobs && cachedJobs.length) {
+    renderJobsUI(cachedJobs);
+  }
+
+  // 2️⃣ Fetch fresh jobs in background
   let jobs = await window.sanityClient.fetch(`*[_type=="job"] | order(posted desc){
     title,
     company,
@@ -281,6 +306,14 @@ async function renderRecentJobs() {
     sponsoredUntil
   }`);
 
+  // 3️⃣ Save fresh data
+  saveCache("home_jobs_cache", jobs);
+
+  // 4️⃣ Render updated data
+  renderJobsUI(jobs);
+}
+  
+function renderJobsUI(jobs) {
   statJobs.innerText = jobs.length + '+';
 
   jobs.sort((a, b) => {
@@ -298,10 +331,10 @@ async function renderRecentJobs() {
     const badge = getBadge(job);
 
     const card = document.createElement('a');
-card.href = "jobs.html?job=" + encodeURIComponent(job.title);
-card.className = `job-card ${job.listingTier === 'premier' ? 'premier' : ''}`;
-card.style.textDecoration = "none";
-card.style.color = "inherit";
+    card.href = "jobs.html?job=" + encodeURIComponent(job.title);
+    card.className = `job-card ${job.listingTier === 'premier' ? 'premier' : ''}`;
+    card.style.textDecoration = "none";
+    card.style.color = "inherit";
 
     card.innerHTML = `
       <h3>
@@ -315,12 +348,12 @@ card.style.color = "inherit";
         Posted: ${job.posted} • Closing: ${job.deadline}
         ${isUrgent ? '<span class="urgent">Urgent</span>' : ''}
       </p>
-      <a href="jobs.html" class="apply-link">View & Apply</a>
     `;
 
     homeJobList.appendChild(card);
   });
 }
+
 
 renderRecentJobs();
 const statBursaries = document.getElementById("statBursaries");
@@ -371,6 +404,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 
 </body>
 </html>
+
 
 
 
