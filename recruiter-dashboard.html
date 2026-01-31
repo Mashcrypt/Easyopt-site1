@@ -2529,22 +2529,22 @@ async function loadCVs() {
     updateCVLibrarySubtext();
 
 // Store all CVs data for filtering - FETCH USER PROFILES
-allCVsData = await Promise.all(uniqueUserCVs.map(async (doc) => {
+allCVsData = await Promise.all(uniqueUserCVs.map(async (cvDoc) => {
   // Handle both Timestamp and string dates
   let uploadDate;
-  if (doc.data.uploadedAt?.toDate) {
-    uploadDate = doc.data.uploadedAt.toDate();
-  } else if (doc.data.uploadedAt) {
-    uploadDate = new Date(doc.data.uploadedAt);
+  if (cvDoc.data.uploadedAt?.toDate) {
+    uploadDate = cvDoc.data.uploadedAt.toDate();
+  } else if (cvDoc.data.uploadedAt) {
+    uploadDate = new Date(cvDoc.data.uploadedAt);
   } else {
     uploadDate = new Date();
   }
-  
+
   // Fetch the user's profile data
   let userProfile = {};
-  if (doc.data.userId) {
+  if (cvDoc.data.userId) {
     try {
-      const userRef = doc(db, 'users', doc.data.userId);
+      const userRef = doc(db, 'users', cvDoc.data.userId);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
         userProfile = userSnap.data();
@@ -2553,38 +2553,40 @@ allCVsData = await Promise.all(uniqueUserCVs.map(async (doc) => {
       console.log('Could not fetch user profile:', error);
     }
   }
-  
+
   return {
-    id: doc.id,
-    ...doc.data,
+    id: cvDoc.id,
+    ...cvDoc.data,
+
     // Use user profile data if available, otherwise fall back to CV data
-    fullName: userProfile.fullName || doc.data.fullName || "Anonymous User",
-    jobTitle: userProfile.desiredJobTitle || doc.data.jobTitle || "Job Seeker",
-    location: userProfile.location || doc.data.location || "Location not specified",
+    fullName: userProfile.fullName || cvDoc.data.fullName || "Anonymous User",
+    jobTitle: userProfile.desiredJobTitle || cvDoc.data.jobTitle || "Job Seeker",
+    location: userProfile.location || cvDoc.data.location || "Location not specified",
     phone: userProfile.phone || "Not specified",
     email: userProfile.email || "Not specified",
-    
+
     // Education
     institution: userProfile.institution || "Not specified",
     degreeType: userProfile.degreeType || "Not specified",
     fieldOfStudy: userProfile.fieldOfStudy || "Not specified",
     expectedGraduation: userProfile.expectedGraduation || "Not specified",
-    
+
     // Career preferences
     desiredJobTitle: userProfile.desiredJobTitle || "Not specified",
     preferredLocation: userProfile.preferredLocation || "Not specified",
     employmentStatus: userProfile.employmentStatus || "Not specified",
-    
+
     // Original CV data
-    skills: doc.data.skills || userProfile.skills || "Not specified",
-    experience: doc.data.experience || '1-3 years',
-    availability: doc.data.availability || 'immediate',
-    yearsExp: parseInt(doc.data.experience?.split('-')[0] || '1'),
+    skills: cvDoc.data.skills || userProfile.skills || "Not specified",
+    experience: cvDoc.data.experience || '1-3 years',
+    availability: cvDoc.data.availability || 'immediate',
+    yearsExp: parseInt(cvDoc.data.experience?.split('-')[0] || '1'),
     uploadedAt: uploadDate,
-    cvURL: doc.data.cvURL || '',
-    userId: doc.data.userId || doc.id
+    cvURL: cvDoc.data.cvURL || '',
+    userId: cvDoc.data.userId || cvDoc.id
   };
 }));
+
 
     // Initialize pipeline with all CVs in "new" stage
     candidatePipeline.new = allCVsData.map(cv => cv.id);
