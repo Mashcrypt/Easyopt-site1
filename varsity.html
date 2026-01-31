@@ -188,6 +188,35 @@ header p {
 @media (max-width:900px){
   #searchInput{width:100%;margin-bottom:10px}
 }
+
+/* =============================== */
+/* SKELETON LOADING */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.6), transparent);
+  animation: shimmer 1.3s infinite;
+}
+@keyframes shimmer {
+  100% { left: 100%; }
+}
+
+.skeleton-varsity {
+  height: 70px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+  
 </style>
 </head>
 <body>
@@ -235,10 +264,43 @@ header p {
 
 <script src="js/sanityClient.js"></script>
 <script>
+// ===== Skeleton loader =====
+function showVarsitySkeletons(){
+  varsityList.innerHTML = "";
+  for(let i=0;i<8;i++){
+    const li = document.createElement("li");
+    li.className = "varsity-card skeleton skeleton-varsity";
+    varsityList.appendChild(li);
+  }
+}
+showVarsitySkeletons();
+
+  
 const varsityList = document.getElementById('varsityList');
 const searchInput = document.getElementById('searchInput');
 const sortBtn = document.getElementById('sortDeadlineBtn');
 let universities = [];
+
+let globalSearch = localStorage.getItem("homeSearchTerm");
+if(globalSearch){
+  searchInput.value = globalSearch;
+  localStorage.removeItem("homeSearchTerm");
+}
+
+// ===== Cache system =====
+const VARSITY_CACHE = "careerUnifiedVarsityCache";
+const VARSITY_CACHE_TIME = "careerUnifiedVarsityCacheTime";
+const CACHE_TTL = 5 * 60 * 1000;
+
+// ===== Load cache instantly =====
+const cached = localStorage.getItem(VARSITY_CACHE);
+if (cached) {
+  try {
+    universities = JSON.parse(cached);
+    injectUniversitySchema();
+    renderList();
+  } catch(e){}
+}
   
 async function fetchUniversities() {
   universities = await window.sanityClient.fetch(`
@@ -250,6 +312,9 @@ async function fetchUniversities() {
       notes
     }
   `);
+// ===== Save to cache =====
+localStorage.setItem(VARSITY_CACHE, JSON.stringify(universities));
+localStorage.setItem(VARSITY_CACHE_TIME, Date.now());
 
   injectUniversitySchema();
   renderList();
@@ -280,7 +345,15 @@ function injectUniversitySchema() {
 }
 
 // Fetch on page load
-fetchUniversities();
+const last = localStorage.getItem(VARSITY_CACHE_TIME);
+if (!last || Date.now() - last > CACHE_TTL) {
+  fetchUniversities();    // no cache or expired
+} else {
+  fetchUniversities();    // background refresh
+}
+
+setInterval(fetchUniversities, 5 * 60 * 1000);
+
 
 
 function renderList() {
@@ -347,6 +420,7 @@ down.onclick = () => window.scrollTo({top:document.body.scrollHeight, behavior:'
 
 </body>
 </html>
+
 
 
 
