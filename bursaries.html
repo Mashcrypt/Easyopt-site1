@@ -209,13 +209,34 @@ header p {
 <button id="scrollDown" class="scroll-btn">↓</button>
 
 <script src="js/sanityClient.js"></script>
+
 <script>
+// ===== Skeleton loader =====
+function showBursarySkeletons() {
+  bursaryList.innerHTML = "";
+  for (let i = 0; i < 6; i++) {
+    const li = document.createElement("li");
+    li.className = "bursary-card skeleton skeleton-bursary";
+    bursaryList.appendChild(li);
+  }
+}
+showBursarySkeletons();
+
+  
 const bursaryList = document.getElementById('bursaryList');
 const facultyFilter = document.getElementById('facultyFilter');
 const bursaryPreview = document.getElementById('bursaryPreview');
-const globalSearch = localStorage.getItem("homeSearchTerm");
+let globalSearch = localStorage.getItem("homeSearchTerm");
+if (globalSearch) localStorage.removeItem("homeSearchTerm");
+
 let bursaries = [];
 let selectedIndex = null;
+
+// ===== Cache =====
+const BURSARY_CACHE = "careerUnifiedBursaryCache";
+const BURSARY_CACHE_TIME = "careerUnifiedBursaryCacheTime";
+const CACHE_TTL = 5 * 60 * 1000;
+
 
 function injectBursarySchema() {
   const schema = {
@@ -242,7 +263,27 @@ function injectBursarySchema() {
   document.head.appendChild(script);
 }
 
-  
+// ===== Load cache instantly =====
+const cached = localStorage.getItem(BURSARY_CACHE);
+if (cached) {
+  try {
+    bursaries = JSON.parse(cached);
+    injectBursarySchema();
+
+    // build faculty list
+    facultyFilter.innerHTML = `<option value="All">All Bursaries</option>`;
+    const faculties = Array.from(new Set(bursaries.map(b => b.faculty))).sort();
+    faculties.forEach(f => {
+      const opt = document.createElement('option');
+      opt.value = f;
+      opt.textContent = f;
+      facultyFilter.appendChild(opt);
+    });
+
+    renderBursaries();
+  } catch(e){}
+}
+ 
 
 async function fetchBursaries() {
 
@@ -266,6 +307,9 @@ async function fetchBursaries() {
     deadline,
     applicationLink
   }`);
+  // ===== Save to cache =====
+  localStorage.setItem(BURSARY_CACHE, JSON.stringify(bursaries));
+  localStorage.setItem(BURSARY_CACHE_TIME, Date.now());
 
   // Put search term into UI
   if (globalSearch) {
@@ -370,7 +414,16 @@ function toggleDesc(index){
 }
 
 facultyFilter.addEventListener('change', e=>renderBursaries(e.target.value));
-fetchBursaries();
+const last = localStorage.getItem(BURSARY_CACHE_TIME);
+
+if (!last || Date.now() - last > CACHE_TTL) {
+  fetchBursaries();        // no cache or cache expired
+} else {
+  fetchBursaries();        // refresh silently
+}
+
+setInterval(fetchBursaries, 5 * 60 * 1000);
+
 
 // ================= SCROLL =================
 const up = document.getElementById('scrollUp');
@@ -381,6 +434,7 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 </script>
 </body>
 </html>
+
 
 
 
