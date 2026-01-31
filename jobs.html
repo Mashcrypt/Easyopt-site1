@@ -154,6 +154,58 @@ header p {
   font-weight: 600;
   text-decoration: none;
 }
+
+  /* ================================
+   Skeleton Loading (Jobs Page)
+================================ */
+
+.skeleton {
+  background-color: #e5e7eb;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.6) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  animation: skeleton-shimmer 1.3s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Job card placeholder */
+.skeleton-job {
+  height: 95px;
+  margin-bottom: 12px;
+}
+
+/* Make skeletons look like real cards */
+.job-card.skeleton {
+  box-shadow: none;
+  background-color: #e5e7eb;
+}
+
+/* Disable hover on skeletons */
+.job-card.skeleton:hover {
+  background-color: #e5e7eb;
+  transform: none;
+  cursor: default;
+}
+
+  
 </style>
 </head>
 
@@ -228,17 +280,64 @@ header p {
 <script>
 const jobList = document.getElementById('jobList');
 const jobPreview = document.getElementById('jobPreview');
-const globalSearch = localStorage.getItem("homeSearchTerm");
 
+/* ================================
+   GLOBAL SEARCH (HOMEPAGE → JOBS)
+================================ */
+let globalSearch = localStorage.getItem("homeSearchTerm");
+
+// use once then clear
+if (globalSearch) {
+  localStorage.removeItem("homeSearchTerm");
+}
+
+/* ================================
+   CACHE SYSTEM
+================================ */
+const CACHE_KEY = "careerUnifiedJobsCache";
+const CACHE_TIME_KEY = "careerUnifiedJobsCacheTime";
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 let jobs = [];
 let selectedIndex = null;
-async function fetchJobs() {
 
+/* ================================
+   SKELETON LOADER (UI HOOK)
+================================ */
+function showSkeletons() {
+  jobList.innerHTML = "";
+  for (let i = 0; i < 6; i++) {
+    const li = document.createElement("li");
+    li.className = "job-card skeleton skeleton-job";
+    jobList.appendChild(li);
+  }
+}
+
+/* ================================
+   LOAD CACHE INSTANTLY
+================================ */
+loadCachedJobs();
+
+function loadCachedJobs() {
+  const cached = localStorage.getItem(CACHE_KEY);
+  if (!cached) return;
+
+  try {
+    jobs = JSON.parse(cached);
+    renderJobs();
+    console.log("⚡ Loaded jobs from cache");
+  } catch (e) {
+    console.warn("Cache invalid");
+  }
+}
+
+/* ================================
+   SANITY FETCH (BACKGROUND UPDATE)
+================================ */
+async function fetchJobs() {
   let query = `*[_type == "job"]`;
 
- // If coming from homepage search
- if (globalSearch) {
+  if (globalSearch && globalSearch.trim() !== "") {
     query = `*[_type=="job" && (
       title match "*${globalSearch}*" ||
       company match "*${globalSearch}*" ||
@@ -248,33 +347,45 @@ async function fetchJobs() {
     )]`;
   }
 
-  jobs = await window.sanityClient.fetch(`${query}{
-    _id,
-    title,
-    company,
-    description,
-    location,
-    salary,
-    applyLink,
-    posted,
-    deadline,
-    category,
-    jobType,
-    listingTier,
-    sponsoredUntil,
-    badge
-  }`);
+  try {
+    const fresh = await window.sanityClient.fetch(`${query}{
+      _id,
+      title,
+      company,
+      description,
+      location,
+      salary,
+      applyLink,
+      posted,
+      deadline,
+      category,
+      jobType,
+      listingTier,
+      sponsoredUntil,
+      badge
+    }`);
 
-  // Put the search term into the Jobs search box
-  if (globalSearch) {
-    document.getElementById("jobSearch").value = globalSearch;
+    jobs = fresh;
+
+    localStorage.setItem(CACHE_KEY, JSON.stringify(fresh));
+    localStorage.setItem(CACHE_TIME_KEY, Date.now());
+
+    if (globalSearch) {
+      document.getElementById("jobSearch").value = globalSearch;
+    }
+
+    renderJobs();
+    console.log("🔄 Jobs updated from Sanity");
+
+  } catch (err) {
+    console.error("Sanity failed — using cache", err);
   }
-
-  renderJobs();
 }
 
-
-  function injectJobSchema(job) {
+/* ================================
+   SCHEMA INJECTION
+================================ */
+function injectJobSchema(job) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "JobPosting",
@@ -308,17 +419,18 @@ async function fetchJobs() {
   };
 
   const old = document.getElementById("job-schema");
-if (old) old.remove();
+  if (old) old.remove();
 
-const script = document.createElement("script");
-script.id = "job-schema";
-script.type = "application/ld+json";
-script.textContent = JSON.stringify(schema);
-document.head.appendChild(script);
-
+  const script = document.createElement("script");
+  script.id = "job-schema";
+  script.type = "application/ld+json";
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
 }
 
-  
+/* ================================
+   PRIORITY SORT
+================================ */
 function getPriority(job) {
   const today = new Date();
   if ((job.listingTier === 'premier' || job.listingTier === 'sponsored') && job.sponsoredUntil) {
@@ -329,6 +441,9 @@ function getPriority(job) {
   return 0;
 }
 
+/* ================================
+   RENDER
+================================ */
 function renderJobs() {
   const searchTerm = document.getElementById('jobSearch').value.toLowerCase();
   const category = document.getElementById('categoryFilter').value;
@@ -346,12 +461,12 @@ function renderJobs() {
       return new Date(a.deadline) - new Date(b.deadline);
     });
 
-  jobList.innerHTML = '';
+  jobList.innerHTML = "";
 
   filtered.forEach((job, index) => {
-    const li = document.createElement('li');
-    li.className = 'job-card';
-    if (index === selectedIndex) li.classList.add('selected');
+    const li = document.createElement("li");
+    li.className = "job-card";
+    if (index === selectedIndex) li.classList.add("selected");
 
     let badgeText = job.badge ||
       (job.listingTier === 'premier' ? 'Premier' :
@@ -360,7 +475,7 @@ function renderJobs() {
     li.innerHTML = `
       ${badgeText ? `<span class="job-badge">${badgeText}</span>` : ''}
       <h3>${job.title}</h3>
-      <p class="company"><strong>Company:</strong> ${job.company}</p>
+      <p><strong>Company:</strong> ${job.company}</p>
       <p><strong>Location:</strong> ${job.location}</p>
       <p><strong>Salary:</strong> ${job.salary || 'N/A'}</p>
       <p><strong>Closing:</strong> ${job.deadline}</p>
@@ -376,6 +491,9 @@ function renderJobs() {
   });
 }
 
+/* ================================
+   PREVIEW
+================================ */
 function showPreview(job) {
   let badgeText = job.badge ||
     (job.listingTier === 'premier' ? 'Premier' :
@@ -396,15 +514,35 @@ function showPreview(job) {
   injectJobSchema(job);
 }
 
-document.getElementById('jobSearch').addEventListener('input', renderJobs);
-document.getElementById('categoryFilter').addEventListener('change', renderJobs);
-document.getElementById('sortBtn').addEventListener('click', renderJobs);
+/* ================================
+   EVENTS
+================================ */
+document.getElementById("jobSearch").addEventListener("input", () => {
+  globalSearch = null;
+  renderJobs();
+});
+document.getElementById("categoryFilter").addEventListener("change", renderJobs);
+document.getElementById("sortBtn").addEventListener("click", renderJobs);
 
-fetchJobs();
+/* ================================
+   STARTUP
+================================ */
+showSkeletons();
+
+const last = localStorage.getItem(CACHE_TIME_KEY);
+if (!last || Date.now() - last > CACHE_TTL) {
+  fetchJobs();
+} else {
+  fetchJobs(); // background refresh
+}
+
+setInterval(fetchJobs, 5 * 60 * 1000);
 </script>
+
 
 </body>
 </html>
+
 
 
 
