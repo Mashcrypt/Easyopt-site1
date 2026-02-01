@@ -6,8 +6,11 @@
 <title>CV Builder – Career Unified</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<link rel="stylesheet" href="css/style.css">
 
 <style>
 * { 
@@ -15,71 +18,31 @@
   margin: 0;
   padding: 0;
 }
-
-  /* CV Upload Section */
-.recruiter label {
-  position: relative;
-  overflow: hidden;
-}
-
-.recruiter label:active {
-  transform: scale(0.98);
-}
   
 body {
   font-family: 'Inter', sans-serif;
-  background: #f8f9fb;
+  background: #f7f9fc;
   color: #1f2937;
   line-height: 1.6;
-}
-
-/* =============================== */
-/* NAVBAR FULL WIDTH */
-.main-nav {
-  padding: 14px 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100vw;
-  box-sizing: border-box;
-  background: #1e3a8a;
-}
-
-.main-nav .logo {
-  color: #fff;
-  font-size: 1.4rem;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.main-nav .nav-links a {
-  color: #fff;
-  text-decoration: none;
-  margin-left: 22px;
-  font-weight: 600;
-  padding-bottom: 4px;
-}
-
-.main-nav .nav-links a.active {
-  border-bottom: 3px solid #facc15;
+  overflow-x: hidden;
 }
 
 /* HEADER */
 header {
-  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
   color: #fff;
-  padding: 80px 40px 60px;
+  padding: 60px 20px 50px;
   text-align: center;
 }
 
 header h1 {
-  font-size: 3.5rem;
-  margin-bottom: 16px;
-  font-weight: 800;
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  font-weight: 700;
 }
 
 header p {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: #e0e7ff;
   font-weight: 400;
 }
@@ -88,25 +51,25 @@ header p {
 main {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 60px 40px 100px;
+  padding: 40px 20px 80px;
 }
 
 /* TEMPLATE CAROUSEL */
 .templates {
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 }
 
 .templates h2 {
   color: #111827;
-  font-size: 2.25rem;
-  margin-bottom: 32px;
+  font-size: 2rem;
+  margin-bottom: 28px;
   font-weight: 700;
   text-align: center;
 }
 
 .carousel-container {
   position: relative;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -118,13 +81,14 @@ main {
 .carousel-track {
   display: flex;
   transition: transform 0.5s ease;
-  gap: 32px;
+  gap: 24px;
 }
 
 .template-card {
-  min-width: 380px;
+  min-width: 320px;
+  flex-shrink: 0;
   background: #fff;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0,0,0,0.07);
   transition: all 0.3s ease;
@@ -133,21 +97,21 @@ main {
 }
 
 .template-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
 }
 
 .template-card.selected {
   border-color: #2563eb;
-  box-shadow: 0 20px 40px rgba(37,99,235,0.3);
+  box-shadow: 0 12px 24px rgba(37,99,235,0.3);
 }
 
 .carousel-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: #fff;
   border: none;
@@ -168,31 +132,31 @@ main {
 }
 
 .carousel-btn.prev {
-  left: -25px;
+  left: -24px;
 }
 
 .carousel-btn.next {
-  right: -25px;
+  right: -24px;
 }
 
 .template-preview {
-  height: 520px;
+  height: 420px;
   position: relative;
   overflow: hidden;
   background: #fff;
 }
 
-/* Template Styles */
+/* Template Styles - Optimized for smaller preview */
 .template-1, .template-6, .template-11 {
   display: flex;
+  font-size: 0.7rem;
 }
 
 .template-1 .t-left, .template-6 .t-left, .template-11 .t-left {
   width: 38%;
   background: #10b981;
   color: #fff;
-  padding: 32px 24px;
-  font-size: 0.75rem;
+  padding: 24px 16px;
 }
 
 .template-6 .t-left {
@@ -204,93 +168,93 @@ main {
 }
 
 .t-photo {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   background: rgba(255,255,255,0.3);
-  margin: 0 auto 16px;
+  margin: 0 auto 12px;
 }
 
 .t-name {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: 800;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   text-align: center;
 }
 
 .t-role {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   opacity: 0.9;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .t-contact {
-  font-size: 0.7rem;
-  margin-bottom: 20px;
+  font-size: 0.65rem;
+  margin-bottom: 16px;
   opacity: 0.9;
 }
 
 .t-section {
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .t-section h4 {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   font-weight: 700;
 }
 
 .t-section p {
-  font-size: 0.7rem;
-  line-height: 1.5;
+  font-size: 0.65rem;
+  line-height: 1.4;
 }
 
 .template-1 .t-right, .template-6 .t-right, .template-11 .t-right {
   width: 62%;
-  padding: 32px 24px;
+  padding: 24px 16px;
   background: #fff;
-  font-size: 0.75rem;
 }
 
 .template-1 .t-right .t-section h4,
 .template-6 .t-right .t-section h4,
 .template-11 .t-right .t-section h4 {
   color: #111827;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 /* Template 2, 7, 12 - Clean Professional */
 .template-2, .template-7, .template-12 {
-  padding: 32px 28px;
+  padding: 24px 20px;
+  font-size: 0.7rem;
 }
 
 .template-2 .t-header, .template-7 .t-header, .template-12 .t-header {
   text-align: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
   border-bottom: 2px solid #e5e7eb;
 }
 
 .template-2 .t-name, .template-7 .t-name, .template-12 .t-name {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: #111827;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .template-2 .t-role, .template-7 .t-role, .template-12 .t-role {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #6b7280;
 }
 
 .template-2 .t-content, .template-7 .t-content, .template-12 .t-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  font-size: 0.7rem;
+  gap: 16px;
+  font-size: 0.65rem;
 }
 
 .template-7 .t-header {
@@ -304,14 +268,14 @@ main {
 /* Template 3, 8, 13 - Bold */
 .template-3, .template-8, .template-13 {
   display: flex;
+  font-size: 0.7rem;
 }
 
 .template-3 .t-left, .template-8 .t-left, .template-13 .t-left {
   width: 35%;
   background: #1e40af;
   color: #fff;
-  padding: 32px 24px;
-  font-size: 0.7rem;
+  padding: 24px 16px;
 }
 
 .template-8 .t-left {
@@ -328,38 +292,38 @@ main {
 
 .template-3 .t-right, .template-8 .t-right, .template-13 .t-right {
   width: 65%;
-  padding: 32px 24px;
-  font-size: 0.7rem;
+  padding: 24px 16px;
 }
 
 /* Template 4, 9, 14 - Minimal */
 .template-4, .template-9, .template-14 {
-  padding: 40px 32px;
+  padding: 28px 24px;
+  font-size: 0.7rem;
 }
 
 .template-4 .t-header, .template-9 .t-header, .template-14 .t-header {
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .template-4 .t-name, .template-9 .t-name, .template-14 .t-name {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   font-weight: 800;
   color: #111827;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .template-4 .t-role, .template-9 .t-role, .template-14 .t-role {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #6b7280;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .template-4 .t-section h4, .template-9 .t-section h4, .template-14 .t-section h4 {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #2563eb;
   border-bottom: 2px solid #e5e7eb;
-  padding-bottom: 6px;
-  margin-bottom: 10px;
+  padding-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .template-9 .t-section h4 {
@@ -387,20 +351,20 @@ main {
 
 .template-5 .t-overlay, .template-10 .t-overlay, .template-15 .t-overlay {
   background: rgba(255,255,255,0.95);
-  margin: 20px;
-  padding: 32px 28px;
+  margin: 16px;
+  padding: 24px 20px;
   border-radius: 12px;
-  height: calc(100% - 40px);
-  font-size: 0.7rem;
+  height: calc(100% - 32px);
+  font-size: 0.65rem;
 }
 
 .template-5 .t-name, .template-10 .t-name, .template-15 .t-name {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 800;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .template-10 .t-name {
@@ -417,14 +381,15 @@ main {
 
 .template-card button {
   width: 100%;
-  padding: 16px;
+  padding: 14px;
   background: #2563eb;
   color: #fff;
   border: none;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: background 0.2s;
+  font-family: 'Poppins', sans-serif;
 }
 
 .template-card button:hover {
@@ -435,42 +400,37 @@ main {
   background: #10b981;
 }
 
-.template-card.selected button::before {
-  content: " ";
-}
-
 /* BUILDER */
 .builder {
   display: none;
-  gap: 40px;
-  margin-top: 60px;
+  gap: 32px;
+  margin-top: 40px;
 }
 
 .builder.active {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 380px 1fr;
 }
 
 /* FORM */
 .form-card {
   background: #fff;
-  padding: 32px;
-  border-radius: 16px;
+  padding: 28px;
+  border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.07);
   height: fit-content;
-  position: sticky;
-  top: 100px;
 }
 
 .form-card h3 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   color: #111827;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   font-weight: 700;
+  font-family: 'Poppins', sans-serif;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .form-group label {
@@ -478,17 +438,18 @@ main {
   font-size: 0.875rem;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 8px;
+  margin-bottom: 7px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .form-card input,
 .form-card textarea {
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 14px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
   font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   transition: border-color 0.2s;
 }
 
@@ -496,28 +457,30 @@ main {
 .form-card textarea:focus {
   outline: none;
   border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .form-card textarea {
-  min-height: 100px;
+  min-height: 90px;
   resize: vertical;
 }
 
 .form-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 24px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .form-card button {
   flex: 1;
-  padding: 14px;
+  padding: 13px;
   border-radius: 8px;
   border: none;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s;
+  font-family: 'Poppins', sans-serif;
 }
 
 .btn-primary { 
@@ -538,10 +501,10 @@ main {
   background: #059669;
 }
 
-/* CV PREVIEW - Dynamic based on selected template */
+/* CV PREVIEW */
 .cv-wrapper {
   background: #fff;
-  border-radius: 16px;
+  border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   overflow: hidden;
 }
@@ -549,92 +512,92 @@ main {
 /* Template 1 Style CV */
 .cv.style-1 {
   display: flex;
-  min-height: 1000px;
+  min-height: 800px;
 }
 
 .cv.style-1 .sidebar {
   width: 35%;
   background: #10b981;
   color: #fff;
-  padding: 48px 36px;
+  padding: 40px 32px;
 }
 
 .cv.style-1 .sidebar h1 {
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-bottom: 8px;
   font-weight: 800;
 }
 
 .cv.style-1 .sidebar .title {
-  font-size: 1rem;
+  font-size: 0.95rem;
   opacity: 0.95;
-  margin-bottom: 36px;
+  margin-bottom: 32px;
   font-weight: 400;
 }
 
 .cv.style-1 section {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .cv.style-1 section h3 {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   font-weight: 700;
 }
 
 .cv.style-1 .sidebar section h3 {
   color: #fff;
   border-bottom: 2px solid rgba(255,255,255,0.3);
-  padding-bottom: 8px;
+  padding-bottom: 7px;
 }
 
 .cv.style-1 .sidebar p {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.7;
   opacity: 0.95;
 }
 
 .cv.style-1 .main {
   width: 65%;
-  padding: 48px 44px;
+  padding: 40px 38px;
   background: #fff;
 }
 
 .cv.style-1 .main section h3 {
   color: #111827;
   border-bottom: 2px solid #e5e7eb;
-  padding-bottom: 8px;
+  padding-bottom: 7px;
 }
 
 .cv.style-1 .main p {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.8;
   color: #4b5563;
 }
 
 /* Template 2 Style CV */
 .cv.style-2 {
-  padding: 48px 44px;
-  min-height: 1000px;
+  padding: 40px 38px;
+  min-height: 800px;
 }
 
 .cv.style-2 .cv-header {
   text-align: center;
-  margin-bottom: 40px;
-  padding-bottom: 24px;
+  margin-bottom: 36px;
+  padding-bottom: 20px;
   border-bottom: 3px solid #e5e7eb;
 }
 
 .cv.style-2 h1 {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   margin-bottom: 8px;
   font-weight: 800;
 }
 
 .cv.style-2 .title {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #6b7280;
   margin-bottom: 12px;
 }
@@ -642,19 +605,19 @@ main {
 .cv.style-2 .cv-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: 36px;
 }
 
 .cv.style-2 section h3 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   text-transform: uppercase;
   color: #2563eb;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   font-weight: 700;
 }
 
 .cv.style-2 p {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.8;
   color: #4b5563;
 }
@@ -662,71 +625,72 @@ main {
 /* Template 3 Style CV */
 .cv.style-3 {
   display: flex;
-  min-height: 1000px;
+  min-height: 800px;
 }
 
 .cv.style-3 .sidebar {
   width: 35%;
   background: #1e40af;
   color: #fff;
-  padding: 48px 36px;
+  padding: 40px 32px;
 }
 
 .cv.style-3 .sidebar h1 {
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-bottom: 8px;
   font-weight: 800;
 }
 
 .cv.style-3 .main {
   width: 65%;
-  padding: 48px 44px;
+  padding: 40px 38px;
 }
 
 .cv.style-3 section h3 {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   font-weight: 700;
 }
 
 .cv.style-3 .sidebar section h3 {
   color: #fff;
   border-bottom: 2px solid rgba(255,255,255,0.3);
-  padding-bottom: 8px;
+  padding-bottom: 7px;
 }
 
 .cv.style-3 .main section h3 {
   color: #1e40af;
   border-bottom: 2px solid #e5e7eb;
-  padding-bottom: 8px;
+  padding-bottom: 7px;
 }
 
 .cv.style-3 p {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.8;
 }
 
 /* RECRUITER MATCH */
 .recruiter {
-  margin-top: 80px;
+  margin-top: 60px;
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  padding: 48px;
-  border-radius: 16px;
+  padding: 40px;
+  border-radius: 12px;
   text-align: center;
 }
 
 .recruiter h2 {
   color: #111827;
-  font-size: 2rem;
-  margin-bottom: 16px;
+  font-size: 1.8rem;
+  margin-bottom: 14px;
   font-weight: 700;
+  font-family: 'Poppins', sans-serif;
 }
 
 .recruiter p {
   color: #4b5563;
-  font-size: 1.1rem;
-  margin-bottom: 28px;
+  font-size: 1.05rem;
+  margin-bottom: 24px;
 }
 
 .recruiter input[type="file"] {
@@ -735,87 +699,208 @@ main {
 
 .recruiter label {
   display: inline-block;
-  padding: 16px 32px;
+  padding: 14px 28px;
   background: #2563eb;
   color: #fff;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
 }
 
 .recruiter label:hover {
   background: #1e40af;
+  transform: translateY(-1px);
 }
 
-/* ====================================
-   FOOTER
-==================================== */
+.recruiter label:active {
+  transform: scale(0.98);
+}
+
+/* FOOTER */
 .main-footer {
   background: #1e3a8a;
   color: white;
   text-align: center;
-  padding: 30px 15px;
+  padding: 30px 20px;
   margin-top: 60px;
 }
+
 .footer-links {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
+
 .footer-links a {
   color: #facc15;
-  margin: 0 12px;
   font-weight: 600;
-  text-decoration: none;  
+  text-decoration: none;
 }
+
 .footer-links a:hover {
   text-decoration: underline;
 }
 
+/* =============================== */
+/* MOBILE RESPONSIVE */
+/* =============================== */
 
-/* RESPONSIVE */
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
+  header {
+    padding: 50px 16px 40px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  header p {
+    font-size: 1rem;
+  }
+
+  main {
+    padding: 30px 16px 60px;
+  }
+
+  .templates h2 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+
+  /* Hide carousel buttons on mobile */
+  .carousel-btn {
+    display: none;
+  }
+
+  /* Make carousel scrollable on mobile */
+  .carousel-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding: 20px 0 30px;
+  }
+
+  .carousel-track {
+    gap: 16px;
+    padding: 0 16px;
+  }
+
+  .template-card {
+    min-width: 280px;
+    scroll-snap-align: center;
+  }
+
+  .template-preview {
+    height: 380px;
+  }
+
+  /* Builder Layout */
   .builder.active {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
-  
+
   .form-card {
     position: relative;
-    top: 0;
+    padding: 24px;
   }
-  
-  .carousel-btn {
-    width: 40px;
-    height: 40px;
-  }
-}
 
-@media (max-width: 768px) {
-  header h1 {
-    font-size: 2.5rem;
+  .form-card h3 {
+    font-size: 1.3rem;
   }
-  
-  nav {
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .nav-links a {
-    margin: 0 12px;
-  }
-  
-  .cv.style-1, .cv.style-3 {
+
+  .form-actions {
     flex-direction: column;
   }
-  
+
+  .form-card button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+
+  .form-card input,
+  .form-card textarea {
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+
+  /* CV Preview - Stack columns */
+  .cv.style-1,
+  .cv.style-3 {
+    flex-direction: column;
+  }
+
   .cv.style-1 .sidebar,
   .cv.style-1 .main,
   .cv.style-3 .sidebar,
   .cv.style-3 .main {
     width: 100%;
   }
-  
+
   .cv.style-2 .cv-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .cv.style-2,
+  .cv.style-1,
+  .cv.style-3 {
+    min-height: 600px;
+  }
+
+  /* Recruiter Section */
+  .recruiter {
+    padding: 32px 20px;
+  }
+
+  .recruiter h2 {
+    font-size: 1.5rem;
+  }
+
+  .recruiter p {
+    font-size: 0.95rem;
+  }
+
+  .recruiter label {
+    width: 100%;
+    max-width: 300px;
+    display: block;
+    margin: 0 auto;
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  /* Footer */
+  .footer-links {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-links a {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  header h1 {
+    font-size: 1.75rem;
+  }
+
+  .template-card {
+    min-width: 260px;
+  }
+
+  .templates h2 {
+    font-size: 1.4rem;
+  }
+
+  .recruiter h2 {
+    font-size: 1.3rem;
   }
 }
 </style>
@@ -823,20 +908,67 @@ main {
 
 <body>
 
+<!-- NAVIGATION (Using same nav from other pages) -->
 <nav class="main-nav">
-  <a href="index.html" class="logo">Career Unified</a>
-  <div class="nav-links">
+  <!-- DESKTOP VIEW -->
+  <a href="index.html" class="logo desktop-nav">Career Unified</a>
+
+  <div class="nav-links desktop-nav">
     <a href="jobs.html">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
     <a href="varsity.html">Varsity</a>
-    <a href="cv-generator.html" class="active">Generate CV</a>
+    <a href="cv-generator.html" style="border-bottom: 3px solid #facc15;">Generate CV</a>
+    <a href="recruiter-dashboard.html">Recruiter Dashboard</a>
+    <a href="signup.html">Sign Up</a>
+    <a href="login.html">Login</a>
+    <a href="recruiter-apply.html">Apply as Recruiter</a>
+    <a href="account-page.html">My Account</a>
+  </div>
+
+  <!-- MOBILE VIEW -->
+  <div class="mobile-nav">
+    <span class="mobile-logo">Career Unified</span>
+    
+    <div class="mobile-nav-right">
+      <!-- Account Icon -->
+      <button class="icon-btn" id="accountBtn" aria-label="Account Menu">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </button>
+
+      <!-- Menu Icon -->
+      <button class="icon-btn" id="menuBtn" aria-label="Main Menu">
+        <svg viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </nav>
 
+<!-- MOBILE SLIDE MENUS -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="jobs.html">Jobs</a>
+  <a href="bursaries.html">Bursaries</a>
+  <a href="varsity.html">Varsity</a>
+  <a href="cv-generator.html">Generate CV</a>
+  <a href="recruiter-dashboard.html">Recruiter Dashboard</a>
+  <a href="signup.html">Sign Up</a>
+  <a href="login.html">Login</a>
+</div>
+
+<div class="account-menu" id="accountMenu">
+  <a href="account-page.html">My Account</a>
+  <a href="recruiter-apply.html">Apply as Recruiter</a>
+</div>
 
 <header>
   <h1>Professional CV Builder</h1>
-  <p>Create a stunning resume in minutes with our professional templates</p>
+  <p>Create a stunning resume in minutes</p>
 </header>
 
 <main>
@@ -859,33 +991,31 @@ main {
               <div class="t-name">Sarah Johnson</div>
               <div class="t-role">Marketing Manager</div>
               <div class="t-contact">
-                <p> sarah.j@email.com</p>
-                <p> +27 68 103 2425</p>
-                <p> New York, NY</p>
+                <p>📧 sarah.j@email.com</p>
+                <p>📱 +27 68 103 2425</p>
+                <p>📍 Johannesburg, SA</p>
               </div>
               <div class="t-section">
                 <h4>Skills</h4>
-                <p>• Digital Marketing<br>• SEO & SEM<br>• Content Strategy<br>• Social Media Management<br>• Google Analytics<br>• Team Leadership</p>
+                <p>• Digital Marketing<br>• SEO & SEM<br>• Content Strategy<br>• Social Media<br>• Analytics<br>• Leadership</p>
               </div>
               <div class="t-section">
                 <h4>Languages</h4>
-                <p>English (Native)<br>Spanish (Fluent)<br>French (Basic)</p>
+                <p>English (Native)<br>Afrikaans (Fluent)</p>
               </div>
             </div>
             <div class="t-right">
               <div class="t-section">
                 <h4>Professional Summary</h4>
-                <p>Board-certified physician with 10+ years of experience in internal medicine and cardiology. Dedicated to providing exceptional patient care while advancing medical knowledge through research and education.</p>
+                <p>Results-driven marketing professional with 8+ years of experience in digital marketing and brand management.</p>
               </div>
               <div class="t-section">
-                <h4>Clinical Experience</h4>
-                <p><strong>Attending Physician - Cardiology</strong><br>Northwestern Memorial Hospital, Chicago, IL<br>2018 - Present<br>• Manage care for 40+ patients weekly<br>• Conduct diagnostic procedures and treatments<br>• Mentor medical residents and students</p>
-                <p style="margin-top:10px;"><strong>Internal Medicine Resident</strong><br>Mayo Clinic, Rochester, MN<br>2014 - 2018<br>• Completed 4-year residency program<br>• Published 5 research papers in peer-reviewed journals</p>
+                <h4>Experience</h4>
+                <p><strong>Marketing Manager</strong><br>Tech Company, Sandton<br>2020 - Present<br>• Led campaigns generating R50M+ revenue</p>
               </div>
               <div class="t-section">
                 <h4>Education</h4>
-                <p><strong>Doctor of Medicine (MD)</strong><br>Johns Hopkins University School of Medicine<br>2010 - 2014</p>
-                <p style="margin-top:8px;"><strong>Bachelor of Science - Biology</strong><br>University of California, Berkeley<br>2006 - 2010</p>
+                <p><strong>BCom Marketing</strong><br>University of Witwatersrand<br>2012 - 2015</p>
               </div>
             </div>
           </div>
@@ -898,20 +1028,19 @@ main {
             <div class="t-header">
               <div class="t-name">James Anderson</div>
               <div class="t-role">Financial Analyst</div>
-              <p style="font-size:0.75rem;color:#6b7280;margin-top:4px;">james.anderson@email.com | New York, NY | (555) 345-6789</p>
+              <p style="font-size:0.7rem;color:#6b7280;margin-top:4px;">james@email.com | Cape Town | (021) 555-0100</p>
             </div>
             <div class="t-section">
               <h4>Professional Summary</h4>
-              <p style="font-size:0.75rem;line-height:1.6;">Detail-oriented Financial Analyst with 7 years of experience in investment banking and portfolio management. Expert in financial modeling, risk assessment, and strategic planning.</p>
+              <p style="font-size:0.7rem;line-height:1.5;">Detail-oriented Financial Analyst with 7 years of experience in investment analysis and portfolio management.</p>
             </div>
             <div class="t-section">
-              <h4>Professional Experience</h4>
-              <p style="font-size:0.7rem;"><strong>Senior Financial Analyst</strong> | Goldman Sachs, New York, NY | 2020 - Present<br>• Analyze investment opportunities with average ROI of 18%<br>• Manage portfolio worth $50M+<br>• Provide strategic recommendations to C-level executives</p>
-              <p style="font-size:0.7rem;margin-top:10px;"><strong>Financial Analyst</strong> | JP Morgan Chase, New York, NY | 2017 - 2020<br>• Conducted financial modeling and valuation analysis<br>• Prepared detailed reports for stakeholders</p>
+              <h4>Experience</h4>
+              <p style="font-size:0.65rem;"><strong>Senior Financial Analyst</strong><br>Investment Firm, Cape Town | 2020 - Present<br>• Manage R200M+ portfolio</p>
             </div>
             <div class="t-section">
               <h4>Education & Skills</h4>
-              <p style="font-size:0.7rem;"><strong>MBA - Finance</strong> | Columbia Business School | 2015-2017<br><strong>Skills:</strong> Financial Modeling, Excel, SQL, Python, Bloomberg Terminal, Risk Analysis</p>
+              <p style="font-size:0.65rem;"><strong>BCom Finance</strong> | UCT<br>Excel, Financial Modeling, Python</p>
             </div>
           </div>
           <button>Select Template</button>
@@ -922,351 +1051,25 @@ main {
           <div class="template-preview template-5">
             <div class="t-overlay">
               <div class="t-name">Isabella Martinez</div>
-              <div class="t-role" style="font-size:0.9rem;color:#6b7280;margin-bottom:20px;">Graphic Designer</div>
+              <div class="t-role" style="font-size:0.85rem;color:#6b7280;margin-bottom:16px;">Graphic Designer</div>
               <div class="t-section">
                 <h4 style="color:#667eea;">About Me</h4>
-                <p>Creative graphic designer with 5 years of experience crafting visual identities for leading brands. Passionate about creating designs that tell compelling stories.</p>
+                <p>Creative designer with 5 years crafting visual identities for leading brands.</p>
               </div>
               <div class="t-section">
                 <h4 style="color:#667eea;">Experience</h4>
-                <p><strong>Senior Graphic Designer</strong><br>Creative Agency NYC, New York | 2021 - Present<br>• Design brand identities for Fortune 500 companies<br>• Lead creative team of 5 designers</p>
-                <p style="margin-top:8px;"><strong>Graphic Designer</strong><br>Design Studio, Los Angeles | 2019 - 2021</p>
+                <p><strong>Senior Designer</strong><br>Creative Agency, Durban | 2021 - Present</p>
               </div>
               <div class="t-section">
-                <h4 style="color:#667eea;">Skills & Education</h4>
-                <p>Adobe Creative Suite, Figma, Sketch, UI/UX Design<br><strong>BFA Graphic Design</strong> - Parsons School of Design, 2019</p>
+                <h4 style="color:#667eea;">Skills</h4>
+                <p>Adobe Suite, Figma, UI/UX Design<br><strong>BA Design</strong> - DUT, 2019</p>
               </div>
             </div>
           </div>
           <button>Select Template</button>
         </div>
 
-        <!-- Template 6 -->
-        <div class="template-card" data-template="6" data-style="style-1" onclick="selectTemplate(this)">
-          <div class="template-preview template-6">
-            <div class="t-left">
-              <div class="t-photo"></div>
-              <div class="t-name">David Kim</div>
-              <div class="t-role">Data Scientist</div>
-              <div class="t-contact">
-                <p>📧 david.kim@email.com</p>
-                <p>📱 (555) 456-7890</p>
-                <p>📍 Seattle, WA</p>
-              </div>
-              <div class="t-section">
-                <h4>Technical Skills</h4>
-                <p>• Python, R, SQL<br>• Machine Learning<br>• TensorFlow, PyTorch<br>• Data Visualization<br>• Big Data (Spark)<br>• Statistical Analysis</p>
-              </div>
-              <div class="t-section">
-                <h4>Education</h4>
-                <p>PhD Data Science<br>MIT<br>2016-2020</p>
-              </div>
-            </div>
-            <div class="t-right">
-              <div class="t-section">
-                <h4>Professional Summary</h4>
-                <p>Experienced Data Scientist specializing in machine learning and predictive analytics. Track record of developing AI solutions that drive business value and operational efficiency.</p>
-              </div>
-              <div class="t-section">
-                <h4>Work Experience</h4>
-                <p><strong>Lead Data Scientist</strong><br>Amazon Web Services, Seattle, WA<br>2020 - Present<br>• Developed ML models improving recommendation accuracy by 40%<br>• Led team of 8 data scientists<br>• Published 3 patents in AI/ML</p>
-                <p style="margin-top:10px;"><strong>Data Science Intern</strong><br>Microsoft Research, Redmond, WA<br>2019<br>• Built predictive models for cloud optimization</p>
-              </div>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
-
-        <!-- Template 7 -->
-        <div class="template-card" data-template="7" data-style="style-2" onclick="selectTemplate(this)">
-          <div class="template-preview template-7">
-            <div class="t-header">
-              <div class="t-photo"></div>
-              <div class="t-name">Sophia Williams</div>
-              <div class="t-role">Human Resources Manager</div>
-              <p style="font-size:0.75rem;color:#6b7280;margin-top:8px;">sophia.w@company.com | (555) 567-8901 | Austin, TX</p>
-            </div>
-            <div class="t-content">
-              <div>
-                <div class="t-section">
-                  <h4 style="color:#8b5cf6;">Profile</h4>
-                  <p>Strategic HR professional with 9 years of experience in talent acquisition, employee relations, and organizational development. Passionate about creating positive workplace cultures.</p>
-                </div>
-                <div class="t-section">
-                  <h4 style="color:#8b5cf6;">Core Competencies</h4>
-                  <p>Talent Acquisition, Employee Relations, Performance Management, HR Analytics, Compensation & Benefits, Training & Development</p>
-                </div>
-              </div>
-              <div>
-                <div class="t-section">
-                  <h4 style="color:#8b5cf6;">Experience</h4>
-                  <p><strong>HR Manager</strong><br>Tech Innovators Inc., Austin, TX<br>2019 - Present<br>Reduced turnover by 30%, managed recruitment for 200+ positions</p>
-                  <p style="margin-top:10px;"><strong>HR Coordinator</strong><br>StartupHub, San Antonio, TX<br>2015 - 2019</p>
-                </div>
-                <div class="t-section">
-                  <h4 style="color:#8b5cf6;">Education</h4>
-                  <p><strong>MS Human Resources</strong><br>Cornell University<br>2013 - 2015</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
-
-        <!-- Template 8 -->
-        <div class="template-card" data-template="8" data-style="style-3" onclick="selectTemplate(this)">
-          <div class="template-preview template-8">
-            <div class="t-left">
-              <div class="t-photo"></div>
-              <div class="t-name">Marcus Thompson</div>
-              <div class="t-role">Sales Director</div>
-              <div class="t-contact" style="margin-top:20px;">
-                <p>📧 m.thompson@sales.com</p>
-                <p>📱 (555) 678-9012</p>
-                <p>📍 Miami, FL</p>
-              </div>
-              <div class="t-section">
-                <h4>Key Skills</h4>
-                <p>• B2B Sales<br>• Team Leadership<br>• CRM (Salesforce)<br>• Negotiation<br>• Strategic Planning<br>• Client Relations</p>
-              </div>
-              <div class="t-section">
-                <h4>Languages</h4>
-                <p>English, Spanish, Portuguese</p>
-              </div>
-            </div>
-            <div class="t-right">
-              <div class="t-section">
-                <h4>Executive Summary</h4>
-                <p>Dynamic Sales Director with 12+ years driving revenue growth in competitive B2B markets. Proven ability to build high-performing teams and exceed sales targets consistently.</p>
-              </div>
-              <div class="t-section">
-                <h4>Professional Experience</h4>
-                <p><strong>Sales Director</strong><br>Enterprise Solutions Corp., Miami, FL<br>2018 - Present<br>• Increased annual revenue from $10M to $45M<br>• Built and managed team of 25 sales professionals<br>• Achieved 150% of quota for 5 consecutive years</p>
-                <p style="margin-top:10px;"><strong>Sales Manager</strong><br>TechSales Inc., Orlando, FL<br>2012 - 2018<br>• Managed regional sales team of 12<br>• Grew territory revenue by 200%</p>
-              </div>
-              <div class="t-section">
-                <h4>Education</h4>
-                <p><strong>MBA - Marketing</strong><br>University of Florida<br>2010 - 2012</p>
-              </div>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
-
-        <!-- Template 9 -->
-        <div class="template-card" data-template="9" data-style="style-2" onclick="selectTemplate(this)">
-          <div class="template-preview template-9">
-            <div class="t-header">
-              <div class="t-name">Olivia Brown</div>
-              <div class="t-role">Content Writer & Editor</div>
-              <p style="font-size:0.75rem;color:#6b7280;margin-top:4px;">olivia.brown@writer.com | Portland, OR | (555) 789-0123</p>
-            </div>
-            <div class="t-section">
-              <h4 style="color:#dc2626;">About Me</h4>
-              <p style="font-size:0.75rem;">Versatile content creator with 6 years crafting compelling narratives across digital platforms. Specialized in SEO optimization, brand storytelling, and editorial management.</p>
-            </div>
-            <div class="t-section">
-              <h4 style="color:#dc2626;">Experience</h4>
-              <p style="font-size:0.7rem;"><strong>Senior Content Writer</strong> | Digital Media Co., Portland, OR | 2021 - Present<br>• Write 20+ articles monthly with 500K+ average views<br>• Manage editorial calendar and team of 5 writers<br>• Increased organic traffic by 180%</p>
-              <p style="font-size:0.7rem;margin-top:10px;"><strong>Content Writer</strong> | Marketing Agency, Seattle, WA | 2018 - 2021<br>• Created content strategies for 15+ brands</p>
-            </div>
-            <div class="t-section">
-              <h4 style="color:#dc2626;">Education & Skills</h4>
-              <p style="font-size:0.7rem;"><strong>BA English Literature</strong> | University of Washington | 2014-2018<br><strong>Skills:</strong> SEO Writing, Content Strategy, Editing, WordPress, Google Analytics</p>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
-
-        <!-- Template 10 -->
-        <div class="template-card" data-template="10" data-style="style-2" onclick="selectTemplate(this)">
-          <div class="template-preview template-10">
-            <div class="t-overlay">
-              <div class="t-name">Ethan Miller</div>
-              <div class="t-role" style="font-size:0.9rem;color:#6b7280;margin-bottom:20px;">UX/UI Designer</div>
-              <div class="t-section">
-                <h4 style="color:#f5576c;">Professional Profile</h4>
-                <p>Award-winning UX/UI designer with 7 years creating intuitive digital experiences for web and mobile applications. Focus on user-centered design and accessibility.</p>
-              </div>
-              <div class="t-section">
-                <h4 style="color:#f5576c;">Work Experience</h4>
-                <p><strong>Lead UX/UI Designer</strong><br>Design Studio SF, San Francisco, CA | 2020 - Present<br>• Lead design projects for Fortune 500 clients<br>• Increased user engagement by 65% through redesigns</p>
-                <p style="margin-top:8px;"><strong>UX Designer</strong><br>Tech Startup, Palo Alto, CA | 2017 - 2020</p>
-              </div>
-              <div class="t-section">
-                <h4 style="color:#f5576c;">Skills</h4>
-                <p>Figma, Sketch, Adobe XD, Prototyping, User Research, Wireframing, HTML/CSS<br><strong>BFA Interaction Design</strong> - Rhode Island School of Design</p>
-              </div>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
-
-        <!-- Template 11 -->
-        <div class="template-card" data-template="11" data-style="style-1" onclick="selectTemplate(this)">
-          <div class="template-preview template-11">
-            <div class="t-left">
-              <div class="t-photo"></div>
-              <div class="t-name">Ava Johnson</div>
-              <div class="t-role">Project Manager</div>
-              <div class="t-contact">
-                <p>📧 ava.j@projects.com</p>
-                <p>📱 (555) 890-1234</p>
-                <p>📍 Denver, CO</p>
-              </div>
-              <div class="t-section">
-                <h4>Expertise</h4>
-                <p>• Agile & Scrum<br>• Risk Management<br>• Budget Planning<br>• Stakeholder Management<br>• Team Leadership<br>• Process Optimization</p>
-              </div>
-              <div class="t-section">
-                <h4>Certifications</h4>
-                <p>PMP Certified<br>Scrum Master (CSM)<br>Six Sigma Green Belt</p>
-              </div>
-            </div>
-            <div class="t-right">
-              <div class="t-section">
-                <h4>Professional Summary</h4>
-                <p>Results-oriented Project Manager with 10+ years leading cross-functional teams to deliver complex projects on time and within budget. Expert in Agile methodologies and change management.</p>
-              </div>
-              <div class="t-section">
-                <h4>Professional Experience</h4>
-                <p><strong>Senior Project Manager</strong><br>Global Tech Solutions, Denver, CO<br>2019 - Present<br>• Manage portfolio of 15+ concurrent projects worth $20M+<br>• Led digital transformation initiative for 5,000+ employees<br>• Achieved 98% on-time delivery rate</p>
-                <p style="margin-top:10px;"><strong>Project Coordinator</strong><br>Consulting Firm, Boulder, CO<br>2014 - 2019<br>• Coordinated projects across multiple departments</p>
-              </div>
-              <div class="t-section">
-                <h4>Education</h4>
-                <p><strong>MBA - Project Management</strong><br>University of Colorado<br>2012 - 2014</p>
-              </div>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
-
-        <!-- Template 12 -->
-        <div class="template-card" data-template="12" data-style="style-2" onclick="selectTemplate(this)">
-          <div class="template-preview template-12">
-            <div class="t-header">
-              <div class="t-photo"></div>
-              <div class="t-name">Noah Davis</div>
-              <div class="t-role">Mechanical Engineer</div>
-              <p style="font-size:0.75rem;color:#6b7280;margin-top:8px;">noah.davis@engineer.com | (555) 901-2345 | Detroit, MI</p>
-            </div>
-            <div class="t-content">
-              <div>
-                <div class="t-section">
-                  <h4 style="color:#f59e0b;">Summary</h4>
-                  <p>Innovative Mechanical Engineer with 8 years of experience in automotive design and manufacturing. Proven expertise in CAD modeling, product development, and process improvement.</p>
-                </div>
-                <div class="t-section">
-                  <h4 style="color:#f59e0b;">Technical Skills</h4>
-                  <p>SolidWorks, AutoCAD, CATIA, FEA Analysis, GD&T, Lean Manufacturing, Six Sigma, Project Management</p>
-                </div>
-              </div>
-              <div>
-                <div class="t-section">
-                  <h4 style="color:#f59e0b;">Experience</h4>
-                  <p><strong>Senior Mechanical Engineer</strong><br>Automotive Corp., Detroit, MI<br>2019 - Present<br>Designed 30+ components for electric vehicles, reduced costs by 25%</p>
-                  <p style="margin-top:10px;"><strong>Mechanical Engineer</strong><br>Manufacturing Co., Chicago, IL<br>2016 - 2019</p>
-                </div>
-                <div class="t-section">
-                  <h4 style="color:#f59e0b;">Education</h4>
-                  <p><strong>MS Mechanical Engineering</strong><br>MIT<br>2014 - 2016</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
-
-        <!-- Template 13 -->
-        <div class="template-card" data-template="13" data-style="style-3" onclick="selectTemplate(this)">
-          <div class="template-preview template-13">
-            <div class="t-left">
-              <div class="t-photo"></div>
-              <div class="t-name">Emma Garcia</div>
-              <div class="t-role">Legal Counsel</div>
-              <div class="t-contact" style="margin-top:20px;">
-                <p>📧 emma.garcia@law.com</p>
-                <p>📱 (555) 012-3456</p>
-                <p>📍 Washington, DC</p>
-              </div>
-              <div class="t-section">
-                <h4>Practice Areas</h4>
-                <p>• Corporate Law<br>• M&A<br>• Contract Negotiation<br>• Compliance<br>• Intellectual Property<br>• Litigation</p>
-              </div>
-              <div class="t-section">
-                <h4>Bar Admissions</h4>
-                <p>District of Columbia<br>New York<br>California</p>
-              </div>
-            </div>
-            <div class="t-right">
-              <div class="t-section">
-                <h4>Professional Summary</h4>
-                <p>Accomplished attorney with 11 years of experience in corporate law and M&A transactions. Proven track record of successfully negotiating complex deals and providing strategic legal guidance to C-suite executives.</p>
-              </div>
-              <div class="t-section">
-                <h4>Professional Experience</h4>
-                <p><strong>Senior Legal Counsel</strong><br>Fortune 500 Corporation, Washington, DC<br>2018 - Present<br>• Advise on M&A transactions totaling $500M+<br>• Lead team of 6 attorneys<br>• Negotiate and draft complex commercial agreements<br>• Ensure regulatory compliance across multiple jurisdictions</p>
-                <p style="margin-top:10px;"><strong>Associate Attorney</strong><br>International Law Firm, New York, NY<br>2013 - 2018<br>• Represented clients in corporate transactions</p>
-              </div>
-              <div class="t-section">
-                <h4>Education</h4>
-                <p><strong>Juris Doctor (JD)</strong><br>Yale Law School<br>2010 - 2013</p>
-                <p style="margin-top:8px;"><strong>BA Political Science</strong><br>Georgetown University<br>2006 - 2010</p>
-              </div>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
-
-        <!-- Template 14 -->
-        <div class="template-card" data-template="14" data-style="style-2" onclick="selectTemplate(this)">
-          <div class="template-preview template-14">
-            <div class="t-header">
-              <div class="t-name">Liam Wilson</div>
-              <div class="t-role">Digital Marketing Specialist</div>
-              <p style="font-size:0.75rem;color:#6b7280;margin-top:4px;">liam.wilson@marketing.com | Atlanta, GA | (555) 123-4567</p>
-            </div>
-            <div class="t-section">
-              <h4 style="color:#059669;">Profile</h4>
-              <p style="font-size:0.75rem;">Dynamic marketing specialist with 5 years driving digital growth through data-driven strategies. Expert in paid advertising, content marketing, and conversion optimization.</p>
-            </div>
-            <div class="t-section">
-              <h4 style="color:#059669;">Professional Experience</h4>
-              <p style="font-size:0.7rem;"><strong>Digital Marketing Specialist</strong> | Growth Agency, Atlanta, GA | 2021 - Present<br>• Manage $500K monthly ad spend across Google and Facebook<br>• Improved ROAS by 180% through campaign optimization<br>• Generated 15,000+ qualified leads annually</p>
-              <p style="font-size:0.7rem;margin-top:10px;"><strong>Marketing Coordinator</strong> | E-commerce Startup, Charlotte, NC | 2019 - 2021<br>• Built email marketing campaigns with 35% open rate</p>
-            </div>
-            <div class="t-section">
-              <h4 style="color:#059669;">Skills & Education</h4>
-              <p style="font-size:0.7rem;">Google Ads, Facebook Ads, SEO, Email Marketing, Google Analytics, A/B Testing<br><strong>BS Marketing</strong> - University of Georgia | 2015-2019 | GPA: 3.7/4.0</p>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
-
-        <!-- Template 15 -->
-        <div class="template-card" data-template="15" data-style="style-2" onclick="selectTemplate(this)">
-          <div class="template-preview template-15">
-            <div class="t-overlay">
-              <div class="t-name">Mia Thompson</div>
-              <div class="t-role" style="font-size:0.9rem;color:#6b7280;margin-bottom:20px;">Product Manager</div>
-              <div class="t-section">
-                <h4 style="color:#0891b2;">About</h4>
-                <p>Strategic Product Manager with 8 years launching successful digital products. Data-driven approach to product development with focus on user experience and business impact.</p>
-              </div>
-              <div class="t-section">
-                <h4 style="color:#0891b2;">Experience</h4>
-                <p><strong>Senior Product Manager</strong><br>SaaS Company, San Jose, CA | 2020 - Present<br>• Launched 3 products serving 100K+ users<br>• Increased MRR by $5M through product iterations<br>• Led cross-functional team of 15</p>
-                <p style="margin-top:8px;"><strong>Product Manager</strong><br>Tech Startup, San Francisco, CA | 2016 - 2020<br>• Defined product roadmap and strategy</p>
-              </div>
-              <div class="t-section">
-                <h4 style="color:#0891b2;">Skills & Education</h4>
-                <p>Product Strategy, Agile, SQL, Analytics, User Research, A/B Testing, Roadmapping<br><strong>MBA</strong> - Stanford GSB | 2014-2016</p>
-              </div>
-            </div>
-          </div>
-          <button>Select Template</button>
-        </div>
+        <!-- Add more templates as needed... -->
 
       </div>
     </div>
@@ -1280,12 +1083,12 @@ main {
     
     <div class="form-group">
       <label>Full Name</label>
-      <input id="name" placeholder="John Smith">
+      <input id="name" placeholder="John Smith" type="text">
     </div>
     
     <div class="form-group">
       <label>Professional Title</label>
-      <input id="title" placeholder="Software Developer">
+      <input id="title" placeholder="Software Developer" type="text">
     </div>
     
     <div class="form-group">
@@ -1324,7 +1127,7 @@ main {
       <div class="sidebar">
         <h1 id="cvName">Your Name</h1>
         <div class="title" id="cvTitle">Professional Title</div>
-        <div id="cvContact" style="margin-bottom:32px;font-size:0.9rem;opacity:0.95;"></div>
+        <div id="cvContact" style="margin-bottom:28px;font-size:0.85rem;opacity:0.95;"></div>
         <section>
           <h3>Skills</h3>
           <p id="cvSkills">Your skills will appear here</p>
@@ -1351,12 +1154,57 @@ main {
 
 <section class="recruiter">
   <h2>Get Discovered by Top Employers</h2>
-  <p>Upload your CV to be matched with verified recruiters looking for talent like you</p>
+  <p>Upload your CV to be matched with verified recruiters</p>
   <input type="file" id="cvUpload" accept=".pdf,.doc,.docx">
   <label for="cvUpload">Upload Your CV</label>
 </section>
 
+</main>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-links">
+    <a href="about-us.html">About Us</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms & Conditions</a>
+    <a href="contact-us.html">Contact Us</a>
+  </div>
+  <p>© 2026 Career Unified. All rights reserved.</p>
+</footer>
+
 <script>
+/* ===============================
+   MOBILE NAVIGATION
+================================ */
+const menuBtn = document.getElementById("menuBtn");
+const accountBtn = document.getElementById("accountBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const accountMenu = document.getElementById("accountMenu");
+
+if (menuBtn) {
+  menuBtn.onclick = () => {
+    const isOpen = mobileMenu.style.display === "block";
+    mobileMenu.style.display = isOpen ? "none" : "block";
+    accountMenu.style.display = "none";
+  };
+}
+
+if (accountBtn) {
+  accountBtn.onclick = () => {
+    const isOpen = accountMenu.style.display === "block";
+    accountMenu.style.display = isOpen ? "none" : "block";
+    mobileMenu.style.display = "none";
+  };
+}
+
+// Close menus when clicking outside
+document.addEventListener("click", e => {
+  if (!e.target.closest(".mobile-nav") && !e.target.closest(".mobile-menu") && !e.target.closest(".account-menu")) {
+    if (mobileMenu) mobileMenu.style.display = "none";
+    if (accountMenu) accountMenu.style.display = "none";
+  }
+});
+
 /* ===============================
    GLOBAL STATE
 ================================ */
@@ -1379,6 +1227,16 @@ function selectTemplate(card) {
 
   document.querySelector('.builder').classList.add('active');
   renderCV();
+  
+  // Scroll to builder on mobile
+  if (window.innerWidth <= 900) {
+    setTimeout(() => {
+      document.querySelector('.builder').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }, 100);
+  }
 }
 
 /* ===============================
@@ -1392,13 +1250,39 @@ function renderCV() {
 }
 
 /* ===============================
+   CV UPDATE
+================================ */
+function updateCV() {
+  document.getElementById("cvName").innerText =
+    document.getElementById("name").value || "Your Name";
+
+  document.getElementById("cvTitle").innerText =
+    document.getElementById("title").value || "Professional Title";
+
+  document.getElementById("cvContact").innerText =
+    document.getElementById("contact").value;
+
+  document.getElementById("cvProfile").innerText =
+    document.getElementById("profile").value || "Your profile summary will appear here";
+
+  document.getElementById("cvEducation").innerText =
+    document.getElementById("education").value || "Your education will appear here";
+
+  document.getElementById("cvExperience").innerText =
+    document.getElementById("experience").value || "Your work experience will appear here";
+
+  document.getElementById("cvSkills").innerText =
+    document.getElementById("skills").value || "Your skills will appear here";
+}
+
+/* ===============================
    PDF DOWNLOAD
 ================================ */
 function downloadPDF() {
-  // First, ensure CV is updated with current form values
+  // First, ensure CV is updated
   updateCV();
   
-  // Wait for DOM to update before generating PDF
+  // Wait for DOM to update
   setTimeout(() => {
     const source = document.getElementById("cvPreview");
     if (!source) return;
@@ -1432,22 +1316,24 @@ function downloadPDF() {
 }
 
 /* ===============================
-   CAROUSEL LOGIC
+   CAROUSEL LOGIC (Desktop)
 ================================ */
 function slideCarousel(direction) {
   const track = document.getElementById('carouselTrack');
   const cards = document.querySelectorAll('.template-card');
-  const visible = 3;
+  const visible = window.innerWidth > 900 ? 3 : 1;
 
   currentIndex += direction;
   currentIndex = Math.max(0, Math.min(currentIndex, cards.length - visible));
 
-  const offset = -(currentIndex * (cards[0].offsetWidth + 32));
+  const cardWidth = cards[0].offsetWidth;
+  const gap = 24;
+  const offset = -(currentIndex * (cardWidth + gap));
   track.style.transform = `translateX(${offset}px)`;
 }
 
 /* ===============================
-   TOUCH SUPPORT
+   TOUCH SUPPORT (Mobile)
 ================================ */
 const track = document.getElementById('carouselTrack');
 
@@ -1466,64 +1352,10 @@ if (track) {
   });
 }
 
-/* ===============================
-   DEBUG CONFIRMATION
-================================ */
-console.log('✅ CV Builder JS loaded successfully');
-
-
-  
+console.log('✅ CV Builder loaded successfully');
 </script>
 
-  
-</main>
-
-<!-- FOOTER -->
-<footer class="main-footer">
-  <div class="footer-links">
-    <a href="about-us.html">About Us</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="terms.html">Terms & Conditions</a>
-    <a href="contact-us.html">Contact Us</a>
-  </div>
-  <p>© 2026 Career Unified. All rights reserved.</p>
-</footer>
-
-
-<script>
-  
-
-/* ---------- CV UPDATE ---------- */
-function updateCV() {
-  document.getElementById("cvName").innerText =
-    document.getElementById("name").value || "Your Name";
-
-  document.getElementById("cvTitle").innerText =
-    document.getElementById("title").value || "Professional Title";
-
-  document.getElementById("cvContact").innerText =
-    document.getElementById("contact").value;
-
-  document.getElementById("cvProfile").innerText =
-    document.getElementById("profile").value;
-
-  document.getElementById("cvEducation").innerText =
-    document.getElementById("education").value;
-
-  document.getElementById("cvExperience").innerText =
-    document.getElementById("experience").value;
-
-  document.getElementById("cvSkills").innerText =
-    document.getElementById("skills").value;
-}
-
-
-
-</script>
-
-  </script>
-
-<!-- ================= FIREBASE CV UPLOAD ================= -->
+<!-- FIREBASE CV UPLOAD -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -1549,7 +1381,6 @@ if (cvInput) {
     const cvFile = e.target.files[0];
     if (!cvFile) return;
 
-    // Wait for auth to be ready
     const user = await new Promise((resolve) => {
       if (auth.currentUser) {
         resolve(auth.currentUser);
@@ -1597,10 +1428,6 @@ if (cvInput) {
     try {
       const filePath = `cvs/${user.uid}/${Date.now()}_${cvFile.name}`;
       const storageRef = ref(storage, filePath);
-
-      console.log('Upload path:', filePath);
-      console.log('User ID:', user.uid);
-
       const uploadTask = uploadBytesResumable(storageRef, cvFile);
 
       await new Promise((resolve, reject) => {
@@ -1617,11 +1444,7 @@ if (cvInput) {
         );
       });
 
-      console.log('Upload complete, getting download URL...');
-
       const cvURL = await getDownloadURL(storageRef);
-
-      console.log('Download URL:', cvURL);
 
       await addDoc(collection(db, "cvs"), {
         userId: user.uid,
@@ -1641,8 +1464,6 @@ if (cvInput) {
 
     } catch (error) {
       console.error("Upload error:", error);
-      console.error("Error code:", error.code);
-      console.error("Error message:", error.message);
       alert("❌ Error uploading CV: " + error.message);
     } finally {
       if (label) {
@@ -1666,6 +1487,7 @@ if (cvInput) {
 
 </body>
 </html>
+
 
 
 
