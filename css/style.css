@@ -621,6 +621,140 @@ a:hover {
   }
 }
 
+/* ============================
+   MOBILE NAV FIX – Career Unified
+============================= */
+
+/* NAV BAR BASE */
+.main-nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px;
+  background:inherit;
+  position:sticky;
+  top:0;
+  z-index:999;
+}
+
+/* Logo always visible */
+.logo,
+.mobile-logo{
+  font-weight:700;
+  font-size:20px;
+  white-space:nowrap;
+}
+
+/* Desktop nav layout */
+.nav-links{
+  display:flex;
+  gap:16px;
+  align-items:center;
+}
+
+/* Account icon polish */
+#accountBtn{
+  font-size:22px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:6px;
+}
+
+/* Mobile top bar */
+.mobile-nav{
+  display:none;
+  width:100%;
+  align-items:center;
+  justify-content:space-between;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px){
+
+  /* Show mobile bar */
+  .mobile-nav{
+    display:flex;
+  }
+
+  /* Keep logo ALWAYS visible */
+  .logo{
+    display:block !important;
+  }
+
+  /* Hide desktop nav links */
+  .nav-links{
+    display:none;
+  }
+
+  /* Layout order */
+  .main-nav{
+    flex-wrap:wrap;
+  }
+
+  .logo{
+    order:1;
+  }
+
+  .mobile-nav{
+    order:2;
+    width:100%;
+    margin-top:8px;
+  }
+
+  /* Slide menus */
+  .mobile-menu,
+  .account-menu{
+    position:fixed;
+    top:60px;
+    left:0;
+    right:0;
+    background:#fff;
+    z-index:999;
+    padding:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.15);
+  }
+
+  .mobile-menu a,
+  .account-menu a{
+    display:block;
+    padding:12px;
+    border-bottom:1px solid #eee;
+  }
+
+  /* HERO spacing fix */
+  .hero{
+    padding:60px 20px;
+    text-align:center;
+  }
+
+  .hero h1{
+    font-size:28px;
+  }
+
+  .hero-search{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .hero-search input,
+  .hero-search button{
+    width:100%;
+  }
+
+  /* Stats spacing */
+  .quick-stats{
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+
+  /* Job cards spacing */
+  .job-cards{
+    grid-template-columns:1fr;
+  }
+}
+
+
 
 
 
