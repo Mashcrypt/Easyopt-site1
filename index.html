@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Career Unified – Jobs, Bursaries & University Opportunities in South Africa</title>
   <meta name="description" content="Discover the latest jobs, bursaries, and university application deadlines in South Africa. Apply early, find scholarships, and kickstart your career with Career Unified.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="JKMm0zr9nLbLB8JJt0WMWRy54LR7Ae6gTlexinyCMuI" />
 
   <!-- Open Graph / Facebook -->
@@ -37,41 +36,10 @@
   }
   </script>
 
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="css/style.css">
-
-<style>
-.badge-sponsored {
-  background: linear-gradient(135deg, #ffb703, #fb8500);
-  color: #000;
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 10px;
-  margin-left: 6px;
-  font-weight: 600;
-}
-
-/* ===============================
-   PREMIER VISUAL HIGHLIGHT
-================================ */
-
-.job-card.premier {
-  border: 2px solid #facc15;
-  background: linear-gradient(180deg, #fffbea, #ffffff);
-  box-shadow: 0 0 0 rgba(250, 204, 21, 0);
-  transform: scale(1);
-  transition: all 0.25s ease;
-}
-
-.job-card.premier:hover {
-  box-shadow: 0 10px 30px rgba(250, 204, 21, 0.35);
-  transform: scale(1.02);
-}
-</style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -79,17 +47,9 @@
 <!-- NAVIGATION -->
 <nav class="main-nav">
 
-  <!-- LOGO (desktop only) -->
+  <!-- DESKTOP VIEW -->
   <a href="index.html" class="logo desktop-nav">Career Unified</a>
 
-  <!-- MOBILE TOP BAR -->
-  <div class="mobile-nav">
-    <button id="menuBtn">☰</button>
-    <span class="mobile-logo">Career Unified</span>
-    <button id="accountBtn">👤</button>
-  </div>
-
-  <!-- DESKTOP LINKS -->
   <div class="nav-links desktop-nav">
     <a href="jobs.html">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
@@ -100,6 +60,30 @@
     <a href="login.html">Login</a>
     <a href="recruiter-apply.html">Apply as Recruiter</a>
     <a href="account-page.html">My Account</a>
+  </div>
+
+  <!-- MOBILE VIEW -->
+  <div class="mobile-nav">
+    <span class="mobile-logo">Career Unified</span>
+    
+    <div class="mobile-nav-right">
+      <!-- Account Icon -->
+      <button class="icon-btn" id="accountBtn" aria-label="Account Menu">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </button>
+
+      <!-- Menu Icon -->
+      <button class="icon-btn" id="menuBtn" aria-label="Main Menu">
+        <svg viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
 </nav>
@@ -117,6 +101,7 @@
 
 <div class="account-menu" id="accountMenu">
   <a href="account-page.html">My Account</a>
+  <a href="recruiter-apply.html">Apply as Recruiter</a>
 </div>
 
 
@@ -156,6 +141,7 @@
   <h2 class="section-title">Recent Job Openings</h2>
   <div class="job-cards" id="homeJobList"></div>
 </main>
+
 <!-- HOW IT WORKS -->
 <section class="how-it-works">
   <h2>How Career Unified Works</h2>
@@ -198,7 +184,7 @@
     </div>
 
     <div class="why-card reveal">
-      <h3>Who it’s for</h3>
+      <h3>Who it's for</h3>
       <p>
         For students, graduates, and job seekers who want real opportunities without scams or paywalls.
       </p>
@@ -429,29 +415,31 @@ up.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
 
 
+/* ================= MOBILE NAVIGATION ================= */
 const menuBtn = document.getElementById("menuBtn");
 const accountBtn = document.getElementById("accountBtn");
 const mobileMenu = document.getElementById("mobileMenu");
 const accountMenu = document.getElementById("accountMenu");
 
 menuBtn.onclick = () => {
-  mobileMenu.style.display = mobileMenu.style.display === "block" ? "none" : "block";
+  const isOpen = mobileMenu.style.display === "block";
+  mobileMenu.style.display = isOpen ? "none" : "block";
   accountMenu.style.display = "none";
 };
 
 accountBtn.onclick = () => {
-  accountMenu.style.display = accountMenu.style.display === "block" ? "none" : "block";
+  const isOpen = accountMenu.style.display === "block";
+  accountMenu.style.display = isOpen ? "none" : "block";
   mobileMenu.style.display = "none";
 };
 
 // Close menus when clicking outside
 document.addEventListener("click", e => {
-  if (!e.target.closest(".mobile-nav")) {
+  if (!e.target.closest(".mobile-nav") && !e.target.closest(".mobile-menu") && !e.target.closest(".account-menu")) {
     mobileMenu.style.display = "none";
     accountMenu.style.display = "none";
   }
 });
-
 
 </script>
 
