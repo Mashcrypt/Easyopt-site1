@@ -467,6 +467,36 @@ header p {
   color: #374151;
   margin-bottom: 8px;
 }
+/* ===============================
+  STICKY FOLLOWING JOB PREVIEW PANEL
+=============================== */
+.jobs-container{
+  height: calc(100vh - 180px);
+  overflow: hidden;
+}
+
+.jobs-left{
+  overflow-y: auto;
+  max-height: 100%;
+  padding-right: 10px;
+}
+
+.jobs-preview{
+  position: sticky;
+  top: 20px;
+  height: fit-content;
+}
+/* ===============================
+   FIX BADGE OVERLAP IN PREVIEW
+=============================== */
+.jobs-preview .job-badge{
+  position: relative;
+  top: 0;
+  right: 0;
+  display: inline-block;
+  margin-bottom: 12px;
+  z-index: 1;
+}
 
 </style>
 </head>
@@ -903,6 +933,7 @@ setInterval(fetchJobs, 5 * 60 * 1000);
 
 </body>
 </html>
+
 
 
 
