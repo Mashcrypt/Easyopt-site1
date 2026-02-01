@@ -498,6 +498,83 @@ header p {
   z-index: 1;
 }
 
+/* ===============================
+   STICKY APPLY BUTTON
+=============================== */
+
+/* Turn preview into a flex column */
+.jobs-preview{
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make only the content scroll */
+.jobs-preview .fade-in{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Scroll only the description area */
+.jobs-preview .description-content{
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+/* Stick the apply button */
+.jobs-preview .apply-btn{
+  position: sticky;
+  bottom: 0;
+  background: #16a34a;
+  padding: 14px;
+  text-align: center;
+  z-index: 5;
+  box-shadow: 0 -6px 12px rgba(0,0,0,0.1);
+}
+/* ===============================
+   SWIPE ANIMATIONS (Job Preview)
+=============================== */
+
+.jobs-preview {
+  overflow: hidden;
+}
+
+.preview-slide {
+  animation-duration: 0.35s;
+  animation-fill-mode: both;
+}
+
+.slide-left {
+  animation-name: slideLeft;
+}
+
+.slide-right {
+  animation-name: slideRight;
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(-40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 </style>
 </head>
 
@@ -890,13 +967,13 @@ function renderJobs() {
 }
 
 // Show job preview
-function showPreview(job) {
+function showPreview(job, direction = "left") {
   let badgeText = job.badge ||
     (job.listingTier === 'premier' ? 'Premier' :
      job.listingTier === 'sponsored' ? 'Sponsored' : '');
 
   jobPreview.innerHTML = `
-    <div class="fade-in">
+    <div class="preview-slide ${direction === "left" ? "slide-left" : "slide-right"}">
       ${badgeText ? `<span class="job-badge">${badgeText}</span>` : ''}
       <h2>${job.title}</h2>
       <p><strong>Company:</strong> ${job.company}</p>
@@ -927,12 +1004,62 @@ if (!last || Date.now() - last > CACHE_TTL) {
 } else {
   fetchJobs(); // background refresh
 }
-
 setInterval(fetchJobs, 5 * 60 * 1000);
+
+/* ===============================
+   MOBILE SWIPE BETWEEN JOBS
+=============================== */
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+jobPreview.addEventListener("touchstart", e => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+jobPreview.addEventListener("touchend", e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+function handleSwipe() {
+  const threshold = 50; // minimum swipe distance
+
+  // Swipe left → next job
+  if (touchStartX - touchEndX > threshold) {
+    goToNextJob();
+  }
+
+  // Swipe right → previous job
+  if (touchEndX - touchStartX > threshold) {
+    goToPreviousJob();
+  }
+}
+
+function goToNextJob() {
+  if (selectedIndex === null) return;
+  if (selectedIndex < jobs.length - 1) {
+    selectedIndex++;
+    showPreview(jobs[selectedIndex], "left");
+    renderJobs();
+  }
+}
+
+function goToPreviousJob() {
+  if (selectedIndex === null) return;
+  if (selectedIndex > 0) {
+    selectedIndex--;
+    showPreview(jobs[selectedIndex], "right");
+    renderJobs();
+  }
+}
+
+
 </script>
 
 </body>
 </html>
+
 
 
 
