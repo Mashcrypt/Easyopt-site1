@@ -187,7 +187,36 @@ footer {
     background-color: #162c6f;
     transform: translateY(-2px);
 }
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    nav {
+        flex-direction: column;
+        gap: 5px;
+    }
+    #searchInput {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    #sortDeadlineBtn {
+        width: 100%;
+    }
+}
 
+@media (max-width: 900px) {
+  #varsityList {
+    padding: 0 12px;
+  }
+
+  .varsity-card {
+    padding: 14px;
+  }
+
+  #searchInput,
+  #sortDeadlineBtn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
 .nav-links {
   display: flex;
   align-items: center;
@@ -219,5 +248,6 @@ footer {
   background: rgba(255, 255, 255, 0.1);
   text-decoration: none;  /* No underline on hover */
 }
+
 
 
