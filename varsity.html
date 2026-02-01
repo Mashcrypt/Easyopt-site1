@@ -471,10 +471,30 @@ window.addEventListener('scroll', () => {
 });
 up.onclick = () => window.scrollTo({top:0, behavior:'smooth'});
 down.onclick = () => window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'});
+
+
+/* ================= MOBILE NAVIGATION ================= */
+const menuBtn = document.getElementById("menuBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+
+if (menuBtn) {
+  menuBtn.onclick = () => {
+    const isOpen = mobileMenu.style.display === "block";
+    mobileMenu.style.display = isOpen ? "none" : "block";
+  };
+}
+
+// Close menu when clicking outside
+document.addEventListener("click", e => {
+  if (!e.target.closest(".mobile-nav") && !e.target.closest(".mobile-menu")) {
+    if (mobileMenu) mobileMenu.style.display = "none";
+  }
+});
 </script>
 
 </body>
 </html>
+
 
 
 
