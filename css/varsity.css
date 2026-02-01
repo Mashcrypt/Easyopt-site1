@@ -217,37 +217,7 @@ footer {
     margin-bottom: 10px;
   }
 }
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 20px;  /* Better spacing */
-}
 
-/* Desktop Account Icon Styling */
-.desktop-account-btn {
-  display: flex !important;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  /* Circular icon with hover effect */
-}
-.mobile-logo {
-  text-decoration: none;  /* Looks like text but acts as link */
-  transition: opacity 0.2s;
-}
-
-.mobile-logo:hover {
-  opacity: 0.9;  /* Subtle hover effect */
-}
-.icon-btn {
-  /* Works for both buttons and links */
-  text-decoration: none;
-}
-
-.icon-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  text-decoration: none;  /* No underline on hover */
-}
 
 
 
