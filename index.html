@@ -76,32 +76,21 @@
 
 <body>
 
-
 <!-- NAVIGATION -->
 <nav class="main-nav">
-  <a href="index.html" class="logo">Career Unified</a>
+
+  <!-- LOGO (desktop only) -->
+  <a href="index.html" class="logo desktop-nav">Career Unified</a>
+
+  <!-- MOBILE TOP BAR -->
+  <div class="mobile-nav">
+    <button id="menuBtn">☰</button>
+    <span class="mobile-logo">Career Unified</span>
+    <button id="accountBtn">👤</button>
+  </div>
+
+  <!-- DESKTOP LINKS -->
   <div class="nav-links desktop-nav">
-   <div class="mobile-nav">
-  <button id="menuBtn">☰</button>
-  <span class="mobile-logo">Career Unified</span>
-  <button id="accountBtn">👤</button>
-</div>
-
-<div class="mobile-menu" id="mobileMenu">
-  <a href="jobs.html">Jobs</a>
-  <a href="bursaries.html">Bursaries</a>
-  <a href="varsity.html">Varsity</a>
-  <a href="cv-generator.html">Generate CV</a>
-  <a href="recruiter-dashboard.html">Recruiter Dashboard</a>
-  <a href="recruiter-apply.html">Apply as Recruiter</a>
-  <a href="signup.html">Sign Up</a>
-  <a href="login.html">Login</a>
-</div>
-
-<div class="account-menu" id="accountMenu">
-  <a href="account-page.html">My Account</a>
-</div>
-
     <a href="jobs.html">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
     <a href="varsity.html">Varsity</a>
@@ -111,9 +100,25 @@
     <a href="login.html">Login</a>
     <a href="recruiter-apply.html">Apply as Recruiter</a>
     <a href="account-page.html">My Account</a>
-
   </div>
+
 </nav>
+
+<!-- MOBILE SLIDE MENUS -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="jobs.html">Jobs</a>
+  <a href="bursaries.html">Bursaries</a>
+  <a href="varsity.html">Varsity</a>
+  <a href="cv-generator.html">Generate CV</a>
+  <a href="recruiter-dashboard.html">Recruiter Dashboard</a>
+  <a href="signup.html">Sign Up</a>
+  <a href="login.html">Login</a>
+</div>
+
+<div class="account-menu" id="accountMenu">
+  <a href="account-page.html">My Account</a>
+</div>
+
 
 <!-- HERO -->
 <header class="hero">
@@ -452,6 +457,7 @@ document.addEventListener("click", e => {
 
 </body>
 </html>
+
 
 
 
