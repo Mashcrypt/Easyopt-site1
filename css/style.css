@@ -549,4 +549,77 @@ a:hover {
   }
 }
 
+/* ===============================
+   MOBILE NAV SYSTEM
+================================ */
+
+.mobile-nav,
+.mobile-menu,
+.account-menu {
+  display: none;
+}
+
+/* Desktop */
+.desktop-nav {
+  display: flex;
+}
+
+/* Mobile layout */
+@media (max-width: 900px) {
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 22px;
+  }
+
+  .mobile-nav button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 26px;
+    cursor: pointer;
+  }
+
+  .mobile-logo {
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .mobile-menu,
+  .account-menu {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    background: white;
+    width: 220px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 10px 0;
+    z-index: 9999;
+  }
+
+  .mobile-menu a,
+  .account-menu a {
+    display: block;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #1e3a8a;
+    font-weight: 600;
+  }
+
+  .mobile-menu a:hover,
+  .account-menu a:hover {
+    background: #e0f2fe;
+  }
+}
+
+
 
