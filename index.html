@@ -56,24 +56,32 @@
     <a href="varsity.html">Varsity</a>
     <a href="cv-generator.html">Generate CV</a>
     <a href="recruiter-dashboard.html">Recruiter Dashboard</a>
+    <a href="recruiter-apply.html">Apply as Recruiter</a>
     <a href="signup.html">Sign Up</a>
     <a href="login.html">Login</a>
-    <a href="recruiter-apply.html">Apply as Recruiter</a>
-    <a href="account-page.html">My Account</a>
+    
+    <!-- My Account Icon (Desktop) -->
+    <a href="account-page.html" class="icon-btn desktop-account-btn" aria-label="My Account" title="My Account">
+      <svg viewBox="0 0 24 24">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </a>
   </div>
 
   <!-- MOBILE VIEW -->
   <div class="mobile-nav">
-    <span class="mobile-logo">Career Unified</span>
+    <!-- Clickable Logo -->
+    <a href="index.html" class="mobile-logo">Career Unified</a>
     
     <div class="mobile-nav-right">
-      <!-- Account Icon -->
-      <button class="icon-btn" id="accountBtn" aria-label="Account Menu">
+      <!-- Account Icon - Direct Link -->
+      <a href="account-page.html" class="icon-btn" aria-label="My Account">
         <svg viewBox="0 0 24 24">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
           <circle cx="12" cy="7" r="4"/>
         </svg>
-      </button>
+      </a>
 
       <!-- Menu Icon -->
       <button class="icon-btn" id="menuBtn" aria-label="Main Menu">
@@ -88,20 +96,16 @@
 
 </nav>
 
-<!-- MOBILE SLIDE MENUS -->
+<!-- MOBILE SLIDE MENU -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="jobs.html">Jobs</a>
   <a href="bursaries.html">Bursaries</a>
   <a href="varsity.html">Varsity</a>
   <a href="cv-generator.html">Generate CV</a>
   <a href="recruiter-dashboard.html">Recruiter Dashboard</a>
+  <a href="recruiter-apply.html">Apply as Recruiter</a>
   <a href="signup.html">Sign Up</a>
   <a href="login.html">Login</a>
-</div>
-
-<div class="account-menu" id="accountMenu">
-  <a href="account-page.html">My Account</a>
-  <a href="recruiter-apply.html">Apply as Recruiter</a>
 </div>
 
 
@@ -417,27 +421,19 @@ down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smoot
 
 /* ================= MOBILE NAVIGATION ================= */
 const menuBtn = document.getElementById("menuBtn");
-const accountBtn = document.getElementById("accountBtn");
 const mobileMenu = document.getElementById("mobileMenu");
-const accountMenu = document.getElementById("accountMenu");
 
-menuBtn.onclick = () => {
-  const isOpen = mobileMenu.style.display === "block";
-  mobileMenu.style.display = isOpen ? "none" : "block";
-  accountMenu.style.display = "none";
-};
+if (menuBtn) {
+  menuBtn.onclick = () => {
+    const isOpen = mobileMenu.style.display === "block";
+    mobileMenu.style.display = isOpen ? "none" : "block";
+  };
+}
 
-accountBtn.onclick = () => {
-  const isOpen = accountMenu.style.display === "block";
-  accountMenu.style.display = isOpen ? "none" : "block";
-  mobileMenu.style.display = "none";
-};
-
-// Close menus when clicking outside
+// Close menu when clicking outside
 document.addEventListener("click", e => {
-  if (!e.target.closest(".mobile-nav") && !e.target.closest(".mobile-menu") && !e.target.closest(".account-menu")) {
-    mobileMenu.style.display = "none";
-    accountMenu.style.display = "none";
+  if (!e.target.closest(".mobile-nav") && !e.target.closest(".mobile-menu")) {
+    if (mobileMenu) mobileMenu.style.display = "none";
   }
 });
 
@@ -445,6 +441,7 @@ document.addEventListener("click", e => {
 
 </body>
 </html>
+
 
 
 
