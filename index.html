@@ -80,7 +80,28 @@
 <!-- NAVIGATION -->
 <nav class="main-nav">
   <a href="index.html" class="logo">Career Unified</a>
-  <div class="nav-links">
+  <div class="nav-links desktop-nav">
+   <div class="mobile-nav">
+  <button id="menuBtn">☰</button>
+  <span class="mobile-logo">Career Unified</span>
+  <button id="accountBtn">👤</button>
+</div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="jobs.html">Jobs</a>
+  <a href="bursaries.html">Bursaries</a>
+  <a href="varsity.html">Varsity</a>
+  <a href="cv-generator.html">Generate CV</a>
+  <a href="recruiter-dashboard.html">Recruiter Dashboard</a>
+  <a href="recruiter-apply.html">Apply as Recruiter</a>
+  <a href="signup.html">Sign Up</a>
+  <a href="login.html">Login</a>
+</div>
+
+<div class="account-menu" id="accountMenu">
+  <a href="account-page.html">My Account</a>
+</div>
+
     <a href="jobs.html">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
     <a href="varsity.html">Varsity</a>
@@ -401,10 +422,37 @@ window.addEventListener('scroll',()=>{
 });
 up.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
 down.onclick=()=>window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+
+<script>
+const menuBtn = document.getElementById("menuBtn");
+const accountBtn = document.getElementById("accountBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const accountMenu = document.getElementById("accountMenu");
+
+menuBtn.onclick = () => {
+  mobileMenu.style.display = mobileMenu.style.display === "block" ? "none" : "block";
+  accountMenu.style.display = "none";
+};
+
+accountBtn.onclick = () => {
+  accountMenu.style.display = accountMenu.style.display === "block" ? "none" : "block";
+  mobileMenu.style.display = "none";
+};
+
+// Close menus when clicking outside
+document.addEventListener("click", e => {
+  if (!e.target.closest(".mobile-nav")) {
+    mobileMenu.style.display = "none";
+    accountMenu.style.display = "none";
+  }
+});
+</script>
+
 </script>
 
 </body>
 </html>
+
 
 
 
