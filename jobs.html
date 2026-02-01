@@ -7,263 +7,582 @@
 <meta name="description" content="Browse verified jobs in South Africa. Filter by company, location, salary and apply instantly on Career Unified.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/jobs.css">
+
 <style>
 /* =============================== */
-/* RESET BODY & GLOBAL LAYOUT */
-body {
+/* RESET & BASE */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+body {
   font-family: 'Poppins', sans-serif;
-  background: #f5f5f7;
+  background: #f7f9fc;
   color: #111827;
   overflow-x: hidden;
-}
-
-/* =============================== */
-/* NAVBAR FULL WIDTH */
-.main-nav {
-  padding: 14px 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100vw;
-  box-sizing: border-box;
-  background: #1e3a8a;
-}
-
-.main-nav .logo {
-  color: #fff;
-  font-size: 1.4rem;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.main-nav .nav-links a {
-  color: #fff;
-  text-decoration: none;
-  margin-left: 22px;
-  font-weight: 600;
-  padding-bottom: 4px;
-}
-
-.main-nav .nav-links a.active {
-  border-bottom: 3px solid #facc15;
+  line-height: 1.6;
 }
 
 /* =============================== */
 /* HEADER */
 header {
   text-align: center;
-  padding: 70px 15px 55px;
-  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  padding: 60px 20px 50px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
   color: #fff;
-  width: 100vw;
-  box-sizing: border-box;
 }
 
 header h1 {
   margin: 0;
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
 header p {
-  margin-top: 10px;
-  font-size: 1.2rem;
+  margin-top: 8px;
+  font-size: 1.1rem;
   color: #e5e7eb;
+  font-weight: 500;
 }
 
 /* =============================== */
-/* Jobs Page Styles */
+/* JOBS PAGE LAYOUT */
 .jobs-container {
   display: flex;
   max-width: 1200px;
   margin: 30px auto;
   gap: 20px;
+  padding: 0 20px;
 }
-.jobs-left { flex: 1; }
+
+.jobs-left {
+  flex: 1;
+  min-width: 0; /* Fix flexbox overflow */
+}
 
 .jobs-preview {
   flex: 1;
   background: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   min-height: 420px;
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+/* =============================== */
+/* SEARCH & FILTER */
+.search-filter-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.search-filter-container input,
+.search-filter-container select,
+.search-filter-container button {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+
+.search-filter-container input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-filter-container input:focus,
+.search-filter-container select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-filter-container select {
+  background: white;
+  cursor: pointer;
+}
+
+.search-filter-container button {
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.search-filter-container button:hover {
+  background: #1e40af;
+}
+
+/* =============================== */
+/* JOB CARDS LIST */
+.jobs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .job-card {
   background: #fff;
   border-radius: 10px;
-  padding: 12px 14px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   cursor: pointer;
-  transition: 0.25s ease;
+  transition: all 0.2s ease;
   position: relative;
+  border-left: 3px solid transparent;
 }
 
 .job-card:hover {
-  background-color: #d0e7ff;
-  transform: translateY(-2px);
+  background: #f0f7ff;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .job-card.selected {
-  border-left: 4px solid #facc15;
+  border-left-color: #facc15;
+  background: #fffbeb;
 }
 
+.job-card h3 {
+  font-size: 1.1rem;
+  color: #1e3a8a;
+  margin-bottom: 8px;
+  padding-right: 80px; /* Space for badge */
+}
+
+.job-card p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.job-card strong {
+  color: #374151;
+  font-weight: 600;
+}
+
+/* =============================== */
+/* JOB BADGE */
 .job-badge {
   position: absolute;
-  top: 10px;
+  top: 12px;
   right: 12px;
-  padding: 2px 8px;
+  padding: 4px 10px;
   background: #facc15;
   color: #1e3a8a;
   font-size: 11px;
   font-weight: 700;
   border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.jobs-preview h2 { color:#1e3a8a; }
-
-/* Search Filter */
-.search-filter-container {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+/* =============================== */
+/* JOB PREVIEW */
+.jobs-preview h2 {
+  color: #1e3a8a;
+  font-size: 1.75rem;
+  margin-bottom: 16px;
 }
 
-/* Fade Animation */
-.fade-in {
-  animation: fadeIn 0.35s ease;
+.jobs-preview p {
+  margin: 8px 0;
+  color: #4b5563;
 }
 
-@keyframes fadeIn {
-  from { opacity:0; transform: translateY(8px); }
-  to { opacity:1; transform: translateY(0); }
+.jobs-preview strong {
+  color: #1f2937;
 }
 
+.jobs-preview .description-content {
+  white-space: pre-line;
+  margin: 20px 0;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  line-height: 1.7;
+  color: #374151;
+}
+
+/* =============================== */
+/* APPLY BUTTON */
 .apply-btn {
   display: inline-block;
-  margin-top: 15px;
+  margin-top: 20px;
   background: #16a34a;
   color: white;
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 12px 24px;
+  border-radius: 8px;
   font-weight: 600;
   text-decoration: none;
+  transition: all 0.2s;
+  font-size: 15px;
 }
 
-  /* ================================
-   Skeleton Loading (Jobs Page)
-================================ */
+.apply-btn:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
 
+/* =============================== */
+/* SKELETON LOADING */
 .skeleton {
-  background-color: #e5e7eb;
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 0%,
+    #f3f4f6 50%,
+    #e5e7eb 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
   border-radius: 10px;
   position: relative;
   overflow: hidden;
 }
 
-.skeleton::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.6) 50%,
-    rgba(255,255,255,0) 100%
-  );
-  animation: skeleton-shimmer 1.3s infinite;
-}
-
 @keyframes skeleton-shimmer {
-  100% {
-    transform: translateX(100%);
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* Job card placeholder */
 .skeleton-job {
-  height: 95px;
+  height: 110px;
   margin-bottom: 12px;
 }
 
-/* Make skeletons look like real cards */
 .job-card.skeleton {
-  box-shadow: none;
-  background-color: #e5e7eb;
-}
-
-/* Disable hover on skeletons */
-.job-card.skeleton:hover {
-  background-color: #e5e7eb;
-  transform: none;
   cursor: default;
+  border: none;
 }
 
+.job-card.skeleton:hover {
+  background: #e5e7eb;
+  transform: none;
+}
+
+/* =============================== */
+/* FADE ANIMATION */
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============================== */
+/* FOOTER */
+.main-footer {
+  background: #1e3a8a;
+  color: white;
+  text-align: center;
+  padding: 30px 20px;
+  margin-top: 60px;
+}
+
+.footer-links {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-links a {
+  color: #facc15;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* =============================== */
+/* SEO FALLBACK */
+.seo-content {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* =============================== */
+/* MOBILE RESPONSIVE */
+@media (max-width: 900px) {
   
+  header {
+    padding: 50px 16px 40px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  header p {
+    font-size: 1rem;
+  }
+
+  /* Stack layout on mobile */
+  .jobs-container {
+    flex-direction: column;
+    margin: 20px auto;
+    padding: 0 16px;
+    gap: 16px;
+  }
+
+  .jobs-left,
+  .jobs-preview {
+    width: 100%;
+  }
+
+  .jobs-preview {
+    position: static;
+    max-height: none;
+    padding: 20px;
+    margin-top: 0;
+  }
+
+  /* Search & Filters */
+  .search-filter-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-filter-container input,
+  .search-filter-container select,
+  .search-filter-container button {
+    width: 100%;
+    min-width: auto;
+    padding: 14px 16px;
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+
+  /* Job Cards */
+  .job-card {
+    padding: 14px;
+  }
+
+  .job-card h3 {
+    font-size: 1rem;
+    padding-right: 70px;
+  }
+
+  .job-card p {
+    font-size: 0.85rem;
+  }
+
+  /* Job Preview */
+  .jobs-preview h2 {
+    font-size: 1.4rem;
+  }
+
+  .jobs-preview p {
+    font-size: 0.9rem;
+  }
+
+  .jobs-preview .description-content {
+    font-size: 0.9rem;
+    padding: 14px;
+  }
+
+  .apply-btn {
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  /* Footer */
+  .footer-links {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-links a {
+    font-size: 14px;
+  }
+}
+
+/* =============================== */
+/* EXTRA SMALL SCREENS */
+@media (max-width: 400px) {
+  header h1 {
+    font-size: 1.75rem;
+  }
+
+  .job-card h3 {
+    font-size: 0.95rem;
+  }
+
+  .job-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+
+/* =============================== */
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+}
+
+.empty-state svg {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.empty-state h3 {
+  color: #374151;
+  margin-bottom: 8px;
+}
+
 </style>
 </head>
 
 <body>
 
+<!-- NAVIGATION (Using same nav from homepage) -->
 <nav class="main-nav">
-  <a href="index.html" class="logo">Career Unified</a>
-  <div class="nav-links">
-    <a href="jobs.html" class="active">Jobs</a>
+  <!-- DESKTOP VIEW -->
+  <a href="index.html" class="logo desktop-nav">Career Unified</a>
+
+  <div class="nav-links desktop-nav">
+    <a href="jobs.html" style="border-bottom: 3px solid #facc15;">Jobs</a>
     <a href="bursaries.html">Bursaries</a>
     <a href="varsity.html">Varsity</a>
     <a href="cv-generator.html">Generate CV</a>
+    <a href="recruiter-dashboard.html">Recruiter Dashboard</a>
+    <a href="signup.html">Sign Up</a>
+    <a href="login.html">Login</a>
+    <a href="recruiter-apply.html">Apply as Recruiter</a>
+    <a href="account-page.html">My Account</a>
+  </div>
+
+  <!-- MOBILE VIEW -->
+  <div class="mobile-nav">
+    <span class="mobile-logo">Career Unified</span>
+    
+    <div class="mobile-nav-right">
+      <!-- Account Icon -->
+      <button class="icon-btn" id="accountBtn" aria-label="Account Menu">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </button>
+
+      <!-- Menu Icon -->
+      <button class="icon-btn" id="menuBtn" aria-label="Main Menu">
+        <svg viewBox="0 0 24 24">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </nav>
 
+<!-- MOBILE SLIDE MENUS -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="jobs.html">Jobs</a>
+  <a href="bursaries.html">Bursaries</a>
+  <a href="varsity.html">Varsity</a>
+  <a href="cv-generator.html">Generate CV</a>
+  <a href="recruiter-dashboard.html">Recruiter Dashboard</a>
+  <a href="signup.html">Sign Up</a>
+  <a href="login.html">Login</a>
+</div>
+
+<div class="account-menu" id="accountMenu">
+  <a href="account-page.html">My Account</a>
+  <a href="recruiter-apply.html">Apply as Recruiter</a>
+</div>
+
+<!-- HEADER -->
 <header>
   <h1>Available Jobs</h1>
-  <p>Find your next opportunity</p>
+  <p>Find your next opportunity in South Africa</p>
 </header>
 
+<!-- MAIN CONTENT -->
 <main class="jobs-container">
   <div class="jobs-left">
+    <!-- Search & Filter -->
     <div class="search-filter-container">
-      <input type="text" id="jobSearch" placeholder="Search job title, company, keyword">
+      <input type="text" id="jobSearch" placeholder="Search jobs, companies, keywords...">
       <select id="categoryFilter">
         <option value="all">All Categories</option>
         <option value="internship">Internship / Graduate</option>
         <option value="temporary">Temporary</option>
         <option value="freelance">Freelance</option>
       </select>
-      <button id="sortBtn">Sort by Closing Date</button>
+      <button id="sortBtn">Sort by Deadline</button>
     </div>
+
+    <!-- Job List -->
     <ul class="jobs-list" id="jobList"></ul>
   </div>
 
+  <!-- Job Preview Panel -->
   <div class="jobs-preview" id="jobPreview">
-    <p>Select a job to view details</p>
+    <div style="text-align: center; color: #9ca3af; padding: 40px 20px;">
+      <svg viewBox="0 0 24 24" style="width: 64px; height: 64px; margin: 0 auto 16px; stroke: currentColor; fill: none; stroke-width: 2;">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+      </svg>
+      <p style="font-size: 1.1rem; color: #6b7280;">Select a job to view details</p>
+    </div>
   </div>
   
-  <!-- SEO FALLBACK CONTENT (invisible to users, readable by Google) -->
-<section aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
-  <h2>Latest Jobs in South Africa</h2>
-  <p>
-    Career Unified lists verified job opportunities across South Africa including
-    IT, finance, retail, engineering, hospitality, government, and graduate roles.
-  </p>
-  <p>
-    Our platform updates daily to help job seekers find full-time, part-time,
-    remote, and internship positions from trusted employers.
-  </p>
-  <p>
-    Use Career Unified to search, filter, and apply for jobs across all provinces
-    in South Africa.
-  </p>
-</section>
-
+  <!-- SEO FALLBACK CONTENT -->
+  <section class="seo-content" aria-hidden="true">
+    <h2>Latest Jobs in South Africa</h2>
+    <p>
+      Career Unified lists verified job opportunities across South Africa including
+      IT, finance, retail, engineering, hospitality, government, and graduate roles.
+    </p>
+    <p>
+      Our platform updates daily to help job seekers find full-time, part-time,
+      remote, and internship positions from trusted employers.
+    </p>
+    <p>
+      Use Career Unified to search, filter, and apply for jobs across all provinces
+      in South Africa.
+    </p>
+  </section>
 </main>
 
 <!-- FOOTER -->
@@ -277,25 +596,55 @@ header p {
   <p>© 2026 Career Unified. All rights reserved.</p>
 </footer>
 
+<!-- SANITY CLIENT -->
 <script src="js/sanityClient.js"></script>
 
 <script>
+/* ================================
+   MOBILE NAVIGATION
+================================ */
+const menuBtn = document.getElementById("menuBtn");
+const accountBtn = document.getElementById("accountBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const accountMenu = document.getElementById("accountMenu");
+
+if (menuBtn) {
+  menuBtn.onclick = () => {
+    const isOpen = mobileMenu.style.display === "block";
+    mobileMenu.style.display = isOpen ? "none" : "block";
+    accountMenu.style.display = "none";
+  };
+}
+
+if (accountBtn) {
+  accountBtn.onclick = () => {
+    const isOpen = accountMenu.style.display === "block";
+    accountMenu.style.display = isOpen ? "none" : "block";
+    mobileMenu.style.display = "none";
+  };
+}
+
+// Close menus when clicking outside
+document.addEventListener("click", e => {
+  if (!e.target.closest(".mobile-nav") && !e.target.closest(".mobile-menu") && !e.target.closest(".account-menu")) {
+    if (mobileMenu) mobileMenu.style.display = "none";
+    if (accountMenu) accountMenu.style.display = "none";
+  }
+});
+
+/* ================================
+   JOBS PAGE LOGIC
+================================ */
 const jobList = document.getElementById('jobList');
 const jobPreview = document.getElementById('jobPreview');
 
-/* ================================
-   GLOBAL SEARCH (HOMEPAGE → JOBS)
-================================ */
+// Global search from homepage
 let globalSearch = localStorage.getItem("homeSearchTerm");
-
-// use once then clear
 if (globalSearch) {
   localStorage.removeItem("homeSearchTerm");
 }
 
-/* ================================
-   CACHE SYSTEM
-================================ */
+// Cache system
 const CACHE_KEY = "careerUnifiedJobsCache";
 const CACHE_TIME_KEY = "careerUnifiedJobsCacheTime";
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
@@ -303,9 +652,7 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 let jobs = [];
 let selectedIndex = null;
 
-/* ================================
-   SKELETON LOADER (UI HOOK)
-================================ */
+// Show skeleton loaders
 function showSkeletons() {
   jobList.innerHTML = "";
   for (let i = 0; i < 6; i++) {
@@ -315,9 +662,7 @@ function showSkeletons() {
   }
 }
 
-/* ================================
-   LOAD CACHE INSTANTLY
-================================ */
+// Load cached jobs instantly
 loadCachedJobs();
 
 function loadCachedJobs() {
@@ -333,9 +678,7 @@ function loadCachedJobs() {
   }
 }
 
-/* ================================
-   SANITY FETCH (BACKGROUND UPDATE)
-================================ */
+// Fetch fresh jobs from Sanity
 async function fetchJobs() {
   let query = `*[_type == "job"]`;
 
@@ -384,9 +727,7 @@ async function fetchJobs() {
   }
 }
 
-/* ================================
-   SCHEMA INJECTION
-================================ */
+// Schema injection for SEO
 function injectJobSchema(job) {
   const schema = {
     "@context": "https://schema.org",
@@ -430,9 +771,7 @@ function injectJobSchema(job) {
   document.head.appendChild(script);
 }
 
-/* ================================
-   PRIORITY SORT
-================================ */
+// Priority sorting
 function getPriority(job) {
   const today = new Date();
   if ((job.listingTier === 'premier' || job.listingTier === 'sponsored') && job.sponsoredUntil) {
@@ -443,9 +782,7 @@ function getPriority(job) {
   return 0;
 }
 
-/* ================================
-   RENDER
-================================ */
+// Render jobs list
 function renderJobs() {
   const searchTerm = document.getElementById('jobSearch').value.toLowerCase();
   const category = document.getElementById('categoryFilter').value;
@@ -465,6 +802,20 @@ function renderJobs() {
 
   jobList.innerHTML = "";
 
+  if (filtered.length === 0) {
+    jobList.innerHTML = `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" style="stroke: currentColor; fill: none; stroke-width: 2;">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <h3>No jobs found</h3>
+        <p>Try adjusting your search or filters</p>
+      </div>
+    `;
+    return;
+  }
+
   filtered.forEach((job, index) => {
     const li = document.createElement("li");
     li.className = "job-card";
@@ -479,7 +830,7 @@ function renderJobs() {
       <h3>${job.title}</h3>
       <p><strong>Company:</strong> ${job.company}</p>
       <p><strong>Location:</strong> ${job.location}</p>
-      <p><strong>Salary:</strong> ${job.salary || 'N/A'}</p>
+      <p><strong>Salary:</strong> ${job.salary || 'Not specified'}</p>
       <p><strong>Closing:</strong> ${job.deadline}</p>
     `;
 
@@ -487,15 +838,21 @@ function renderJobs() {
       selectedIndex = index;
       showPreview(job);
       renderJobs();
+      
+      // Scroll to preview on mobile
+      if (window.innerWidth <= 900) {
+        document.getElementById('jobPreview').scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
     };
 
     jobList.appendChild(li);
   });
 }
 
-/* ================================
-   PREVIEW
-================================ */
+// Show job preview
 function showPreview(job) {
   let badgeText = job.badge ||
     (job.listingTier === 'premier' ? 'Premier' :
@@ -507,18 +864,16 @@ function showPreview(job) {
       <h2>${job.title}</h2>
       <p><strong>Company:</strong> ${job.company}</p>
       <p><strong>Location:</strong> ${job.location}</p>
-      <p><strong>Salary:</strong> ${job.salary || 'N/A'}</p>
+      <p><strong>Salary:</strong> ${job.salary || 'Not specified'}</p>
       <p><strong>Posted:</strong> ${job.posted} | <strong>Closing:</strong> ${job.deadline}</p>
-      <div style="white-space:pre-line;margin-top:12px;">${job.description}</div>
-      <a class="apply-btn" href="${job.applyLink}" target="_blank">Apply Now</a>
+      <div class="description-content">${job.description}</div>
+      <a class="apply-btn" href="${job.applyLink}" target="_blank" rel="noopener">Apply Now</a>
     </div>
   `;
   injectJobSchema(job);
 }
 
-/* ================================
-   EVENTS
-================================ */
+// Event listeners
 document.getElementById("jobSearch").addEventListener("input", () => {
   globalSearch = null;
   renderJobs();
@@ -526,9 +881,7 @@ document.getElementById("jobSearch").addEventListener("input", () => {
 document.getElementById("categoryFilter").addEventListener("change", renderJobs);
 document.getElementById("sortBtn").addEventListener("click", renderJobs);
 
-/* ================================
-   STARTUP
-================================ */
+// Startup
 showSkeletons();
 
 const last = localStorage.getItem(CACHE_TIME_KEY);
@@ -541,9 +894,9 @@ if (!last || Date.now() - last > CACHE_TTL) {
 setInterval(fetchJobs, 5 * 60 * 1000);
 </script>
 
-
 </body>
 </html>
+
 
 
 
