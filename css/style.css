@@ -58,13 +58,51 @@ a:hover {
   font-weight: 700;
 }
 
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .nav-links a {
   color: white;
-  margin-left: 20px;
+  margin-left: 0;
+  font-weight: 600;
+  transition: color 0.2s;
 }
 
 .nav-links a:hover {
   color: #facc15;
+  text-decoration: none;
+}
+
+/* Desktop Account Icon */
+.desktop-account-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0 !important;
+  border-radius: 50%;
+  transition: background 0.2s;
+  margin-left: 8px;
+}
+
+.desktop-account-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white !important;
+  text-decoration: none !important;
+}
+
+.desktop-account-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* ====================================
@@ -184,6 +222,8 @@ a:hover {
   border-radius: 14px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   transition: transform .2s;
+  position: relative;
+  cursor: pointer;
 }
 
 .job-card:hover {
@@ -446,11 +486,6 @@ a:hover {
   transform: translateY(0);
 }
 
-.job-card {
-  position: relative;
-  cursor: pointer;
-}
-
 /* Hover hint bubble */
 .job-card::after {
   content: "Click to view job";
@@ -479,8 +514,7 @@ a:hover {
 ================================ */
 
 .mobile-nav,
-.mobile-menu,
-.account-menu {
+.mobile-menu {
   display: none;
 }
 
@@ -503,10 +537,12 @@ a:hover {
   border-radius: 8px;
   transition: background 0.2s;
   position: relative;
+  text-decoration: none;
 }
 
 .icon-btn:hover {
   background: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
 }
 
 .icon-btn svg {
@@ -547,6 +583,13 @@ a:hover {
     font-weight: 700;
     font-size: 18px;
     letter-spacing: -0.5px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .mobile-logo:hover {
+    opacity: 0.9;
+    text-decoration: none;
   }
 
   .mobile-nav-right {
@@ -669,9 +712,8 @@ a:hover {
     padding: 24px;
   }
 
-  /* Mobile Menus */
-  .mobile-menu,
-  .account-menu {
+  /* Mobile Menu */
+  .mobile-menu {
     position: fixed;
     top: 64px;
     right: 0;
@@ -697,8 +739,7 @@ a:hover {
     }
   }
 
-  .mobile-menu a,
-  .account-menu a {
+  .mobile-menu a {
     display: flex;
     align-items: center;
     padding: 14px 20px;
@@ -709,8 +750,7 @@ a:hover {
     transition: background 0.2s;
   }
 
-  .mobile-menu a:hover,
-  .account-menu a:hover {
+  .mobile-menu a:hover {
     background: #f0f7ff;
   }
 
@@ -825,7 +865,7 @@ a:hover {
   }
 
   .hero-search button{
-    background:#2563eb; /* your blue */
+    background:#2563eb;
     color:white;
     border:none;
     padding:12px 20px;
@@ -840,6 +880,7 @@ a:hover {
     transform:scale(0.95);
   }
 }
+
 
 
 
